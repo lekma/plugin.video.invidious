@@ -122,6 +122,7 @@ class Thumbnails(object):
             return super(Thumbnails, cls).__new__(cls, thumbnails)
         return None
 
+
 # videos -----------------------------------------------------------------------
 
 class VideoThumbnails(Thumbnails):

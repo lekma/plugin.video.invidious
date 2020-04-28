@@ -145,7 +145,8 @@ class Dispatcher(object):
                 Folders(self.getSubfolders("search", _search_styles_)))
         q = kwargs.pop("q", "") or search_dialog()
         if q:
-            return self.addItems(service.search(q, **kwargs), kwargs["type"], q=q, **kwargs)
+            return self.addItems(
+                service.search(q, **kwargs), kwargs["type"], q=q, **kwargs)
         return False # failing here is a bit stupid
 
 
