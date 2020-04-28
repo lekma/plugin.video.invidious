@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="plugin.video.invidious"
+       name="Invidious"
+       version="0.0.1"
+       provider-name="lekma">
+    <requires>
+        <import addon="xbmc.python" version="2.26.0" />
+        <import addon="script.module.six" version="1.11.0" />
+        <import addon="script.module.kodi-six" version="0.1.2" />
+        <import addon="script.module.requests" version="2.22.0" />
+        <import addon="script.module.inputstreamhelper" version="0.4.3" />
+    </requires>
+    <extension point="xbmc.python.pluginsource" library="addon.py">
+        <provides>video</provides>
+    </extension>
+    <extension point="xbmc.addon.metadata">
+        <reuselanguageinvoker>true</reuselanguageinvoker>
+        <summary lang="en_GB">Invidious Addon</summary>
+        <description lang="en_GB">Invidious Addon</description>
+        <language>en</language>
+        <platform>all</platform>
+        <source>https://github.com/lekma/plugin.video.invidious</source>
+        <assets>
+            <icon>resources/media/icon.png</icon>
+        </assets>
+    </extension>
+</addon>

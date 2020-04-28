@@ -1,0 +1,121 @@
+# Addon Name: Invidious
+# Addon id: plugin.video.invidious
+# Addon Provider: lekma
+msgid ""
+msgstr ""
+"Project-Id-Version: plugin.video.invidious\n"
+"Report-Msgid-Bugs-To: https://github.com/lekma/plugin.video.invidious/issues\n"
+"POT-Creation-Date: 2020-04-11 10:28+0000\n"
+"PO-Revision-Date: 2020-04-11 10:30+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# folders
+
+msgctxt "#30000"
+msgid "Invidious"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Search"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Videos"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Channels"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Playlists"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Live"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Top"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Popular"
+msgstr ""
+
+msgctxt "#30009"
+msgid "Trending"
+msgstr ""
+
+msgctxt "#30010"
+msgid "Music"
+msgstr ""
+
+msgctxt "#30011"
+msgid "Gaming"
+msgstr ""
+
+msgctxt "#30012"
+msgid "News"
+msgstr ""
+
+msgctxt "#30013"
+msgid "Movies"
+msgstr ""
+
+# items
+
+msgctxt "#30056"
+msgid "Author: {0.author}\nTitle: {0.title}"
+msgstr ""
+
+msgctxt "#30057"
+msgid "Author: {0.author}\nTitle: {0.title}\nViews: {0.viewCount}\nPublished: {0.published}"
+msgstr ""
+
+msgctxt "#30058"
+msgid "Author: {0.author}\nTitle: {0.title}\nViews: {0.viewCount}\nPublished: {0.published}\nDescription: {0.description}"
+msgstr ""
+
+msgctxt "#30059"
+msgid "[COLOR red][LIVE NOW][/COLOR] {0.title}"
+msgstr ""
+
+msgctxt "#30060"
+msgid "{0.author}\nDescription: {0.description}"
+msgstr ""
+
+msgctxt "#30061"
+msgid "{0.title}\nVideos: {0.videoCount}"
+msgstr ""
+
+msgctxt "#30099"
+msgid "More..."
+msgstr ""
+
+# settings
+
+msgctxt "#30100"
+msgid "Settings"
+msgstr ""
+
+msgctxt "#30101"
+msgid "General"
+msgstr ""
+
+msgctxt "#30102"
+msgid "Instance name/ip address"
+msgstr ""
+
+msgctxt "#30103"
+msgid "Api path"
+msgstr ""
+
+msgctxt "#30104"
+msgid "Use ssl"
+msgstr ""
+
