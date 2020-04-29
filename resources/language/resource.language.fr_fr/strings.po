@@ -1,0 +1,150 @@
+# Addon Name: Invidious
+# Addon id: plugin.video.invidious
+# Addon Provider: lekma
+msgid ""
+msgstr ""
+"Project-Id-Version: plugin.video.invidious\n"
+"Report-Msgid-Bugs-To: https://github.com/lekma/plugin.video.invidious/issues\n"
+"POT-Creation-Date: 2020-04-11 10:28+0000\n"
+"PO-Revision-Date: 2020-04-29 08:13+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.8.7.1\n"
+
+# folders
+msgctxt "#30000"
+msgid "Invidious"
+msgstr "Invidious"
+
+msgctxt "#30002"
+msgid "Search"
+msgstr "Rechercher"
+
+msgctxt "#30003"
+msgid "Videos"
+msgstr "Vidéos"
+
+msgctxt "#30004"
+msgid "Channels"
+msgstr "Chaînes"
+
+msgctxt "#30005"
+msgid "Playlists"
+msgstr "Listes de lecture"
+
+msgctxt "#30006"
+msgid "Live"
+msgstr "Direct"
+
+msgctxt "#30007"
+msgid "Top"
+msgstr "Top"
+
+msgctxt "#30008"
+msgid "Popular"
+msgstr "Populaire"
+
+msgctxt "#30009"
+msgid "Trending"
+msgstr "Tendance"
+
+msgctxt "#30010"
+msgid "Music"
+msgstr "Musique"
+
+msgctxt "#30011"
+msgid "Gaming"
+msgstr "Jeux vidéo"
+
+msgctxt "#30012"
+msgid "News"
+msgstr "Nouveautés"
+
+msgctxt "#30013"
+msgid "Movies"
+msgstr "Films"
+
+# items
+msgctxt "#30056"
+msgid ""
+"Author: {0.author}\n"
+"Title: {0.title}"
+msgstr ""
+"Auteur: {0.author}\n"
+"Titre: {0.title}"
+
+msgctxt "#30057"
+msgid ""
+"Author: {0.author}\n"
+"Title: {0.title}\n"
+"Views: {0.viewCount}\n"
+"Published: {0.published}"
+msgstr ""
+"Auteur: {0.author}\n"
+"Titre: {0.title}\n"
+"Vues: {0.viewCount}\n"
+"Publiée le: {0.published}"
+
+msgctxt "#30058"
+msgid ""
+"Author: {0.author}\n"
+"Title: {0.title}\n"
+"Views: {0.viewCount}\n"
+"Published: {0.published}\n"
+"Description: {0.description}"
+msgstr ""
+"Auteur: {0.author}\n"
+"Titre: {0.title}\n"
+"Vues: {0.viewCount}\n"
+"Publiée le: {0.published}\n"
+"Description: {0.description}"
+
+msgctxt "#30059"
+msgid "[COLOR red][LIVE NOW][/COLOR] {0.title}"
+msgstr "[COLOR red][EN DIRECT][/COLOR] {0.title}"
+
+msgctxt "#30060"
+msgid ""
+"{0.author}\n"
+"Description: {0.description}"
+msgstr ""
+"{0.author}\n"
+"Description: {0.description}"
+
+msgctxt "#30061"
+msgid ""
+"{0.title}\n"
+"Videos: {0.videoCount}"
+msgstr ""
+"{0.title}\n"
+"Vidéos: {0.videoCount}"
+
+msgctxt "#30099"
+msgid "More..."
+msgstr "Suivant..."
+
+# settings
+msgctxt "#30100"
+msgid "Settings"
+msgstr "Paramètres"
+
+msgctxt "#30101"
+msgid "General"
+msgstr "Général"
+
+msgctxt "#30102"
+msgid "Instance name/ip address"
+msgstr "Nom de l'instance/Adresse IP"
+
+msgctxt "#30103"
+msgid "Api path"
+msgstr "Chemin de l'API"
+
+msgctxt "#30104"
+msgid "Use ssl"
+msgstr "Utiliser SSL"
