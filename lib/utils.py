@@ -12,7 +12,8 @@ from kodi_six import xbmc, xbmcaddon, xbmcgui
 
 
 addon = xbmcaddon.Addon()
-addon_path = xbmc.translatePath(addon.getAddonInfo("path"))
+addonPath = xbmc.translatePath(addon.getAddonInfo("path"))
+addonId = xbmc.translatePath(addon.getAddonInfo("id"))
 
 dialog = xbmcgui.Dialog()
 
@@ -36,7 +37,7 @@ def localized_string(id):
 
 
 def get_media_path(*args):
-    return join(addon_path, "resources", "media", *args)
+    return join(addonPath, "resources", "media", *args)
 
 def get_icon(name):
     return get_media_path("{}.png".format(name))
@@ -81,7 +82,7 @@ class ListItem(xbmcgui.ListItem):
             offscreen=True)
 
     def __init__(self, label, path, isFolder=False, infos=None,
-                 streamInfos=None, **art):
+                 streamInfos=None, contextMenus=None, **art):
         self.setIsFolder(isFolder)
         self.setIsPlayable(not isFolder)
         self.isFolder = isFolder
@@ -91,6 +92,8 @@ class ListItem(xbmcgui.ListItem):
         if streamInfos:
             for info in iteritems(streamInfos):
                 self.addStreamInfo(*info)
+        if contextMenus:
+            self. addContextMenuItems(contextMenus)
         if art:
             self.setArt(art)
 

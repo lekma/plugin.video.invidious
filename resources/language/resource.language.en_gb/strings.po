@@ -67,6 +67,10 @@ msgctxt "#30013"
 msgid "Movies"
 msgstr ""
 
+msgctxt "#30031"
+msgid "Go to channel"
+msgstr ""
+
 # items
 
 msgctxt "#30056"
