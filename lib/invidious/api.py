@@ -7,7 +7,7 @@ from __future__ import absolute_import, division, unicode_literals
 import collections
 import requests
 
-from six.moves.urllib.parse import urljoin, urlunsplit
+from six.moves.urllib.parse import urljoin, urlunsplit, urlsplit
 
 from . import objects
 from ..utils import get_setting, notify, log
@@ -65,10 +65,10 @@ class InvidiousService(object):
     }
 
     def __init__(self):
-        scheme = "https" if get_setting("ssl", bool) else "http"
-        netloc = get_setting("instance", unicode)
+        self.scheme = "https" if get_setting("ssl", bool) else "http"
+        self.netloc = get_setting("instance", unicode)
         path = "{}/".format(get_setting("path", unicode).strip("/"))
-        self.url = urlunsplit((scheme, netloc, path, "", ""))
+        self.url = urlunsplit((self.scheme, self.netloc, path, "", ""))
         self.session = InvidiousSession(headers=self._headers_)
         self._channels_ = {}
         self.queries = collections.deque()
@@ -160,10 +160,14 @@ class InvidiousService(object):
     def video(self, **kwargs):
         video = self.simple("video", kwargs.pop("videoId"), **kwargs)
         if video:
+            url, manifest, mime = (video.dashUrl, "mpd", "application/dash+xml")
             if video.liveNow:
-                return (video._item(video.hlsUrl), "hls", None)
-            else:
-                return (video._item(video.dashUrl), "mpd", "application/dash+xml")
+                url, manifest, mime = (video.hlsUrl, "hls", None)
+            split = urlsplit(url)
+            url = urlunsplit((split.scheme or self.scheme,
+                              split.netloc or self.netloc,
+                              split.path, split.query, split.fragment))
+            return (video._item(url), manifest, mime)
 
 
 service = InvidiousService()
