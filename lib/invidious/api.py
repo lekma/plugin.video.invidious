@@ -10,7 +10,7 @@ import requests
 from six.moves.urllib.parse import urljoin, urlunsplit
 
 from . import objects
-from ..utils import get_setting, notify, debug
+from ..utils import get_setting, notify, log
 
 
 class InvidiousSession(requests.Session):
@@ -22,7 +22,7 @@ class InvidiousSession(requests.Session):
 
     def request(self, *args, **kwargs):
         response = super(InvidiousSession, self).request(*args, **kwargs)
-        debug("url: {}".format(response.url))
+        log("request.url: {}".format(response.url))
         try:
             response.raise_for_status()
         except Exception as error:

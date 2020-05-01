@@ -71,7 +71,7 @@ def get_setting(id, _type=None):
 # logging ----------------------------------------------------------------------
 
 def log(msg, level=xbmc.LOGNOTICE):
-    xbmc.log("{}: {}".format(addon.getAddonInfo("id"), msg), level=level)
+    xbmc.log("[{}] {}".format(addonId, msg), level=level)
 
 
 def debug(msg):
