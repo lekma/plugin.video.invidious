@@ -4,6 +4,7 @@
 from __future__ import absolute_import, division, unicode_literals
 
 
+import collections
 import requests
 
 from six.moves.urllib.parse import urljoin, urlunsplit
@@ -70,6 +71,7 @@ class InvidiousService(object):
         self.url = urlunsplit((scheme, netloc, path, "", ""))
         self.session = InvidiousSession(headers=self._headers_)
         self._channels_ = {}
+        self.queries = collections.deque()
 
     def get(self, url, **kwargs):
         return self.session.get(urljoin(self.url, url), params=kwargs)

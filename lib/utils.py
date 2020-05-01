@@ -13,7 +13,7 @@ from kodi_six import xbmc, xbmcaddon, xbmcgui
 
 addon = xbmcaddon.Addon()
 addonPath = xbmc.translatePath(addon.getAddonInfo("path"))
-addonId = xbmc.translatePath(addon.getAddonInfo("id"))
+addonId = addon.getAddonInfo("id")
 
 dialog = xbmcgui.Dialog()
 
@@ -41,6 +41,16 @@ def get_media_path(*args):
 
 def get_icon(name):
     return get_media_path("{}.png".format(name))
+
+
+def get_window_id():
+    return xbmcgui.getCurrentWindowId()
+
+def get_addon_id():
+    return addonId
+
+def get_addon_path():
+    return addonPath
 
 
 # settings ---------------------------------------------------------------------

@@ -141,13 +141,21 @@ class Dispatcher(object):
     @action(30002)
     def search(self, **kwargs):
         if not "type" in kwargs:
+            service.queries.clear()
             return self.addItems(
                 Folders(self.getSubfolders("search", _search_styles_)))
-        q = kwargs.pop("q", "") or search_dialog()
+        q = kwargs.pop("q", "")
+        if not q:
+            try:
+                q, kwargs = service.queries.pop()
+            except IndexError:
+                q = search_dialog()
+                if q:
+                    service.queries.append((q, kwargs))
         if q:
             return self.addItems(
                 service.search(q, **kwargs), kwargs["type"], q=q, **kwargs)
-        return False # failing here is a bit stupid
+        return False
 
 
     # dispatch -----------------------------------------------------------------

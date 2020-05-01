@@ -9,7 +9,8 @@ from datetime import datetime
 from six import string_types, iteritems, with_metaclass, raise_from
 
 from . import _folders_schema_, _home_folders_
-from ..utils import ListItem, build_url, localized_string, addonId
+from ..utils import ListItem, build_url, localized_string
+from ..utils import get_window_id, get_addon_id
 
 
 # ------------------------------------------------------------------------------
@@ -117,7 +118,10 @@ class InvidiousItem(InvidiousObject):
         return self._plot_.format(self)
 
     def menus(self, **kwargs):
-        return [(localized_string(label), action.format(addonId=addonId, **kwargs))
+        return [(localized_string(label),
+                 action.format(windowId=get_window_id(),
+                               addonId=get_addon_id(),
+                               **kwargs))
                 for label, action in self._menus_]
 
 
@@ -147,7 +151,7 @@ class BaseVideo(InvidiousItem):
     _plot_ = localized_string(30056)
     _fields_ = {"title", "videoId", "videoThumbnails", "lengthSeconds", "author", "authorId"}
     _menus_ = [
-        (30031, "ActivateWindow(Videos,plugin://{addonId}/?action=channel&authorId={authorId})")
+        (30031, "Container.Update(plugin://{addonId}/?action=channel&authorId={authorId})")
     ]
 
     @property
