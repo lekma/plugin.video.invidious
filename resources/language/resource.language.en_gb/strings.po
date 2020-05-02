@@ -71,6 +71,10 @@ msgctxt "#30031"
 msgid "Go to channel"
 msgstr ""
 
+msgctxt "#30032"
+msgid "Add channel to favourites"
+msgstr ""
+
 # items
 
 msgctxt "#30056"

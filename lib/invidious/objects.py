@@ -10,7 +10,7 @@ from six import string_types, iteritems, with_metaclass, raise_from
 
 from . import _folders_schema_, _home_folders_
 from ..utils import ListItem, build_url, localized_string
-from ..utils import get_window_id, get_addon_id
+from ..utils import get_window_id, get_addon_id, get_addon_path
 
 
 # ------------------------------------------------------------------------------
@@ -121,6 +121,7 @@ class InvidiousItem(InvidiousObject):
         return [(localized_string(label),
                  action.format(windowId=get_window_id(),
                                addonId=get_addon_id(),
+                               addonPath=get_addon_path(),
                                **kwargs))
                 for label, action in self._menus_]
 

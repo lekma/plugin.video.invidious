@@ -103,7 +103,7 @@ class ListItem(xbmcgui.ListItem):
             for info in iteritems(streamInfos):
                 self.addStreamInfo(*info)
         if contextMenus:
-            self. addContextMenuItems(contextMenus)
+            self.addContextMenuItems(contextMenus)
         if art:
             self.setArt(art)
 
