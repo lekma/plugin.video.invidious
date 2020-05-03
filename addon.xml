@@ -26,4 +26,16 @@
             <icon>resources/media/icon.png</icon>
         </assets>
     </extension>
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="goToChannel.py">
+                <label>30031</label>
+                <visible>ListItem.Property(authorId)</visible>
+            </item>
+            <!--<item library="addChannelToFavourites.py">
+                <label>30032</label>
+                <visible>ListItem.Property(authorId)</visible>
+            </item>-->
+        </menu>
+    </extension>
 </addon>

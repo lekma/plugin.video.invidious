@@ -10,7 +10,6 @@ from six import string_types, iteritems, with_metaclass, raise_from
 
 from . import _folders_schema_, _home_folders_
 from ..utils import ListItem, build_url, localized_string
-from ..utils import get_window_id, get_addon_id, get_addon_path
 
 
 # ------------------------------------------------------------------------------
@@ -117,14 +116,6 @@ class InvidiousItem(InvidiousObject):
     def plot(self):
         return self._plot_.format(self)
 
-    def menus(self, **kwargs):
-        return [(localized_string(label),
-                 action.format(windowId=get_window_id(),
-                               addonId=get_addon_id(),
-                               addonPath=get_addon_path(),
-                               **kwargs))
-                for label, action in self._menus_]
-
 
 class Thumbnails(object):
 
@@ -151,9 +142,6 @@ class BaseVideo(InvidiousItem):
     _infos_ = {"mediatype": "video"}
     _plot_ = localized_string(30056)
     _fields_ = {"title", "videoId", "videoThumbnails", "lengthSeconds", "author", "authorId"}
-    _menus_ = [
-        (30031, "Container.Update(plugin://{addonId}/?action=channel&authorId={authorId})")
-    ]
 
     @property
     def _infos(self):
@@ -169,7 +157,7 @@ class BaseVideo(InvidiousItem):
             path,
             infos={"video": dict(self._infos, title=self.title, plot=self.plot())},
             streamInfos={"video": {"duration": self.lengthSeconds}},
-            contextMenus=self.menus(authorId=self.authorId),
+            properties={"authorId": self.authorId},
             thumb=getattr(self.videoThumbnails, "sddefault", ""))
 
     def item(self, url, action):

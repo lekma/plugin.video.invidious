@@ -92,7 +92,7 @@ class ListItem(xbmcgui.ListItem):
             offscreen=True)
 
     def __init__(self, label, path, isFolder=False, infos=None,
-                 streamInfos=None, contextMenus=None, **art):
+                 streamInfos=None, properties=None, **art):
         self.setIsFolder(isFolder)
         self.setIsPlayable(not isFolder)
         self.isFolder = isFolder
@@ -102,8 +102,8 @@ class ListItem(xbmcgui.ListItem):
         if streamInfos:
             for info in iteritems(streamInfos):
                 self.addStreamInfo(*info)
-        if contextMenus:
-            self.addContextMenuItems(contextMenus)
+        if properties:
+            self.setProperties(properties)
         if art:
             self.setArt(art)
 
