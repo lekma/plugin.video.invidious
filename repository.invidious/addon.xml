@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="repository.invidious"
+        name="Invidious Repository"
+        version="0.0.1"
+        provider-name="lekma">
+    <extension point="xbmc.addon.repository" name="Invidious Addon Repository">
+        <checksum>https://raw.githubusercontent.com/DavidHenryThoreau/plugin.video.invidious/master/addons.xml.md5</checksum>
+        <info compressed="false">https://raw.githubusercontent.com/DavidHenryThoreau/plugin.video.invidious/master/addons.xml</info>
+        <datadir zip="true">https://github.com/DavidHenryThoreau/plugin.video.invidious/raw/master/repo</datadir>
+    </extension>
+
+    <extension point="xbmc.addon.metadata">
+        <summary lang="fr">Dépot Invidious</summary>
+        <description lang="fr">Télécharger et installer Invidious</description>
+        <summary lang="en">Invidious Repository</summary>
+        <description lang="en">Download and install Invidious</description>
+        <platform>all</platform>
+    </extension>
+</addon>
