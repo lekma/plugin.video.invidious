@@ -13,6 +13,9 @@
         <setting id="ssl" label="30104"
                  type="bool" default="true" />
 
+        <setting id="fields" label="30105"
+                 type="bool" default="false" />
+
     </category>
 
 </settings>
