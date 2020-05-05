@@ -8,8 +8,7 @@ from datetime import datetime
 
 from six import string_types, iteritems, with_metaclass, raise_from
 
-from . import _folders_schema_, _home_folders_
-from ..utils import ListItem, build_url, localized_string
+from utils import ListItem, buildUrl, localizedString, getAddonId
 
 
 # ------------------------------------------------------------------------------
@@ -77,6 +76,85 @@ class InvidiousObject(with_metaclass(InvidiousType, object)):
 
 # folders ----------------------------------------------------------------------
 
+_folders_schema_ = {
+    "search": {
+        "": {
+            "id": 30002
+        },
+        "videos": {
+            "id": 30003,
+            "kwargs": {"type": "video"}
+        },
+        "channels": {
+            "id": 30004,
+            "kwargs": {"type": "channel"}
+        },
+        "playlists": {
+            "id": 30005,
+            "kwargs": {"type": "playlist"}
+        }
+    },
+    "playlists": {
+        "": {
+            "id": 30005
+        }
+    },
+    "live": {
+        "": {
+            "id": 30006,
+            "action": "playlists",
+            "kwargs": {"authorId": "UC4R8DWoMoI7CAwX8_LjQHig"}
+        }
+    },
+    "top": {
+        "": {
+            "id": 30007
+        }
+    },
+    "popular": {
+        "": {
+            "id": 30008
+        }
+    },
+    "trending": {
+        "": {
+            "id": 30009
+        },
+        "music": {
+            "id": 30010,
+            "kwargs": {"type": "Music"}
+        },
+        "gaming": {
+            "id": 30011,
+            "kwargs": {"type": "Gaming"}
+        },
+        "news": {
+            "id": 30012,
+            "kwargs": {"type": "News"}
+        },
+        "movies": {
+            "id": 30013,
+            "kwargs": {"type": "Movies"}
+        }
+    }
+}
+
+
+_home_folders_ = (
+    {"type": "top"},
+    {"type": "popular"},
+    {"type": "trending"},
+    {"type": "live"},
+    {"type": "search"}
+)
+
+
+_trending_styles_ = ("music", "gaming", "news", "movies")
+
+
+_search_styles_ = ("videos", "channels", "playlists")
+
+
 class Folder(InvidiousObject):
 
     @property
@@ -90,14 +168,14 @@ class Folder(InvidiousObject):
         folder = _folders_schema_[self.type][self.style]
         label = folder["id"]
         if isinstance(label, int):
-            label = localized_string(label)
+            label = localizedString(label)
         action = folder.get("action", self.type)
         kwargs.update(folder.get("kwargs", {}))
-        plot = folder.get("plot", "")
+        plot = folder.get("plot", label)
         if isinstance(plot, int):
-            plot = localized_string(plot)
+            plot = localizedString(plot)
         return ListItem(
-            label, build_url(url, action=action, **kwargs), isFolder=True,
+            label, buildUrl(url, action=action, **kwargs), isFolder=True,
             infos={"video": {"title": label, "plot": plot}})
 
 
@@ -115,6 +193,11 @@ class InvidiousItem(InvidiousObject):
 
     def plot(self):
         return self._plot_.format(self)
+
+    def menus(self, **kwargs):
+        return [(localizedString(label),
+                 action.format(addonId=getAddonId(), **kwargs))
+                for label, action in self._menus_]
 
 
 class Thumbnails(object):
@@ -140,8 +223,13 @@ class BaseVideo(InvidiousItem):
     __date__ = {"published"}
     _repr_ = "BaseVideo({0.videoId})"
     _infos_ = {"mediatype": "video"}
-    _plot_ = localized_string(30056)
+    _plot_ = localizedString(30056)
     _fields_ = {"title", "videoId", "videoThumbnails", "lengthSeconds", "author", "authorId"}
+    _menus_ = [
+        (30031, "Container.Update(plugin://{addonId}/?action=channel&authorId={authorId})"),
+        #(30031, "RunScript({addonId},goToChannel,{authorId})"),
+        (30032, "RunScript({addonId},addChannelToFavourites,{authorId})")
+    ]
 
     @property
     def _infos(self):
@@ -157,26 +245,33 @@ class BaseVideo(InvidiousItem):
             path,
             infos={"video": dict(self._infos, title=self.title, plot=self.plot())},
             streamInfos={"video": {"duration": self.lengthSeconds}},
-            properties={"authorId": self.authorId},
+            contextMenus=self.menus(authorId=self.authorId),
             thumb=getattr(self.videoThumbnails, "sddefault", ""))
 
     def item(self, url, action):
-        return self._item(build_url(url, action=action, videoId=self.videoId))
+        return self._item(buildUrl(url, action=action, videoId=self.videoId))
 
 
 class ShortVideo(BaseVideo):
 
     _repr_ = "ShortVideo({0.videoId})"
-    _plot_ = localized_string(30057)
+    _plot_ = localizedString(30057)
     _fields_ = {"published", "viewCount"}
 
 
-class Video(ShortVideo):
+class StdVideo(ShortVideo):
+
+    _repr_ = "StdVideo({0.videoId})"
+    _plot_ = localizedString(30058)
+    _fields_ = {"description"}
+
+
+class Video(StdVideo):
 
     _repr_ = "Video({0.videoId})"
-    _plot_ = localized_string(30058)
-    _live_ = localized_string(30059)
-    _fields_ = {"description", "liveNow", "dashUrl", "hlsUrl"}
+    _plot_ = localizedString(30058)
+    _live_ = localizedString(30059)
+    _fields_ = {"liveNow", "dashUrl", "hlsUrl"}
 
     @property
     def _infos(self):
@@ -204,16 +299,20 @@ class Channel(InvidiousItem):
 
     __json__ = {"authorThumbnails": AuthorThumbnails}
     _repr_ = "Channel({0.author})"
-    _plot_ = localized_string(30060)
+    _plot_ = localizedString(30060)
     _fields_ = {"author", "authorId", "autoGenerated", "description", "authorThumbnails"}
+
+    @property
+    def thumbnail(self):
+        return getattr(self.authorThumbnails, "512", "")
 
     def item(self, url, action):
         return ListItem(
             self.author,
-            build_url(url, action=action, authorId=self.authorId),
+            buildUrl(url, action=action, authorId=self.authorId),
             isFolder=True,
             infos={"video": {"plot": self.plot()}},
-            poster=getattr(self.authorThumbnails, "512", ""))
+            poster=self.thumbnail)
 
 
 # playlists --------------------------------------------------------------------
@@ -221,13 +320,13 @@ class Channel(InvidiousItem):
 class Playlist(InvidiousItem):
 
     _repr_ = "Playlist({0.playlistId})"
-    _plot_ = localized_string(30061)
+    _plot_ = localizedString(30061)
     _fields_ = {"title", "playlistId", "playlistThumbnail", "videoCount", "videos", "authorId"}
 
     def item(self, url, action):
         return ListItem(
             self.title,
-            build_url(url, action=action, playlistId=self.playlistId),
+            buildUrl(url, action=action, playlistId=self.playlistId),
             isFolder=True,
             infos={"video": {"plot": self.plot()}},
             poster=self.playlistThumbnail)
@@ -276,6 +375,11 @@ class BaseVideos(InvidiousItems):
 class ShortVideos(InvidiousItems):
 
     _ctor_ = ShortVideo
+
+
+class StdVideos(InvidiousItems):
+
+    _ctor_ = StdVideo
 
 
 class Videos(InvidiousItems):
