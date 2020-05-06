@@ -10,7 +10,7 @@ from six.moves.urllib.parse import urljoin, urlunsplit
 
 import objects
 from iac import Service, public
-from utils import getSetting, notify, log, error, iconError
+from utils import getSetting, notify, log, logError, iconError
 
 
 # ------------------------------------------------------------------------------
@@ -35,7 +35,7 @@ class InvidiousSession(requests.Session):
             except Exception:
                 msg = None
             if msg:
-                error("session: error processing request [{}]".format(msg))
+                logError("session: error processing request [{}]".format(msg))
                 return notify(msg, icon=iconError, time=5000)
             raise err
         else:

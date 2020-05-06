@@ -63,15 +63,15 @@ def log(msg, level=xbmc.LOGNOTICE):
     xbmc.log("[{}] {}".format(_addon_id_, msg), level=level)
 
 
-def debug(msg):
+def logDebug(msg):
     log(msg, xbmc.LOGDEBUG)
 
 
-def warn(msg):
+def logWarning(msg):
     log(msg, xbmc.LOGWARNING)
 
 
-def error(msg):
+def logError(msg):
     log(msg, xbmc.LOGERROR)
 
 

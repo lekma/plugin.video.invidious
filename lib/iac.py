@@ -10,7 +10,7 @@ import json
 from six import raise_from
 from kodi_six import xbmc
 
-from utils import getAddonId, error
+from utils import getAddonId, logError
 
 
 def public(func):
@@ -18,15 +18,19 @@ def public(func):
     return func
 
 
+# ------------------------------------------------------------------------------
+# Monitor
+# ------------------------------------------------------------------------------
+
 class JSONRPCError(Exception):
 
-    _err_msg_ = "[{code}] {message}"
+    _error_msg_ = "[{code}] {message}"
     _data_msg_ = "in {method}"
     _stack_msg_ = "(stack: {message} ({name}))"
 
-    def __init__(self, data):
-        message = self._err_msg_.format(**data)
-        data = data.get("data")
+    def __init__(self, error):
+        message = self._error_msg_.format(**error)
+        data = error.get("data")
         if data:
             message = " ".join((message, self.data(data)))
         super(JSONRPCError, self).__init__(message)
@@ -42,30 +46,6 @@ class JSONRPCError(Exception):
         return self._stack_msg_.format(**stack)
 
 
-class RequestError(RuntimeError):
-
-    _unknown_err_ = "unknown error"
-
-    def __init__(self, data=None):
-        message = data["message"] if data else self._unknown_err_
-        super(RequestError, self).__init__(message)
-
-
-def unpack(data):
-    data = json.loads(data)
-    try:
-        return JSONRPCError(data["error"])
-    except KeyError:
-        try:
-            return RequestError(data["exception"])
-        except KeyError:
-            return data["result"]
-
-
-# ------------------------------------------------------------------------------
-# Monitor
-# ------------------------------------------------------------------------------
-
 class Monitor(xbmc.Monitor):
 
     _request_ = {
@@ -80,8 +60,11 @@ class Monitor(xbmc.Monitor):
             "sender": sender,
             "data": data
         }
-        return xbmc.executeJSONRPC(
-            json.dumps(dict(self._request_, params=params)))
+        error = json.loads(
+            xbmc.executeJSONRPC(
+                json.dumps(dict(self._request_, params=params)))).get("error")
+        if error:
+            raise JSONRPCError(error)
 
 
 # ------------------------------------------------------------------------------
@@ -90,7 +73,7 @@ class Monitor(xbmc.Monitor):
 
 class Service(Monitor):
 
-    _err_msg_ = "[{0.__class__.__name__}: {0}]"
+    _error_msg_ = "[{0.__class__.__name__}: {0}]"
 
     def __init__(self, sender=None):
         self.sender = sender or getAddonId()
@@ -106,54 +89,71 @@ class Service(Monitor):
             pass
         self._methods_.clear() # clear circular references
 
-    def execute(self, data):
+    def execute(self, request):
         try:
-            name, args, kwargs = json.loads(data)
+            name, args, kwargs = json.loads(request)
             try:
-                result = {"result": self._methods_[name](*args, **kwargs)}
+                method = self._methods_[name]
             except KeyError:
                 raise_from(AttributeError("no method '{0}'".format(name)), None)
-        except Exception as err:
-            msg = self._err_msg_.format(err)
-            error("service: error processing request {}".format(msg))
-            result = {"exception": {"message": msg}}
+            else:
+                response = {"result": method(*args, **kwargs)}
+        except Exception as error:
+            message = self._error_msg_.format(error)
+            logError("service: error processing request {}".format(message))
+            response = {"error": {"message": message}}
         finally:
-            return result
+            return response
 
-    def onNotification(self, sender, method, data):
+    def onNotification(self, sender, method, request):
         if sender == self.sender:
             message = method.split(".", 1)[1]
-            self.send(message, sender, self.execute(data))
+            self.send(message, sender, self.execute(request))
 
 
 # ------------------------------------------------------------------------------
 # Client
 # ------------------------------------------------------------------------------
 
+class RequestError(Exception):
+
+    _unknown_msg_ = "unknown error"
+
+    def __init__(self, error=None):
+        message = error["message"] if error else self._unknown_msg_
+        super(RequestError, self).__init__(message)
+
+
+def unpack(response):
+    response = json.loads(response)
+    try:
+        return response["result"]
+    except KeyError:
+        return RequestError(response["error"])
+
+
 class Request(Monitor):
 
     def __init__(self, sender):
         self.sender = sender
         self.message = uuid.uuid4().hex
-        self.result = RequestError()
+        self.response = RequestError()
         self.ready = False
 
-    def execute(self, *data):
-        response = unpack(self.send(self.sender, self.message, data))
-        if isinstance(response, Exception):
-            raise response
+    def execute(self, request):
+        self.send(self.sender, self.message, request)
         while not self.ready:
             if self.waitForAbort(0.1):
                 break
-        if isinstance(self.result, Exception):
-            raise self.result
-        return self.result
+        if isinstance(self.response, Exception):
+            raise self.response
+        return self.response
 
-    def onNotification(self, sender, method, data):
+    def onNotification(self, sender, method, response):
         if sender == self.message:
             message = method.split(".", 1)[1]
             if message == self.sender:
-                self.result = unpack(data)
+                self.response = unpack(response)
                 self.ready = True
 
 
@@ -167,7 +167,7 @@ class Attribute(object):
         return Attribute(self.sender, ".".join((self.name, name)))
 
     def __call__(self, *args, **kwargs):
-        return Request(self.sender).execute(self.name, args, kwargs)
+        return Request(self.sender).execute((self.name, args, kwargs))
 
 
 class Client(object):

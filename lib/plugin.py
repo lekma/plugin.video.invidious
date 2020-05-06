@@ -12,7 +12,7 @@ from inputstreamhelper import Helper
 
 from client import client
 from objects import Home, Folders, Folder, _trending_styles_, _search_styles_
-from utils import parseQuery, getMoreItem, searchDialog, localizedString, log
+from utils import parseQuery, getMoreItem, searchDialog, localizedString
 
 
 def action(category=0):
