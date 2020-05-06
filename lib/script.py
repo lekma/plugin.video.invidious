@@ -19,9 +19,9 @@ _channel_action_ = "plugin://{}/?action=channel&authorId={{}}".format(getAddonId
 
 # goToChannel ------------------------------------------------------------------
 
-#def goToChannel(authorId):
-#    xbmc.executebuiltin(
-#        "Container.Update({})".format(_channel_action_.format(authorId)))
+def goToChannel(authorId):
+    xbmc.executebuiltin(
+        "Container.Update({})".format(_channel_action_.format(authorId)))
 
 
 # addChannelToFavourites -------------------------------------------------------
@@ -53,7 +53,7 @@ def addChannelToFavourites(authorId):
 # __main__ ---------------------------------------------------------------------
 
 _dispatch_ = {
-    #"goToChannel": goToChannel,
+    "goToChannel": goToChannel,
     "addChannelToFavourites": addChannelToFavourites
 }
 

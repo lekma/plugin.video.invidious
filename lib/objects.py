@@ -222,7 +222,6 @@ class BaseVideo(InvidiousItem):
     _plot_ = localizedString(30056)
     _menus_ = [
         (30031, "Container.Update(plugin://{addonId}/?action=channel&authorId={authorId})"),
-        #(30031, "RunScript({addonId},goToChannel,{authorId})"),
         (30032, "RunScript({addonId},addChannelToFavourites,{authorId})")
     ]
 
