@@ -46,41 +46,16 @@ class InvidiousSession(requests.Session):
 # Service
 # ------------------------------------------------------------------------------
 
-class Fields(dict):
-
-    def __init__(self, default=None, **kwargs):
-        if default:
-            self.update(default=default.fields())
-        self.update(((k, v.fields()) for k, v in kwargs.items()))
-
-    def __missing__(self, key):
-        if "default" in self:
-            return self["default"]
-        raise KeyError(key)
-
-
 class InvidiousService(Service):
 
     _headers_ = {}
 
-    # XXX: this is really clunky, needs a better approach
-    _requests_ = {
-        "top": ("top", Fields(objects.StdVideos)),
-        "popular": ("popular", Fields(objects.ShortVideos)),
-        "trending": ("trending", Fields(objects.Videos)),
-        "videos": ("channels/{}/videos", Fields(objects.Videos)),
-        "channel": ("channels/{}", Fields(objects.Channel)),
-        "video": ("videos/{}", Fields(objects.Video)),
-        "playlists": ("channels/{}/playlists", Fields(objects.ChannelPlaylists)),
-        "playlist": ("playlists/{}", Fields(objects.Playlist)),
-        "search": (
-            "search",
-            Fields(
-                video=objects.Videos,
-                channel=objects.Channels,
-                playlist=objects.Playlists
-            )
-        )
+    _urls_ = {
+        "videos": "channels/{}/videos",
+        "channel": "channels/{}",
+        "video": "videos/{}",
+        "playlists": "channels/{}/playlists",
+        "playlist": "playlists/{}"
     }
 
     def __init__(self, *args, **kwargs):
@@ -93,9 +68,7 @@ class InvidiousService(Service):
         self.netloc = getSetting("instance", unicode)
         path = "{}/".format(getSetting("path", unicode).strip("/"))
         self.url = urlunsplit((self.scheme, self.netloc, path, "", ""))
-        self.use_fields = getSetting("fields", bool)
         log("service.url: '{}'".format(self.url))
-        log("service.use_fields: {}".format(self.use_fields))
 
     def start(self):
         log("starting service...")
@@ -113,12 +86,7 @@ class InvidiousService(Service):
 
     @public
     def query(self, key, *args, **kwargs):
-        url, fields = self._requests_[key]
-        if self.use_fields:
-            fields = fields[kwargs.get("type", "default")]
-            if fields:
-                kwargs["fields"] = ",".join(fields)
-        return self.get(url.format(*args), **kwargs)
+        return self.get(self._urls_.get(key, key).format(*args), **kwargs)
 
     def _get_channel(self, authorId):
         channel = self.query("channel", authorId)

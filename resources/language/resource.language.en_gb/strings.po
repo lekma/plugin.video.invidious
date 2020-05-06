@@ -131,7 +131,3 @@ msgctxt "#30104"
 msgid "Use ssl"
 msgstr ""
 
-msgctxt "#30105"
-msgid "Use the 'fields' API"
-msgstr ""
-
