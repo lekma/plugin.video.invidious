@@ -102,7 +102,7 @@ msgid "{0.author}\nDescription: {0.description}"
 msgstr ""
 
 msgctxt "#30061"
-msgid "{0.title}\nVideos: {0.videoCount}"
+msgid "{0.title}\nAuthor: {0.author}\nVideos: {0.videoCount}"
 msgstr ""
 
 msgctxt "#30099"

@@ -105,8 +105,8 @@ msgid "{0.author}\nDescription: {0.description}"
 msgstr "{0.author}\nDescription: {0.description}"
 
 msgctxt "#30061"
-msgid "{0.title}\nVideos: {0.videoCount}"
-msgstr "{0.title}\nVidéos: {0.videoCount}"
+msgid "{0.title}\nAuthor: {0.author}\nVideos: {0.videoCount}"
+msgstr "{0.title}\nAuteur: {0.author}\nVidéos: {0.videoCount}"
 
 msgctxt "#30099"
 msgid "More..."
