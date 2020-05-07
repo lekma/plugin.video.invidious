@@ -9,7 +9,7 @@ import collections
 from six.moves.urllib.parse import urlunsplit, urlsplit
 
 import objects
-from iac import Client
+from iapc import Client
 
 
 # ------------------------------------------------------------------------------

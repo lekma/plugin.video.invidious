@@ -48,7 +48,7 @@
         <source>https://github.com/lekma/plugin.video.invidious</source>
         <assets>
             <icon>resources/media/icon.png</icon>
-	    <fanart>resources/media/fanart.jpg</fanart>
+            <fanart>resources/media/fanart.jpg</fanart>
         </assets>
     </extension>
 

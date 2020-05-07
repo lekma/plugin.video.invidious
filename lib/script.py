@@ -10,7 +10,7 @@ import json
 from kodi_six import xbmc
 
 from client import client
-from iac import JSONRPCError
+from iapc import JSONRPCError
 from utils import getAddonId
 
 

@@ -8,14 +8,20 @@ import uuid
 import json
 
 from six import raise_from
-from kodi_six import xbmc
-
-from utils import getAddonId, logError
+from kodi_six import xbmc, xbmcaddon
 
 
 def public(func):
     func.__public__ = True
     return func
+
+
+def getAddonId():
+    return xbmcaddon.Addon().getAddonInfo("id")
+
+
+def log(msg, sender=None, level=xbmc.LOGNOTICE):
+    xbmc.log("[{}] {}".format(sender or getAddonId(), msg), level=level)
 
 
 # ------------------------------------------------------------------------------
@@ -25,8 +31,8 @@ def public(func):
 class JSONRPCError(Exception):
 
     _error_msg_ = "[{code}] {message}"
-    _data_msg_ = "in {method}"
-    _stack_msg_ = "(stack: {message} ({name}))"
+    _data_msg_ = "in {method}."
+    _stack_msg_ = "{message} ({name})"
 
     def __init__(self, error):
         message = self._error_msg_.format(**error)
@@ -37,9 +43,15 @@ class JSONRPCError(Exception):
 
     def data(self, data):
         message = self._data_msg_.format(**data)
-        stack = data.get("stack")
-        if stack:
-            message = " ".join((message, self.stack(stack)))
+        try:
+            # unfortunately kodi doesn't respect its own specification :(
+            try:
+                _message_ = data["message"]
+            except KeyError:
+                _message_ = self.stack(data["stack"])
+            message = " ".join((_message_, message))
+        except KeyError:
+            pass
         return message
 
     def stack(self, stack):
@@ -79,6 +91,9 @@ class Service(Monitor):
         self.sender = sender or getAddonId()
         self._methods_ = {}
 
+    def log(self, msg, level=xbmc.LOGERROR):
+        log(msg, sender=self.sender, level=level)
+
     def serve(self):
         for name in dir(self):
             if not name.startswith("_"):
@@ -100,7 +115,7 @@ class Service(Monitor):
                 response = {"result": method(*args, **kwargs)}
         except Exception as error:
             message = self._error_msg_.format(error)
-            logError("service: error processing request {}".format(message))
+            self.log("service: error processing request {}".format(message))
             response = {"error": {"message": message}}
         finally:
             return response
