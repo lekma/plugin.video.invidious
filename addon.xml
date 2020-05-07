@@ -42,8 +42,8 @@
         <reuselanguageinvoker>true</reuselanguageinvoker>
         <summary lang="en_GB">Invidious Addon</summary>
         <description lang="en_GB">Invidious Addon</description>
-        <summary lang="fr_FR">Addon pour Invidious</summary>
-        <description lang="fr_FR">Addon pour Invidious</description>
+        <summary lang="fr_FR">Extension pour Invidious</summary>
+        <description lang="fr_FR">Extension pour Invidious</description>
         <license>GPL-3.0-only</license>
         <platform>all</platform>
         <source>https://github.com/lekma/plugin.video.invidious</source>
