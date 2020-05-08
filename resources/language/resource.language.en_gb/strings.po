@@ -76,7 +76,7 @@ msgid "Add channel to favourites"
 msgstr ""
 
 msgctxt "#30033"
-msgid "Settings updated"
+msgid "Play with YouTube"
 msgstr ""
 
 # items
