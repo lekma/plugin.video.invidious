@@ -50,11 +50,21 @@ def addChannelToFavourites(authorId):
     executeJSONRPC(dict(_request_, params=params))
 
 
+# playWithYouTube --------------------------------------------------------------
+
+_youtube_action_ = "plugin://plugin.video.youtube/play/?video_id={}&incognito=true"
+
+def playWithYouTube(videoId):
+    xbmc.executebuiltin(
+        "PlayMedia({})".format(_youtube_action_.format(videoId)))
+
+
 # __main__ ---------------------------------------------------------------------
 
 _dispatch_ = {
     "goToChannel": goToChannel,
-    "addChannelToFavourites": addChannelToFavourites
+    "addChannelToFavourites": addChannelToFavourites,
+    "playWithYouTube": playWithYouTube
 }
 
 def dispatch(name, *args):

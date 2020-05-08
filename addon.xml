@@ -34,6 +34,10 @@
                 <label>30032</label>
                 <visible>ListItem.Property(authorId)</visible>
             </item>
+            <item library="lib/script.py" args="playWithYouTube">
+                <label>30033</label>
+                <visible>ListItem.Property(videoId)</visible>
+            </item>
         </menu>
     </extension>
     -->

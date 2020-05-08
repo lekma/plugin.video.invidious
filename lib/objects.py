@@ -222,7 +222,8 @@ class BaseVideo(InvidiousItem):
     _plot_ = localizedString(30056)
     _menus_ = [
         (30031, "Container.Update(plugin://{addonId}/?action=channel&authorId={authorId})"),
-        (30032, "RunScript({addonId},addChannelToFavourites,{authorId})")
+        (30032, "RunScript({addonId},addChannelToFavourites,{authorId})"),
+        (30033, "PlayMedia(plugin://plugin.video.youtube/play/?video_id={videoId}&incognito=true)")
     ]
 
     @property
@@ -239,7 +240,7 @@ class BaseVideo(InvidiousItem):
             path,
             infos={"video": dict(self._infos, title=self.title, plot=self.plot())},
             streamInfos={"video": {"duration": self.lengthSeconds}},
-            contextMenus=self.menus(authorId=self.authorId),
+            contextMenus=self.menus(authorId=self.authorId, videoId=self.videoId),
             thumb=getattr(self.videoThumbnails, "sddefault", ""))
 
     def item(self, url, action):
