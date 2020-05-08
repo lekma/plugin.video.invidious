@@ -222,8 +222,10 @@ class BaseVideo(InvidiousItem):
     _plot_ = localizedString(30056)
     _menus_ = [
         (30031, "Container.Update(plugin://{addonId}/?action=channel&authorId={authorId})"),
+        #(30031, "RunScript({addonId},goToChannel,{authorId})"),
         (30032, "RunScript({addonId},addChannelToFavourites,{authorId})"),
-        (30033, "PlayMedia(plugin://plugin.video.youtube/play/?video_id={videoId}&incognito=true)")
+        (30033, "PlayMedia(plugin://plugin.video.youtube/play/?incognito=true&video_id={videoId})")
+        #(30033, "RunScript({addonId},playWithYouTube,{videoId})")
     ]
 
     @property

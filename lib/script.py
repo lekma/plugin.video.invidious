@@ -14,49 +14,72 @@ from iapc import JSONRPCError
 from utils import getAddonId
 
 
-_channel_action_ = "plugin://{}/?action=channel&authorId={{}}".format(getAddonId())
+# utils ------------------------------------------------------------------------
+
+# xbmc.executebuiltin
+def _executeBuiltin_(function, *args):
+    xbmc.executebuiltin("{}({})".format(function, ",".join(args)))
+
+
+# xbmc.executeJSONRPC
+_jsonrpc_request_ = {
+    "id": 1,
+    "jsonrpc": "2.0",
+}
+
+def _executeJSONRPC_(method, **kwargs):
+    request = dict(_jsonrpc_request_, method=method, params=kwargs)
+    error = json.loads(xbmc.executeJSONRPC(json.dumps(request))).get("error")
+    if error:
+        raise JSONRPCError(error)
+
+
+# _containerUpdate -------------------------------------------------------------
+
+def _containerUpdate(*args):
+    _executeBuiltin_("Container.Update", *args)
+
+
+# _addFavourite ----------------------------------------------------------------
+
+def _addFavourite(title, type, **kwargs):
+    _executeJSONRPC_("Favourites.AddFavourite", title=title, type=type, **kwargs)
+
+
+# _playMedia -------------------------------------------------------------------
+
+def _playMedia(*args):
+    _executeBuiltin_("PlayMedia", *args)
+
+
+# ------------------------------------------------------------------------------
+# actions
+# ------------------------------------------------------------------------------
+
+_channel_url_ = "plugin://{}/?action=channel&authorId={{}}".format(getAddonId())
 
 
 # goToChannel ------------------------------------------------------------------
 
 def goToChannel(authorId):
-    xbmc.executebuiltin(
-        "Container.Update({})".format(_channel_action_.format(authorId)))
+    _containerUpdate(_channel_url_.format(authorId))
 
 
 # addChannelToFavourites -------------------------------------------------------
 
-_request_ = {
-    "id": 1,
-    "jsonrpc": "2.0",
-    "method": "Favourites.AddFavourite"
-}
-
-_request_params_ = {
-    "type": "window",
-    "window": "videos"
-}
-
-def executeJSONRPC(request):
-    error = json.loads(xbmc.executeJSONRPC(json.dumps(request))).get("error")
-    if error:
-        raise JSONRPCError(error)
-
 def addChannelToFavourites(authorId):
     channel = client.channel_(authorId)
-    params = dict(_request_params_,
-                  title=channel.author, thumbnail=channel.thumbnail,
-                  windowparameter=_channel_action_.format(authorId))
-    executeJSONRPC(dict(_request_, params=params))
+    _addFavourite(channel.author, "window",
+                  window="videos", thumbnail=channel.thumbnail,
+                  windowparameter=_channel_url_.format(authorId))
 
 
 # playWithYouTube --------------------------------------------------------------
 
-_youtube_action_ = "plugin://plugin.video.youtube/play/?video_id={}&incognito=true"
+_youtube_url_ = "plugin://plugin.video.youtube/play/?incognito=true&video_id={}"
 
 def playWithYouTube(videoId):
-    xbmc.executebuiltin(
-        "PlayMedia({})".format(_youtube_action_.format(videoId)))
+    _playMedia(_youtube_url_.format(videoId))
 
 
 # __main__ ---------------------------------------------------------------------
