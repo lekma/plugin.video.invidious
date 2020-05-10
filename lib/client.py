@@ -44,6 +44,10 @@ class InvidiousClient(object):
         if data:
             return objects.Channel(data)
 
+    def instances_(self, **kwargs):
+        return [instance[0] for instance in self.client.instances(**kwargs)
+                if instance[1]["type"] in ("http", "https")]
+
     # --------------------------------------------------------------------------
 
     def video(self, **kwargs):

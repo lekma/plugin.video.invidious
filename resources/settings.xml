@@ -7,6 +7,9 @@
         <setting id="instance" label="30102" type="text"
                  default="invidio.us" />
 
+        <setting id="selectInstance" label="30105" type="action"
+                 action="RunScript(plugin.video.invidious,selectInstance)" />
+
         <setting id="path" label="30103" type="text"
                  default="api/v1" />
 

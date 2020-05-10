@@ -11,7 +11,7 @@ from kodi_six import xbmc
 
 from client import client
 from iapc import JSONRPCError
-from utils import getAddonId
+from utils import getAddonId, selectDialog, getSetting, setSetting
 
 
 # utils ------------------------------------------------------------------------
@@ -82,12 +82,25 @@ def playWithYouTube(videoId):
     _playMedia(_youtube_url_.format(videoId))
 
 
+# selectInstance ---------------------------------------------------------------
+
+def selectInstance():
+    instance = getSetting("instance", unicode)
+    instances = client.instances_(sort_by="health")
+    if instances:
+        preselect = instances.index(instance) if instance in instances else -1
+        index = selectDialog(instances, preselect=preselect)
+        if index >= 0:
+            setSetting("instance", instances[index], unicode)
+
+
 # __main__ ---------------------------------------------------------------------
 
 _dispatch_ = {
     "goToChannel": goToChannel,
     "addChannelToFavourites": addChannelToFavourites,
-    "playWithYouTube": playWithYouTube
+    "playWithYouTube": playWithYouTube,
+    "selectInstance": selectInstance
 }
 
 def dispatch(name, *args):

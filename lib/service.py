@@ -58,6 +58,8 @@ class InvidiousService(Service):
         "playlist": "playlists/{}"
     }
 
+    _instances_url_ = "https://instances.invidio.us/instances.json"
+
     def __init__(self, *args, **kwargs):
         super(InvidiousService, self).__init__(*args, **kwargs)
         self.session = InvidiousSession(headers=self._headers_)
@@ -108,6 +110,10 @@ class InvidiousService(Service):
     @public
     def netloc(self):
         return self._netloc
+
+    @public
+    def instances(self, **kwargs):
+        return self.session.get(self._instances_url_, params=kwargs)
 
 
 # __main__ ---------------------------------------------------------------------

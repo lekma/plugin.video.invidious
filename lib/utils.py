@@ -120,10 +120,10 @@ def notify(message, heading=_addon_name_, icon=_addon_icon_, time=5000):
 
 # select -----------------------------------------------------------------------
 
-def selectDialog(_list, heading=_addon_name_):
+def selectDialog(_list, heading=_addon_name_, **kwargs):
     if isinstance(heading, int):
         heading = localizedString(heading)
-    return _dialog_.select(heading, _list)
+    return _dialog_.select(heading, _list, **kwargs)
 
 
 # input -----------------------------------------------------------------------
