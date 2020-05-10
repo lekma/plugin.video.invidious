@@ -89,7 +89,7 @@ def selectInstance():
     instances = client.instances_(sort_by="health")
     if instances:
         preselect = instances.index(instance) if instance in instances else -1
-        index = selectDialog(instances, preselect=preselect)
+        index = selectDialog(instances, heading=30105, preselect=preselect)
         if index >= 0:
             setSetting("instance", instances[index], unicode)
 
