@@ -4,14 +4,14 @@
     <!-- General -->
     <category label="30101">
 
-        <setting id="instance" label="30102"
-                 type="text" default="invidio.us" />
+        <setting id="instance" label="30102" type="text"
+                 default="invidio.us" />
 
-        <setting id="path" label="30103"
-                 type="text" default="api/v1" />
+        <setting id="path" label="30103" type="text"
+                 default="api/v1" />
 
-        <setting id="ssl" label="30104"
-                 type="bool" default="true" />
+        <setting id="ssl" label="30104" type="bool"
+                 default="true" />
 
     </category>
 

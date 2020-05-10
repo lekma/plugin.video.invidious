@@ -13,6 +13,7 @@ from kodi_six import xbmc, xbmcaddon, xbmcgui
 
 _addon_ = xbmcaddon.Addon()
 _addon_id_ = _addon_.getAddonInfo("id")
+_addon_name_ = _addon_.getAddonInfo("name")
 _addon_path_ = xbmc.translatePath(_addon_.getAddonInfo("path"))
 _addon_icon_ = xbmc.translatePath(_addon_.getAddonInfo("icon"))
 
@@ -24,6 +25,9 @@ def getWindowId():
 
 def getAddonId():
     return _addon_id_
+
+def getAddonName():
+    return _addon_name_
 
 def getAddonPath():
     return _addon_path_
@@ -87,26 +91,55 @@ def getSetting(id, _type=None):
     return _addon_.getSetting(id)
 
 
+_set_settings_ = {
+    bool: _addon_.setSettingBool,
+    int: _addon_.setSettingInt,
+    float: _addon_.setSettingNumber,
+    unicode: _addon_.setSettingString
+}
+
+def setSetting(id, value, _type=None):
+    if _type is not None:
+        return _set_settings_.get(_type, _addon_.setSetting)(id, _type(value))
+    return _addon_.setSetting(id, value)
+
+
 # notify -----------------------------------------------------------------------
 
 iconInfo = xbmcgui.NOTIFICATION_INFO
 iconWarning = xbmcgui.NOTIFICATION_WARNING
 iconError = xbmcgui.NOTIFICATION_ERROR
 
-_addon_heading_ = localizedString(30000)
-
-def notify(message, heading=_addon_heading_, icon=_addon_icon_, time=2000):
+def notify(message, heading=_addon_name_, icon=_addon_icon_, time=5000):
     if isinstance(message, int):
         message = localizedString(message)
+    if isinstance(heading, int):
+        heading = localizedString(heading)
     _dialog_.notification(heading, message, icon, time)
+
+
+# select -----------------------------------------------------------------------
+
+def selectDialog(_list, heading=_addon_name_):
+    if isinstance(heading, int):
+        heading = localizedString(heading)
+    return _dialog_.select(heading, _list)
+
+
+# input -----------------------------------------------------------------------
+
+def inputDialog(heading=_addon_name_, **kwargs):
+    if isinstance(heading, int):
+        heading = localizedString(heading)
+    return _dialog_.input(heading, **kwargs)
 
 
 # search -----------------------------------------------------------------------
 
-_search_label_ = localizedString(30002)
+_search_heading_ = localizedString(30002)
 
 def searchDialog():
-    return _dialog_.input(_search_label_)
+    return inputDialog(_search_heading_)
 
 
 # listitem ---------------------------------------------------------------------

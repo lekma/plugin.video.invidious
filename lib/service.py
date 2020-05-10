@@ -36,7 +36,7 @@ class InvidiousSession(requests.Session):
                 msg = None
             if msg:
                 logError("session: error processing request [{}]".format(msg))
-                return notify(msg, icon=iconError, time=5000)
+                return notify(msg, icon=iconError)
             raise err
         else:
             return response.json()
@@ -64,11 +64,11 @@ class InvidiousService(Service):
         self.channels = {}
 
     def setup(self):
-        self.scheme = "https" if getSetting("ssl", bool) else "http"
-        self.netloc = getSetting("instance", unicode)
-        path = "{}/".format(getSetting("path", unicode).strip("/"))
-        self.url = urlunsplit((self.scheme, self.netloc, path, "", ""))
-        log("service.url: '{}'".format(self.url))
+        self._scheme = "https" if getSetting("ssl", bool) else "http"
+        self._netloc = getSetting("instance", unicode)
+        _path = "{}/".format(getSetting("path", unicode).strip("/"))
+        self._url = urlunsplit((self._scheme, self._netloc, _path, "", ""))
+        log("service.url: '{}'".format(self._url))
 
     def start(self):
         log("starting service...")
@@ -80,7 +80,7 @@ class InvidiousService(Service):
         self.setup()
 
     def get(self, url, **kwargs):
-        return self.session.get(urljoin(self.url, url), params=kwargs)
+        return self.session.get(urljoin(self._url, url), params=kwargs)
 
     # public api ---------------------------------------------------------------
 
@@ -95,19 +95,19 @@ class InvidiousService(Service):
             return channel
 
     @public
-    def channel_(self, authorId):
+    def channel(self, authorId):
         try:
             return self.channels[authorId]
         except KeyError:
             return self._get_channel(authorId)
 
     @public
-    def scheme_(self):
-        return self.scheme
+    def scheme(self):
+        return self._scheme
 
     @public
-    def netloc_(self):
-        return self.netloc
+    def netloc(self):
+        return self._netloc
 
 
 # __main__ ---------------------------------------------------------------------

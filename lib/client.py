@@ -34,45 +34,47 @@ class InvidiousClient(object):
         self.client = Client()
         self.queries = collections.deque()
 
-    def query(self, key, *args, **kwargs):
+    # --------------------------------------------------------------------------
+
+    def query_(self, key, *args, **kwargs):
         return self.client.query(key, *args, **kwargs) or self._defaults_.get(key, [])
 
     def channel_(self, authorId):
-        data = self.client.channel_(authorId)
+        data = self.client.channel(authorId)
         if data:
             return objects.Channel(data)
 
     # --------------------------------------------------------------------------
 
     def video(self, **kwargs):
-        video = self.query("video", kwargs.pop("videoId"), **kwargs)
+        video = self.query_("video", kwargs.pop("videoId"), **kwargs)
         if video:
             video = objects.Video(video)
             url, manifest, mime = (video.dashUrl, "mpd", "application/dash+xml")
             if video.liveNow:
                 url, manifest, mime = (video.hlsUrl, "hls", None)
             split = urlsplit(url)
-            url = urlunsplit((split.scheme or self.client.scheme_(),
-                              split.netloc or self.client.netloc_(),
+            url = urlunsplit((split.scheme or self.client.scheme(),
+                              split.netloc or self.client.netloc(),
                               split.path, split.query, split.fragment))
             return (video._item(url), manifest, mime)
 
     # --------------------------------------------------------------------------
 
     def top(self, **kwargs):
-        return objects.StdVideos(self.query("top", **kwargs))
+        return objects.StdVideos(self.query_("top", **kwargs))
 
     def popular(self, **kwargs):
-        return objects.ShortVideos(self.query("popular", **kwargs))
+        return objects.ShortVideos(self.query_("popular", **kwargs))
 
     def trending(self, **kwargs):
         return objects.Videos(
-            self.query("trending", **kwargs), category=kwargs.get("type"))
+            self.query_("trending", **kwargs), category=kwargs.get("type"))
 
     def playlists(self, **kwargs):
         category = None
         authorId = kwargs.pop("authorId")
-        data = self.query("playlists", authorId, **kwargs)
+        data = self.query_("playlists", authorId, **kwargs)
         channel = self.channel_(authorId)
         if channel:
             category = channel.author
@@ -85,7 +87,7 @@ class InvidiousClient(object):
     def channel(self, page=1, limit=60, **kwargs):
         category = None
         authorId = kwargs.pop("authorId")
-        data = self.query("videos", authorId, page=page, **kwargs)
+        data = self.query_("videos", authorId, page=page, **kwargs)
         channel = self.channel_(authorId)
         if channel:
             category = channel.author
@@ -94,7 +96,7 @@ class InvidiousClient(object):
         return objects.Videos(data, limit=limit, page=page, category=category)
 
     def playlist(self, page=1, limit=100, **kwargs):
-        data = self.query(
+        data = self.query_(
             "playlist", kwargs.pop("playlistId"), page=page, **kwargs)
         authorId = data["authorId"]
         if authorId:
@@ -106,7 +108,7 @@ class InvidiousClient(object):
 
     def search(self, q, page=1, limit=20, **kwargs):
         return self._search_[kwargs["type"]](
-            self.query("search", q=q, page=page, **kwargs),
+            self.query_("search", q=q, page=page, **kwargs),
             limit=limit, page=page)
 
 
