@@ -114,6 +114,8 @@ class Dispatcher(object):
     def playlist(self, **kwargs):
         return self.addItems(client.playlist(**kwargs), "video", **kwargs)
 
+    # --------------------------------------------------------------------------
+
     @action()
     def home(self, **kwargs):
         return self.addItems(Home())

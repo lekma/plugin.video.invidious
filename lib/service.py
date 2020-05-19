@@ -8,7 +8,6 @@ import requests
 
 from six.moves.urllib.parse import urljoin, urlunsplit
 
-import objects
 from iapc import Service, public
 from utils import getSetting, notify, log, logError, iconError
 
