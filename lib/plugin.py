@@ -153,9 +153,8 @@ class Dispatcher(object):
                 q, kwargs = client.queries.pop()
             except IndexError:
                 q = searchDialog()
-                if q:
-                    client.queries.append((q, kwargs))
         if q:
+            client.queries.append((q, kwargs))
             return self.addItems(
                 client.search(q, **kwargs), kwargs["type"], q=q, **kwargs)
         return False
