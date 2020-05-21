@@ -136,6 +136,27 @@ _folders_schema_ = {
             "id": 30013,
             "kwargs": {"type": "Movies"}
         }
+    },
+    "music": {
+        "": {
+            "id": 30010,
+            "action": "playlists",
+            "kwargs": {"authorId": "UC-9-kyTW8ZkZNDHQJ6FgpwQ"}
+        }
+    },
+    "gaming": {
+        "": {
+            "id": 30011,
+            "action": "playlists",
+            "kwargs": {"authorId": "UCOpNcN46UbXVtpKMrmU4Abg"}
+        }
+    },
+    "news": {
+        "": {
+            "id": 30012,
+            "action": "playlists",
+            "kwargs": {"authorId": "UCYfdidRxbB8Qhf0Nx7ioOYw"}
+        }
     }
 }
 
@@ -144,6 +165,9 @@ _home_folders_ = (
     {"type": "top"},
     {"type": "popular"},
     {"type": "trending"},
+    {"type": "music"},
+    {"type": "gaming"},
+    {"type": "news"},
     {"type": "live"},
     {"type": "search"}
 )
@@ -209,7 +233,11 @@ class Thumbnails(object):
 class VideoThumbnails(Thumbnails):
 
     def __init__(self, thumbnails):
+        if isinstance(thumbnails[0], list):
+            thumbnails = thumbnails[0]
         for thumbnail in thumbnails:
+            if isinstance(thumbnail, list):
+                thumbnail = thumbnail[0]
             setattr(self, thumbnail["quality"], thumbnail["url"])
 
 
