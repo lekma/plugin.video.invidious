@@ -16,6 +16,7 @@ _addon_id_ = _addon_.getAddonInfo("id")
 _addon_name_ = _addon_.getAddonInfo("name")
 _addon_path_ = xbmc.translatePath(_addon_.getAddonInfo("path"))
 _addon_icon_ = xbmc.translatePath(_addon_.getAddonInfo("icon"))
+_addon_profile_ = xbmc.translatePath(_addon_.getAddonInfo("profile"))
 
 _dialog_ = xbmcgui.Dialog()
 
@@ -34,6 +35,9 @@ def getAddonPath():
 
 def getAddonIcon():
     return _addon_icon_
+
+def getAddonProfile():
+    return _addon_profile_
 
 
 def parseQuery(query):
@@ -120,9 +124,11 @@ def notify(message, heading=_addon_name_, icon=_addon_icon_, time=5000):
 
 # select -----------------------------------------------------------------------
 
-def selectDialog(_list, heading=_addon_name_, **kwargs):
+def selectDialog(_list, heading=_addon_name_, multi=False, **kwargs):
     if isinstance(heading, int):
         heading = localizedString(heading)
+    if multi:
+        return _dialog_.multiselect(heading, _list, **kwargs)
     return _dialog_.select(heading, _list, **kwargs)
 
 

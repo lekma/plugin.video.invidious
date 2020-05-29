@@ -11,6 +11,7 @@ from kodi_six import xbmc
 
 from client import client
 from iapc import JSONRPCError
+from feed import addChannelToFeed, removeChannelsFromFeed
 from utils import getAddonId, selectDialog, getSetting, setSetting
 
 
@@ -100,7 +101,9 @@ _dispatch_ = {
     "goToChannel": goToChannel,
     "addChannelToFavourites": addChannelToFavourites,
     "playWithYouTube": playWithYouTube,
-    "selectInstance": selectInstance
+    "selectInstance": selectInstance,
+    "addChannelToFeed": addChannelToFeed,
+    "removeChannelsFromFeed": removeChannelsFromFeed
 }
 
 def dispatch(name, *args):

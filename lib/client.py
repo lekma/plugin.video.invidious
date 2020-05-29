@@ -65,6 +65,9 @@ class InvidiousClient(object):
 
     # --------------------------------------------------------------------------
 
+    def feed(self, ids, **kwargs):
+        return objects.Videos(self.client.feed(ids, **kwargs))
+
     def top(self, **kwargs):
         return objects.StdVideos(self.query_("top", **kwargs))
 

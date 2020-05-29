@@ -6,13 +6,17 @@ from __future__ import absolute_import, division, unicode_literals
 
 import sys
 
-from six import wraps
+from six import wraps, raise_from
 from kodi_six import xbmcplugin
 from inputstreamhelper import Helper
 
 from client import client
 from objects import Home, Folders, Folder, _trending_styles_, _search_styles_
+from feed import getFeed
 from utils import parseQuery, getMoreItem, searchDialog, localizedString
+
+
+_invalid_action_ = "Invalid action '{}'"
 
 
 def action(category=0):
@@ -139,6 +143,10 @@ class Dispatcher(object):
                 Folders(self.getSubfolders("trending", _trending_styles_)))
         return self.addItems(client.trending(**kwargs), "video")
 
+    @action(30014)
+    def feed(self, **kwargs):
+        return self.addItems(client.feed(getFeed(), **kwargs), "video")
+
     # search -------------------------------------------------------------------
 
     @action(30002)
@@ -162,9 +170,13 @@ class Dispatcher(object):
     # dispatch -----------------------------------------------------------------
 
     def dispatch(self, **kwargs):
-        action = getattr(self, kwargs.pop("action", "home"))
+        name = kwargs.pop("action", "home")
+        try:
+            action = getattr(self, name)
+        except AttributeError:
+            raise_from(AttributeError(_invalid_action_.format(name)), None)
         if not callable(action) or not getattr(action, "__action__", False):
-            raise Exception("Invalid action '{}'".format(action.__name__))
+            raise TypeError(_invalid_action_.format(name))
         return action(**kwargs)
 
 

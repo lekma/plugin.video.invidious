@@ -67,6 +67,10 @@ msgctxt "#30013"
 msgid "Movies"
 msgstr ""
 
+msgctxt "#30014"
+msgid "Feed"
+msgstr ""
+
 msgctxt "#30031"
 msgid "Go to channel"
 msgstr ""
@@ -77,6 +81,10 @@ msgstr ""
 
 msgctxt "#30033"
 msgid "Play with YouTube"
+msgstr ""
+
+msgctxt "#30034"
+msgid "Add channel to feed"
 msgstr ""
 
 # items
@@ -133,5 +141,17 @@ msgstr ""
 
 msgctxt "#30105"
 msgid "Publicly available instances"
+msgstr ""
+
+msgctxt "#30111"
+msgid "Feed management"
+msgstr ""
+
+msgctxt "#30112"
+msgid "Videos per channel"
+msgstr ""
+
+msgctxt "#30113"
+msgid "Remove channels from feed"
 msgstr ""
 

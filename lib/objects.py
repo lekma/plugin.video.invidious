@@ -157,11 +157,17 @@ _folders_schema_ = {
             "action": "playlists",
             "kwargs": {"authorId": "UCYfdidRxbB8Qhf0Nx7ioOYw"}
         }
+    },
+    "feed": {
+        "": {
+            "id": 30014
+        }
     }
 }
 
 
 _home_folders_ = (
+    {"type": "feed"},
     {"type": "top"},
     {"type": "popular"},
     {"type": "trending"},
@@ -249,11 +255,10 @@ class BaseVideo(InvidiousItem):
     _infos_ = {"mediatype": "video"}
     _plot_ = localizedString(30056)
     _menus_ = [
-        (30031, "Container.Update(plugin://{addonId}/?action=channel&authorId={authorId})"),
-        #(30031, "RunScript({addonId},goToChannel,{authorId})"),
+        (30033, "RunScript({addonId},playWithYouTube,{videoId})"),
+        (30031, "RunScript({addonId},goToChannel,{authorId})"),
         (30032, "RunScript({addonId},addChannelToFavourites,{authorId})"),
-        (30033, "PlayMedia(plugin://plugin.video.youtube/play/?incognito=true&video_id={videoId})")
-        #(30033, "RunScript({addonId},playWithYouTube,{videoId})")
+        (30034, "RunScript({addonId},addChannelToFeed,{authorId},{author})")
     ]
 
     @property
@@ -270,7 +275,8 @@ class BaseVideo(InvidiousItem):
             path,
             infos={"video": dict(self._infos, title=self.title, plot=self.plot())},
             streamInfos={"video": {"duration": self.lengthSeconds}},
-            contextMenus=self.menus(authorId=self.authorId, videoId=self.videoId),
+            contextMenus=self.menus(authorId=self.authorId, author=self.author,
+                                    videoId=self.videoId),
             thumb=getattr(self.videoThumbnails, "sddefault", ""))
 
     def item(self, url, action):
@@ -322,6 +328,9 @@ class Channel(InvidiousItem):
     __json__ = {"authorThumbnails": AuthorThumbnails}
     _repr_ = "Channel({0.author})"
     _plot_ = localizedString(30060)
+    _menus_ = [
+        (30034, "RunScript({addonId},addChannelToFeed,{authorId},{author})")
+    ]
 
     @property
     def thumbnail(self):
@@ -333,6 +342,7 @@ class Channel(InvidiousItem):
             buildUrl(url, action=action, authorId=self.authorId),
             isFolder=True,
             infos={"video": {"plot": self.plot()}},
+            contextMenus=self.menus(authorId=self.authorId, author=self.author),
             poster=self.thumbnail)
 
 

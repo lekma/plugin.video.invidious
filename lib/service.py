@@ -54,7 +54,8 @@ class InvidiousService(Service):
         "channel": "channels/{}",
         "video": "videos/{}",
         "playlists": "channels/{}/playlists",
-        "playlist": "playlists/{}"
+        "playlist": "playlists/{}",
+        "latest": "channels/{}/latest"
     }
 
     _instances_url_ = "https://instances.invidio.us/instances.json"
@@ -70,6 +71,7 @@ class InvidiousService(Service):
         _path = "{}/".format(getSetting("path", unicode).strip("/"))
         self._url = urlunsplit((self._scheme, self._netloc, _path, "", ""))
         log("service.url: '{}'".format(self._url))
+        self._feed_len = getSetting("feed_len", int)
 
     def start(self):
         log("starting service...")
@@ -113,6 +115,18 @@ class InvidiousService(Service):
     @public
     def instances(self, **kwargs):
         return self.session.get(self._instances_url_, params=kwargs)
+
+    @public
+    def feed(self, ids, **kwargs):
+        feed = []
+        for authorId in ids:
+            try:
+                latest = self.query("latest", authorId, **kwargs)
+            except Exception:
+                latest = []
+            feed.extend(latest[:self._feed_len])
+        feed.sort(key=lambda v: v["published"], reverse=True)
+        return feed
 
 
 # __main__ ---------------------------------------------------------------------

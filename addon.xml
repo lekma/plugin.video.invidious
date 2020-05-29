@@ -24,25 +24,6 @@
 		<provides>executable</provides>
 	</extension>
 
-    <!-- kodi 19
-    <extension point="kodi.context.item">
-        <menu id="kodi.core.main">
-            <item library="lib/script.py" args="goToChannel">
-                <label>30031</label>
-                <visible>ListItem.Property(authorId)</visible>
-            </item>
-            <item library="lib/script.py" args="addChannelToFavourites">
-                <label>30032</label>
-                <visible>ListItem.Property(authorId)</visible>
-            </item>
-            <item library="lib/script.py" args="playWithYouTube">
-                <label>30033</label>
-                <visible>ListItem.Property(videoId)</visible>
-            </item>
-        </menu>
-    </extension>
-    -->
-
     <extension point="xbmc.addon.metadata">
         <reuselanguageinvoker>true</reuselanguageinvoker>
         <license>GPL-3.0-only</license>
