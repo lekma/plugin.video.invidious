@@ -70,6 +70,10 @@ msgctxt "#30013"
 msgid "Movies"
 msgstr "Films"
 
+msgctxt "#30014"
+msgid "Feed"
+msgstr "Feed"
+
 msgctxt "#30031"
 msgid "Go to channel"
 msgstr "Aller à la chaîne"
@@ -81,6 +85,10 @@ msgstr "Ajouter la chaîne aux favoris"
 msgctxt "#30033"
 msgid "Play with YouTube"
 msgstr "Lire avec l'extension YouTube"
+
+msgctxt "#30034"
+msgid "Ajouter la chaîne au feed"
+msgstr ""
 
 # items
 
@@ -137,4 +145,13 @@ msgstr "Utiliser SSL"
 msgctxt "#30105"
 msgid "Publicly available instances"
 msgstr "Instances publiques"
+
+msgctxt "#30111"
+msgid "Gérer le feed"
+msgstr ""
+
+msgctxt "#30112"
+msgid "Supprimer des chaînes du feed"
+msgstr ""
+
 
