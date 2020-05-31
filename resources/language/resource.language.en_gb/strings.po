@@ -148,10 +148,6 @@ msgid "Feed management"
 msgstr ""
 
 msgctxt "#30112"
-msgid "Videos per channel"
-msgstr ""
-
-msgctxt "#30113"
 msgid "Remove channels from feed"
 msgstr ""
 

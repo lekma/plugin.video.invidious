@@ -145,7 +145,7 @@ class Dispatcher(object):
 
     @action(30014)
     def feed(self, **kwargs):
-        return self.addItems(client.feed(getFeed(), **kwargs), "video")
+        return self.addItems(client.feed(getFeed(), **kwargs), "video", **kwargs)
 
     # search -------------------------------------------------------------------
 

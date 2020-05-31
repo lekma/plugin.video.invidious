@@ -372,7 +372,7 @@ class InvidiousItems(list):
     _content_ = "videos"
     _category_ = None
 
-    def __init__(self, items, limit=0, page=0, content=None, category=None):
+    def __init__(self, items, limit=0, content=None, category=None):
         super(InvidiousItems, self).__init__((self._ctor_(item) for item in items))
         self.more = (len(self) >= limit) if limit else False
         self.content = content or self._content_

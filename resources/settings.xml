@@ -21,10 +21,7 @@
     <!-- Feed management -->
     <category label="30111">
 
-        <setting id="feed_len" label="30112" type="slider"
-                 range="1,1,30" option="int" default="5" />
-
-        <setting id="removeChannelsFromFeed" label="30113" type="action"
+        <setting id="removeChannelsFromFeed" label="30112" type="action"
                  action="RunScript(plugin.video.invidious,removeChannelsFromFeed)" />
 
     </category>
