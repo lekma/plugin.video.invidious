@@ -67,6 +67,12 @@ msgctxt "#30013"
 msgid "Movies"
 msgstr "Películas"
 
+msgctxt "#30014"
+msgid "Feed"
+msgstr "Feed"
+
+# context menus
+
 msgctxt "#30031"
 msgid "Go to channel"
 msgstr "Ir a un canal"
@@ -78,6 +84,18 @@ msgstr "Añadir canal a favoritos"
 msgctxt "#30033"
 msgid "Play with YouTube"
 msgstr "Reproducir con el plugin de YouTube"
+
+msgctxt "#30034"
+msgid "Add channel to feed"
+msgstr "Añadir canal al feed"
+
+msgctxt "#30035"
+msgid "Remove"
+msgstr "Eliminar"
+
+msgctxt "#30036"
+msgid "Clear search history"
+msgstr "Borrar historial de búsqueda"
 
 # items
 
@@ -104,6 +122,10 @@ msgstr "{0.author}\nDescripción: {0.description}"
 msgctxt "#30061"
 msgid "{0.title}\nAuthor: {0.author}\nVideos: {0.videoCount}"
 msgstr "{0.title}\nAutor: {0.author}\nVídeos: {0.videoCount}"
+
+msgctxt "#30062"
+msgid "New search"
+msgstr "Nueva búsqueda"
 
 msgctxt "#30099"
 msgid "More..."
@@ -134,4 +156,20 @@ msgstr "Usar SSL"
 msgctxt "#30105"
 msgid "Publicly available instances"
 msgstr "Instancias públicas"
+
+msgctxt "#30111"
+msgid "Persistent data"
+msgstr "Datos persistentes"
+
+msgctxt "#30112"
+msgid "Remove channels from feed"
+msgstr "Eliminar canales del feed"
+
+msgctxt "#30113"
+msgid "Clear all search history"
+msgstr "Borrar todo el historial de búsqueda"
+
+msgctxt "#30114"
+msgid "Search history cleared"
+msgstr "Historial de búsqueda borrado"
 
