@@ -12,7 +12,7 @@ from inputstreamhelper import Helper
 
 from client import client
 from objects import Home, Folders, Folder, _trending_styles_, _search_styles_
-from feed import getFeed
+from persistence import getFeed
 from utils import parseQuery, getMoreItem, searchDialog, localizedString
 
 

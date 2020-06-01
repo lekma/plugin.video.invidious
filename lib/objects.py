@@ -7,6 +7,7 @@ from __future__ import absolute_import, division, unicode_literals
 from datetime import datetime
 
 from six import string_types, iteritems, with_metaclass, raise_from
+from six.moves.urllib.parse import quote_plus
 
 from utils import ListItem, buildUrl, localizedString, getAddonId
 
@@ -220,10 +221,11 @@ class InvidiousItem(InvidiousObject):
     def plot(self):
         return self._plot_.format(self)
 
-    def menus(self, **kwargs):
-        return [(localizedString(label),
+    @classmethod
+    def menus(cls, **kwargs):
+        return [(localizedString(label).format(**kwargs),
                  action.format(addonId=getAddonId(), **kwargs))
-                for label, action in self._menus_]
+                for label, action in cls._menus_]
 
 
 class Thumbnails(object):
@@ -275,7 +277,8 @@ class BaseVideo(InvidiousItem):
             path,
             infos={"video": dict(self._infos, title=self.title, plot=self.plot())},
             streamInfos={"video": {"duration": self.lengthSeconds}},
-            contextMenus=self.menus(authorId=self.authorId, author=self.author,
+            contextMenus=self.menus(authorId=self.authorId,
+                                    author=quote_plus(self.author.encode("utf-8")),
                                     videoId=self.videoId),
             thumb=getattr(self.videoThumbnails, "sddefault", ""))
 
@@ -342,7 +345,8 @@ class Channel(InvidiousItem):
             buildUrl(url, action=action, authorId=self.authorId),
             isFolder=True,
             infos={"video": {"plot": self.plot()}},
-            contextMenus=self.menus(authorId=self.authorId, author=self.author),
+            contextMenus=self.menus(authorId=self.authorId,
+                                    author=quote_plus(self.author.encode("utf-8"))),
             poster=self.thumbnail)
 
 

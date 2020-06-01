@@ -11,7 +11,7 @@ from kodi_six import xbmc
 
 from client import client
 from iapc import JSONRPCError
-from feed import addChannelToFeed, removeChannelsFromFeed
+from persistence import addChannelToFeed, removeChannelsFromFeed
 from utils import getAddonId, selectDialog, getSetting, setSetting
 
 
