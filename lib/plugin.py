@@ -12,14 +12,14 @@ from inputstreamhelper import Helper
 
 from client import client
 from objects import Home, Folders, Folder, _trending_styles_, _search_styles_
-from persistence import getFeed
+from persistence import getFeed, newSearch, searchHistory
 from utils import parseQuery, getMoreItem, searchDialog, localizedString
 
 
 _invalid_action_ = "Invalid action '{}'"
 
 
-def action(category=0):
+def action(category=0, action=None):
     def decorator(func):
         func.__action__ = True
         @wraps(func)
@@ -27,7 +27,7 @@ def action(category=0):
             success = False
             try:
                 self.category = category
-                self.action = func.__name__
+                self.action = action or func.__name__
                 success = func(self, **kwargs)
             except Exception:
                 success = False
@@ -50,6 +50,12 @@ class Dispatcher(object):
         self.handle = handle
 
     # utils --------------------------------------------------------------------
+
+    def _addItems(self, items):
+        if not xbmcplugin.addDirectoryItems(
+            self.handle, [item.item(self.url).asItem() for item in items]):
+            raise
+        return True
 
     def addItem(self, item):
         if item and not xbmcplugin.addDirectoryItem(self.handle, *item.asItem()):
@@ -149,23 +155,33 @@ class Dispatcher(object):
 
     # search -------------------------------------------------------------------
 
+    def _search(self, q, **kwargs):
+        client.queries.append((q, kwargs))
+        return self.addItems(
+            client.search(q, **kwargs), kwargs["type"], q=q, **kwargs)
+
+    @action(30002, action="search")
+    def new_search(self, **kwargs):
+        try:
+            q, kwargs = client.queries.pop()
+        except IndexError:
+            q = newSearch(kwargs["type"])
+        if q:
+            return self._search(q, **kwargs)
+        return False
+
     @action(30002)
     def search(self, **kwargs):
         if not "type" in kwargs:
-            client.queries.clear()
             return self.addItems(
                 Folders(self.getSubfolders("search", _search_styles_)))
         q = kwargs.pop("q", "")
         if not q:
-            try:
-                q, kwargs = client.queries.pop()
-            except IndexError:
-                q = searchDialog()
-        if q:
-            client.queries.append((q, kwargs))
-            return self.addItems(
-                client.search(q, **kwargs), kwargs["type"], q=q, **kwargs)
-        return False
+            client.queries.clear()
+            self.addItem(
+                Folder({"type": "search", "style": "new"}).item(self.url, **kwargs))
+            return self._addItems(searchHistory(kwargs["type"]))
+        return self._search(q, **kwargs)
 
     # dispatch -----------------------------------------------------------------
 

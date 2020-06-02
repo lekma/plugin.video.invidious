@@ -93,6 +93,10 @@ _folders_schema_ = {
         "playlists": {
             "id": 30005,
             "kwargs": {"type": "playlist"}
+        },
+        "new": {
+            "id": 30062,
+            "action": "new_search"
         }
     },
     "playlists": {

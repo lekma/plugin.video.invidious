@@ -71,6 +71,8 @@ msgctxt "#30014"
 msgid "Feed"
 msgstr ""
 
+# context menus
+
 msgctxt "#30031"
 msgid "Go to channel"
 msgstr ""
@@ -85,6 +87,14 @@ msgstr ""
 
 msgctxt "#30034"
 msgid "Add channel to feed"
+msgstr ""
+
+msgctxt "#30035"
+msgid "Remove"
+msgstr ""
+
+msgctxt "#30036"
+msgid "Clear search history"
 msgstr ""
 
 # items
@@ -111,6 +121,10 @@ msgstr ""
 
 msgctxt "#30061"
 msgid "{0.title}\nAuthor: {0.author}\nVideos: {0.videoCount}"
+msgstr ""
+
+msgctxt "#30062"
+msgid "New search"
 msgstr ""
 
 msgctxt "#30099"
@@ -144,10 +158,18 @@ msgid "Publicly available instances"
 msgstr ""
 
 msgctxt "#30111"
-msgid "Feed management"
+msgid "Persistent data"
 msgstr ""
 
 msgctxt "#30112"
 msgid "Remove channels from feed"
+msgstr ""
+
+msgctxt "#30113"
+msgid "Clear all search history"
+msgstr ""
+
+msgctxt "#30114"
+msgid "Search history cleared"
 msgstr ""
 
