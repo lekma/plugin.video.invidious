@@ -10,7 +10,7 @@ import time
 from six.moves.urllib.parse import urljoin, urlunsplit
 
 from iapc import Service, public
-from utils import getSetting, notify, log, logError, iconError
+from utils import getSetting, notify, log, logError, iconError, makeDataDir
 
 
 # ------------------------------------------------------------------------------
@@ -97,6 +97,7 @@ class InvidiousService(Service):
         self._session_ = InvidiousSession(headers=self._headers_)
         self._channels_ = {}
         self._feed_ = Feed()
+        makeDataDir()
 
     def setup(self):
         self._scheme = "https" if getSetting("ssl", bool) else "http"

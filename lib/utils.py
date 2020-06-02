@@ -8,7 +8,7 @@ from os.path import join
 
 from six import text_type, iteritems
 from six.moves.urllib.parse import parse_qsl, urlencode
-from kodi_six import xbmc, xbmcaddon, xbmcgui
+from kodi_six import xbmc, xbmcaddon, xbmcgui, xbmcvfs
 
 
 _addon_ = xbmcaddon.Addon()
@@ -63,6 +63,10 @@ def getMediaPath(*args):
 
 def getIcon(name):
     return getMediaPath("{}.png".format(name))
+
+def makeDataDir():
+    if not xbmcvfs.exists(_addon_profile_):
+        xbmcvfs.mkdirs(_addon_profile_)
 
 
 # logging ----------------------------------------------------------------------
