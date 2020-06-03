@@ -55,7 +55,7 @@ def buildUrl(*args, **kwargs):
 def localizedString(id):
     if id < 30000:
         return xbmc.getLocalizedString(id)
-    return _addon_.getLocalizedString(id)
+    return xbmcaddon.Addon().getLocalizedString(id)
 
 
 def getMediaPath(*args):
@@ -87,29 +87,31 @@ def logError(msg):
 # settings ---------------------------------------------------------------------
 
 _get_settings_ = {
-    bool: _addon_.getSettingBool,
-    int: _addon_.getSettingInt,
-    float: _addon_.getSettingNumber,
-    unicode: _addon_.getSettingString
+    bool: "getSettingBool",
+    int: "getSettingInt",
+    float: "getSettingNumber",
+    unicode: "getSettingString"
 }
 
 def getSetting(id, _type=None):
+    addon = xbmcaddon.Addon()
     if _type is not None:
-        return _type(_get_settings_.get(_type, _addon_.getSetting)(id))
-    return _addon_.getSetting(id)
+        return _type(getattr(addon, _get_settings_[_type])(id))
+    return addon.getSetting(id)
 
 
 _set_settings_ = {
-    bool: _addon_.setSettingBool,
-    int: _addon_.setSettingInt,
-    float: _addon_.setSettingNumber,
-    unicode: _addon_.setSettingString
+    bool: "setSettingBool",
+    int: "setSettingInt",
+    float: "setSettingNumber",
+    unicode: "setSettingString"
 }
 
 def setSetting(id, value, _type=None):
+    addon = xbmcaddon.Addon()
     if _type is not None:
-        return _set_settings_.get(_type, _addon_.setSetting)(id, _type(value))
-    return _addon_.setSetting(id, value)
+        return getattr(addon, _set_settings_[_type])(id, _type(value))
+    return addon.setSetting(id, value)
 
 
 # notify -----------------------------------------------------------------------
