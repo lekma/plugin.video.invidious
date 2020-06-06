@@ -54,11 +54,39 @@ def removeChannelsFromFeed():
             del feed[keys[index]]
         _dumpFeed(feed)
 
+
 def getFeed():
     return list(iterkeys(_loadFeed()))
 
 
 # search history ---------------------------------------------------------------
+
+class SearchQuery(object):
+
+    _menus_ = [
+        (30035, "RunScript({addonId},removeSearchQuery,{_type},{key})"),
+        (30036, "RunScript({addonId},clearSearchHistory,{_type})")
+    ]
+
+    @classmethod
+    def menus(cls, **kwargs):
+        return [(localizedString(label).format(**kwargs),
+                 action.format(addonId=getAddonId(), **kwargs))
+                for label, action in cls._menus_]
+
+    def __init__(self, _type, key, value):
+        self.type = _type
+        self.key = key
+        self.value = value
+
+    def item(self, url):
+        return ListItem(
+            self.value,
+            buildUrl(url, action="search", type=self.type, q=self.value),
+            isFolder=True,
+            infos={"video": {"title": self.value, "plot": self.value}},
+            contextMenus=self.menus(_type=self.type, key=self.key))
+
 
 _search_history_path_ = join(getAddonProfile(), "search_history.pickle")
 
@@ -93,36 +121,6 @@ def newSearch(_type):
     if q:
         recordSearchQuery(_type, q)
         return q
-
-
-# search history items
-
-class SearchQuery(object):
-
-    _menus_ = [
-        (30035, "RunScript({addonId},removeSearchQuery,{_type},{key})"),
-        (30036, "RunScript({addonId},clearSearchHistory,{_type})")
-    ]
-
-    @classmethod
-    def menus(cls, **kwargs):
-        return [(localizedString(label).format(**kwargs),
-                 action.format(addonId=getAddonId(), **kwargs))
-                for label, action in cls._menus_]
-
-    def __init__(self, _type, key, value):
-        self.type = _type
-        self.key = key
-        self.value = value
-
-    def item(self, url):
-        return ListItem(
-            self.value,
-            buildUrl(url, action="search", type=self.type, q=self.value),
-            isFolder=True,
-            infos={"video": {"title": self.value, "plot": self.value}},
-            contextMenus=self.menus(_type=self.type, key=self.key))
-
 
 def searchHistory(_type):
     return reversed([SearchQuery(_type, *item)
