@@ -4,11 +4,11 @@
     <!-- General -->
     <category label="30101">
 
-        <setting id="instance" label="30102" type="text"
-                 default="invidio.us" />
-
         <setting id="selectInstance" label="30105" type="action"
                  action="RunScript(plugin.video.invidious,selectInstance)" />
+
+        <setting id="instance" label="30102" type="text"
+                 default="invidio.us" />
 
         <setting id="path" label="30103" type="text"
                  default="api/v1" />
@@ -45,7 +45,7 @@
                  action="RunScript(plugin.video.invidious,removeChannelsFromFeed)" />
 
         <setting id="clearAllSearchHistory" label="30113" type="action"
-                 action="RunScript(plugin.video.invidious,clearAllSearchHistory)" />
+                 action="RunScript(plugin.video.invidious,clearSearchHistory)" />
 
     </category>
 

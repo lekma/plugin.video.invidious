@@ -94,10 +94,9 @@ _get_settings_ = {
 }
 
 def getSetting(id, _type=None):
-    addon = xbmcaddon.Addon()
     if _type is not None:
-        return _type(getattr(addon, _get_settings_[_type])(id))
-    return addon.getSetting(id)
+        return _type(getattr(xbmcaddon.Addon(), _get_settings_[_type])(id))
+    return xbmcaddon.Addon().getSetting(id)
 
 
 _set_settings_ = {
@@ -108,10 +107,9 @@ _set_settings_ = {
 }
 
 def setSetting(id, value, _type=None):
-    addon = xbmcaddon.Addon()
     if _type is not None:
-        return getattr(addon, _set_settings_[_type])(id, _type(value))
-    return addon.setSetting(id, value)
+        return getattr(xbmcaddon.Addon(), _set_settings_[_type])(id, _type(value))
+    return xbmcaddon.Addon().setSetting(id, value)
 
 
 # notify -----------------------------------------------------------------------

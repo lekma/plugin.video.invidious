@@ -12,8 +12,7 @@ from kodi_six import xbmc
 from client import client
 from iapc import JSONRPCError
 from persistence import addChannelToFeed, removeChannelsFromFeed
-from persistence import removeItemFromSearchHistory, clearSearchHistory
-from persistence import clearAllSearchHistory
+from persistence import removeSearchQuery, clearSearchHistory
 from utils import getAddonId, selectDialog, getSetting, setSetting, notify
 
 
@@ -101,17 +100,16 @@ def selectInstance():
 
 _search_url_ = "plugin://{}/?action=search&type={{}}".format(getAddonId())
 
-def _removeItemFromSearchHistory(_type, key):
-    removeItemFromSearchHistory(_type, key)
+def _removeSearchQuery(_type, key):
+    removeSearchQuery(_type, key)
     _containerUpdate(_search_url_.format(_type))
 
-def _clearSearchHistory(_type):
+def _clearSearchHistory(_type=None):
     clearSearchHistory(_type)
-    _containerUpdate(_search_url_.format(_type))
-
-def _clearAllSearchHistory():
-    clearAllSearchHistory()
-    notify(30114, time=2000)
+    if _type:
+        _containerUpdate(_search_url_.format(_type))
+    else:
+        notify(30114, time=2000)
 
 
 # __main__ ---------------------------------------------------------------------
@@ -123,9 +121,8 @@ _dispatch_ = {
     "selectInstance": selectInstance,
     "addChannelToFeed": addChannelToFeed,
     "removeChannelsFromFeed": removeChannelsFromFeed,
-    "removeItemFromSearchHistory": _removeItemFromSearchHistory,
-    "clearSearchHistory": _clearSearchHistory,
-    "clearAllSearchHistory": _clearAllSearchHistory
+    "removeSearchQuery": _removeSearchQuery,
+    "clearSearchHistory": _clearSearchHistory
 }
 
 def dispatch(name, *args):

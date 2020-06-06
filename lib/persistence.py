@@ -69,36 +69,38 @@ def _loadSearchHistory():
     return _loadObject(_search_history_path_, default=defaultdict(OrderedDict))
 
 
-def newSearch(_type):
-    q = searchDialog()
-    if q:
-        search_history = _loadSearchHistory()
-        search_history[_type][quote_plus(q.encode("utf-8"))] = q
-        _dumpSearchHistory(search_history)
-        return q
+def recordSearchQuery(_type, q):
+    search_history = _loadSearchHistory()
+    search_history[_type][quote_plus(q.encode("utf-8"))] = q
+    _dumpSearchHistory(search_history)
 
-def removeItemFromSearchHistory(_type, key):
+def removeSearchQuery(_type, key):
     search_history = _loadSearchHistory()
     del search_history[_type][key]
     _dumpSearchHistory(search_history)
 
-def clearSearchHistory(_type):
+def clearSearchHistory(_type=None):
     search_history = _loadSearchHistory()
-    del search_history[_type]
+    if _type:
+        search_history[_type].clear()
+    else:
+        search_history.clear()
     _dumpSearchHistory(search_history)
 
-def clearAllSearchHistory():
-    search_history = _loadSearchHistory()
-    search_history.clear()
-    _dumpSearchHistory(search_history)
+
+def newSearch(_type):
+    q = searchDialog()
+    if q:
+        recordSearchQuery(_type, q)
+        return q
 
 
 # search history items
 
-class SearchHistoryItem(object):
+class SearchQuery(object):
 
     _menus_ = [
-        (30035, "RunScript({addonId},removeItemFromSearchHistory,{_type},{key})"),
+        (30035, "RunScript({addonId},removeSearchQuery,{_type},{key})"),
         (30036, "RunScript({addonId},clearSearchHistory,{_type})")
     ]
 
@@ -123,6 +125,6 @@ class SearchHistoryItem(object):
 
 
 def searchHistory(_type):
-    return reversed([SearchHistoryItem(_type, *item)
+    return reversed([SearchQuery(_type, *item)
                      for item in iteritems(_loadSearchHistory()[_type])])
 

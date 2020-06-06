@@ -13,7 +13,7 @@ from inputstreamhelper import Helper
 from client import client
 from objects import Home, Folders, Folder, _trending_styles_, _search_styles_
 from persistence import getFeed, newSearch, searchHistory
-from utils import parseQuery, getMoreItem, searchDialog, localizedString
+from utils import parseQuery, getMoreItem, localizedString
 
 
 _invalid_action_ = "Invalid action '{}'"
@@ -160,6 +160,12 @@ class Dispatcher(object):
         return self.addItems(
             client.search(q, **kwargs), kwargs["type"], q=q, **kwargs)
 
+    def _history(self, **kwargs):
+        client.queries.clear()
+        self.addItem(
+            Folder({"type": "search", "style": "new"}).item(self.url, **kwargs))
+        return self._addItems(searchHistory(kwargs["type"]))
+
     @action(30002, action="search")
     def new_search(self, **kwargs):
         try:
@@ -177,10 +183,7 @@ class Dispatcher(object):
                 Folders(self.getSubfolders("search", _search_styles_)))
         q = kwargs.pop("q", "")
         if not q:
-            client.queries.clear()
-            self.addItem(
-                Folder({"type": "search", "style": "new"}).item(self.url, **kwargs))
-            return self._addItems(searchHistory(kwargs["type"]))
+            return self._history(**kwargs)
         return self._search(q, **kwargs)
 
     # dispatch -----------------------------------------------------------------
