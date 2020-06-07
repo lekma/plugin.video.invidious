@@ -14,6 +14,7 @@ from client import client
 from objects import Home, Folders, Folder, _trending_styles_, _search_styles_
 from persistence import getFeed, newSearch, searchHistory
 from utils import parseQuery, getMoreItem, localizedString
+from utils import searchDialog, getSetting
 
 
 _invalid_action_ = "Invalid action '{}'"
@@ -166,23 +167,31 @@ class Dispatcher(object):
             Folder({"type": "search", "style": "new"}).item(self.url, **kwargs))
         return self._addItems(searchHistory(kwargs["type"]))
 
-    @action(30002, action="search")
-    def new_search(self, **kwargs):
+    def _new_search(self, history=False, **kwargs):
         try:
             q, kwargs = client.queries.pop()
         except IndexError:
-            q = newSearch(kwargs["type"])
+            q = newSearch(kwargs["type"]) if history else searchDialog()
         if q:
             return self._search(q, **kwargs)
         return False
 
+    @action(30002, action="search")
+    def new_search(self, **kwargs):
+        return self._new_search(history=True, **kwargs)
+
     @action(30002)
     def search(self, **kwargs):
+        history = getSetting("search_history", bool)
         if not "type" in kwargs:
+            if not history:
+                client.queries.clear()
             return self.addItems(
                 Folders(self.getSubfolders("search", _search_styles_)))
         q = kwargs.pop("q", "")
         if not q:
+            if not history:
+                return self._new_search(**kwargs)
             return self._history(**kwargs)
         return self._search(q, **kwargs)
 

@@ -11,6 +11,7 @@ from six.moves.urllib.parse import urljoin, urlunsplit
 
 from iapc import Service, public
 from utils import getSetting, notify, log, logError, iconError, makeDataDir
+from script import _clearSearchHistory
 
 
 # ------------------------------------------------------------------------------
@@ -100,6 +101,7 @@ class InvidiousService(Service):
         makeDataDir()
 
     def setup(self):
+        self._search_history = getSetting("search_history", bool)
         self._scheme = "https" if getSetting("ssl", bool) else "http"
         self._netloc = getSetting("instance", unicode)
         _path = "{}/".format(getSetting("path", unicode).strip("/"))
@@ -113,6 +115,8 @@ class InvidiousService(Service):
         log("service stopped")
 
     def onSettingsChanged(self):
+        if self._search_history and not getSetting("search_history", bool):
+            _clearSearchHistory()
         self.setup()
 
     def get(self, url, **kwargs):
