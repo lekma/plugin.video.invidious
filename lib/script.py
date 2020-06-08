@@ -11,7 +11,9 @@ from kodi_six import xbmc
 
 from client import client
 from iapc import JSONRPCError
-from utils import getAddonId, selectDialog, getSetting, setSetting
+from persistence import addChannelToFeed, removeChannelsFromFeed
+from persistence import removeSearchQuery, clearSearchHistory
+from utils import getAddonId, selectDialog, getSetting, setSetting, notify
 
 
 # utils ------------------------------------------------------------------------
@@ -94,13 +96,33 @@ def selectInstance():
             setSetting("instance", instances[index], unicode)
 
 
+# search history ---------------------------------------------------------------
+
+_search_url_ = "plugin://{}/?action=search&type={{}}".format(getAddonId())
+
+def _removeSearchQuery(_type, key):
+    removeSearchQuery(_type, key)
+    _containerUpdate(_search_url_.format(_type))
+
+def _clearSearchHistory(_type=None):
+    clearSearchHistory(_type)
+    if _type:
+        _containerUpdate(_search_url_.format(_type))
+    else:
+        notify(30114, time=2000)
+
+
 # __main__ ---------------------------------------------------------------------
 
 _dispatch_ = {
     "goToChannel": goToChannel,
     "addChannelToFavourites": addChannelToFavourites,
     "playWithYouTube": playWithYouTube,
-    "selectInstance": selectInstance
+    "selectInstance": selectInstance,
+    "addChannelToFeed": addChannelToFeed,
+    "removeChannelsFromFeed": removeChannelsFromFeed,
+    "removeSearchQuery": _removeSearchQuery,
+    "clearSearchHistory": _clearSearchHistory
 }
 
 def dispatch(name, *args):

@@ -8,7 +8,7 @@ from os.path import join
 
 from six import text_type, iteritems
 from six.moves.urllib.parse import parse_qsl, urlencode
-from kodi_six import xbmc, xbmcaddon, xbmcgui
+from kodi_six import xbmc, xbmcaddon, xbmcgui, xbmcvfs
 
 
 _addon_ = xbmcaddon.Addon()
@@ -16,6 +16,7 @@ _addon_id_ = _addon_.getAddonInfo("id")
 _addon_name_ = _addon_.getAddonInfo("name")
 _addon_path_ = xbmc.translatePath(_addon_.getAddonInfo("path"))
 _addon_icon_ = xbmc.translatePath(_addon_.getAddonInfo("icon"))
+_addon_profile_ = xbmc.translatePath(_addon_.getAddonInfo("profile"))
 
 _dialog_ = xbmcgui.Dialog()
 
@@ -35,6 +36,9 @@ def getAddonPath():
 def getAddonIcon():
     return _addon_icon_
 
+def getAddonProfile():
+    return _addon_profile_
+
 
 def parseQuery(query):
     if query.startswith("?"):
@@ -51,7 +55,7 @@ def buildUrl(*args, **kwargs):
 def localizedString(id):
     if id < 30000:
         return xbmc.getLocalizedString(id)
-    return _addon_.getLocalizedString(id)
+    return xbmcaddon.Addon().getLocalizedString(id)
 
 
 def getMediaPath(*args):
@@ -59,6 +63,10 @@ def getMediaPath(*args):
 
 def getIcon(name):
     return getMediaPath("{}.png".format(name))
+
+def makeDataDir():
+    if not xbmcvfs.exists(_addon_profile_):
+        xbmcvfs.mkdirs(_addon_profile_)
 
 
 # logging ----------------------------------------------------------------------
@@ -79,29 +87,29 @@ def logError(msg):
 # settings ---------------------------------------------------------------------
 
 _get_settings_ = {
-    bool: _addon_.getSettingBool,
-    int: _addon_.getSettingInt,
-    float: _addon_.getSettingNumber,
-    unicode: _addon_.getSettingString
+    bool: "getSettingBool",
+    int: "getSettingInt",
+    float: "getSettingNumber",
+    unicode: "getSettingString"
 }
 
 def getSetting(id, _type=None):
     if _type is not None:
-        return _type(_get_settings_.get(_type, _addon_.getSetting)(id))
-    return _addon_.getSetting(id)
+        return _type(getattr(xbmcaddon.Addon(), _get_settings_[_type])(id))
+    return xbmcaddon.Addon().getSetting(id)
 
 
 _set_settings_ = {
-    bool: _addon_.setSettingBool,
-    int: _addon_.setSettingInt,
-    float: _addon_.setSettingNumber,
-    unicode: _addon_.setSettingString
+    bool: "setSettingBool",
+    int: "setSettingInt",
+    float: "setSettingNumber",
+    unicode: "setSettingString"
 }
 
 def setSetting(id, value, _type=None):
     if _type is not None:
-        return _set_settings_.get(_type, _addon_.setSetting)(id, _type(value))
-    return _addon_.setSetting(id, value)
+        return getattr(xbmcaddon.Addon(), _set_settings_[_type])(id, _type(value))
+    return xbmcaddon.Addon().setSetting(id, value)
 
 
 # notify -----------------------------------------------------------------------
@@ -120,9 +128,11 @@ def notify(message, heading=_addon_name_, icon=_addon_icon_, time=5000):
 
 # select -----------------------------------------------------------------------
 
-def selectDialog(_list, heading=_addon_name_, **kwargs):
+def selectDialog(_list, heading=_addon_name_, multi=False, **kwargs):
     if isinstance(heading, int):
         heading = localizedString(heading)
+    if multi:
+        return _dialog_.multiselect(heading, _list, **kwargs)
     return _dialog_.select(heading, _list, **kwargs)
 
 

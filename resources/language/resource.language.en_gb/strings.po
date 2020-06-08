@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: plugin.video.invidious\n"
 "Report-Msgid-Bugs-To: https://github.com/lekma/plugin.video.invidious/issues\n"
 "POT-Creation-Date: 2020-04-11 10:28+0000\n"
-"PO-Revision-Date: 2020-05-04 15:16+0000\n"
+"PO-Revision-Date: 2020-06-07 09:10+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -67,6 +67,12 @@ msgctxt "#30013"
 msgid "Movies"
 msgstr ""
 
+msgctxt "#30014"
+msgid "Feed"
+msgstr ""
+
+# context menus
+
 msgctxt "#30031"
 msgid "Go to channel"
 msgstr ""
@@ -77,6 +83,18 @@ msgstr ""
 
 msgctxt "#30033"
 msgid "Play with YouTube"
+msgstr ""
+
+msgctxt "#30034"
+msgid "Add channel to feed"
+msgstr ""
+
+msgctxt "#30035"
+msgid "Remove"
+msgstr ""
+
+msgctxt "#30036"
+msgid "Clear search history"
 msgstr ""
 
 # items
@@ -103,6 +121,10 @@ msgstr ""
 
 msgctxt "#30061"
 msgid "{0.title}\nAuthor: {0.author}\nVideos: {0.videoCount}"
+msgstr ""
+
+msgctxt "#30062"
+msgid "New search"
 msgstr ""
 
 msgctxt "#30099"
@@ -133,5 +155,33 @@ msgstr ""
 
 msgctxt "#30105"
 msgid "Publicly available instances"
+msgstr ""
+
+msgctxt "#30111"
+msgid "Persistent data"
+msgstr ""
+
+msgctxt "#30112"
+msgid "Remove channels from feed"
+msgstr ""
+
+msgctxt "#30113"
+msgid "Clear all search history"
+msgstr ""
+
+msgctxt "#30114"
+msgid "Search history cleared"
+msgstr ""
+
+msgctxt "#30115"
+msgid "Search history"
+msgstr ""
+
+msgctxt "#30121"
+msgid "Folders"
+msgstr ""
+
+msgctxt "#30122"
+msgid "Auto-generated channels"
 msgstr ""
 

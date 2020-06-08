@@ -6,16 +6,21 @@ from __future__ import absolute_import, division, unicode_literals
 
 import sys
 
-from six import wraps
+from six import wraps, raise_from
 from kodi_six import xbmcplugin
 from inputstreamhelper import Helper
 
 from client import client
 from objects import Home, Folders, Folder, _trending_styles_, _search_styles_
-from utils import parseQuery, getMoreItem, searchDialog, localizedString
+from persistence import getFeed, newSearch, searchHistory
+from utils import parseQuery, getMoreItem, localizedString
+from utils import searchDialog, getSetting
 
 
-def action(category=0):
+_invalid_action_ = "Invalid action '{}'"
+
+
+def action(category=0, action=None):
     def decorator(func):
         func.__action__ = True
         @wraps(func)
@@ -23,7 +28,7 @@ def action(category=0):
             success = False
             try:
                 self.category = category
-                self.action = func.__name__
+                self.action = action or func.__name__
                 success = func(self, **kwargs)
             except Exception:
                 success = False
@@ -46,6 +51,12 @@ class Dispatcher(object):
         self.handle = handle
 
     # utils --------------------------------------------------------------------
+
+    def _addItems(self, items):
+        if not xbmcplugin.addDirectoryItems(
+            self.handle, [item.item(self.url).asItem() for item in items]):
+            raise
+        return True
 
     def addItem(self, item):
         if item and not xbmcplugin.addDirectoryItem(self.handle, *item.asItem()):
@@ -139,32 +150,61 @@ class Dispatcher(object):
                 Folders(self.getSubfolders("trending", _trending_styles_)))
         return self.addItems(client.trending(**kwargs), "video")
 
+    @action(30014)
+    def feed(self, **kwargs):
+        return self.addItems(client.feed(getFeed(), **kwargs), "video", **kwargs)
+
     # search -------------------------------------------------------------------
+
+    def _search(self, q, **kwargs):
+        client.queries.append((q, kwargs))
+        return self.addItems(
+            client.search(q, **kwargs), kwargs["type"], q=q, **kwargs)
+
+    def _history(self, **kwargs):
+        client.queries.clear()
+        self.addItem(
+            Folder({"type": "search", "style": "new"}).item(self.url, **kwargs))
+        return self._addItems(searchHistory(kwargs["type"]))
+
+    def _new_search(self, history=False, **kwargs):
+        try:
+            q, kwargs = client.queries.pop()
+        except IndexError:
+            q = newSearch(kwargs["type"]) if history else searchDialog()
+        if q:
+            return self._search(q, **kwargs)
+        return False
+
+    @action(30002, action="search")
+    def new_search(self, **kwargs):
+        return self._new_search(history=True, **kwargs)
 
     @action(30002)
     def search(self, **kwargs):
+        history = getSetting("search_history", bool)
         if not "type" in kwargs:
-            client.queries.clear()
+            if not history:
+                client.queries.clear()
             return self.addItems(
                 Folders(self.getSubfolders("search", _search_styles_)))
         q = kwargs.pop("q", "")
         if not q:
-            try:
-                q, kwargs = client.queries.pop()
-            except IndexError:
-                q = searchDialog()
-        if q:
-            client.queries.append((q, kwargs))
-            return self.addItems(
-                client.search(q, **kwargs), kwargs["type"], q=q, **kwargs)
-        return False
+            if not history:
+                return self._new_search(**kwargs)
+            return self._history(**kwargs)
+        return self._search(q, **kwargs)
 
     # dispatch -----------------------------------------------------------------
 
     def dispatch(self, **kwargs):
-        action = getattr(self, kwargs.pop("action", "home"))
+        name = kwargs.pop("action", "home")
+        try:
+            action = getattr(self, name)
+        except AttributeError:
+            raise_from(AttributeError(_invalid_action_.format(name)), None)
         if not callable(action) or not getattr(action, "__action__", False):
-            raise Exception("Invalid action '{}'".format(action.__name__))
+            raise TypeError(_invalid_action_.format(name))
         return action(**kwargs)
 
 

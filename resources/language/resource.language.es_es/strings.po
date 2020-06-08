@@ -6,15 +6,12 @@ msgstr ""
 "Project-Id-Version: plugin.video.invidious\n"
 "Report-Msgid-Bugs-To: https://github.com/lekma/plugin.video.invidious/issues\n"
 "POT-Creation-Date: 2020-04-11 10:28+0000\n"
-"PO-Revision-Date: 2020-06-07 21:30+0000\n"
+"PO-Revision-Date: 2020-05-04 15:16+0000\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: fr\n"
+"Language: en\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"X-Generator: Poedit 1.8.7.1\n"
 
 # folders
 
@@ -24,23 +21,23 @@ msgstr "Invidious"
 
 msgctxt "#30002"
 msgid "Search"
-msgstr "Rechercher"
+msgstr "Buscar"
 
 msgctxt "#30003"
 msgid "Videos"
-msgstr "Vidéos"
+msgstr "Vídeos"
 
 msgctxt "#30004"
 msgid "Channels"
-msgstr "Chaînes"
+msgstr "Canales"
 
 msgctxt "#30005"
 msgid "Playlists"
-msgstr "Listes de lecture"
+msgstr "Listas de reproducción"
 
 msgctxt "#30006"
 msgid "Live"
-msgstr "Direct"
+msgstr "En directo"
 
 msgctxt "#30007"
 msgid "Top"
@@ -48,143 +45,143 @@ msgstr "Top"
 
 msgctxt "#30008"
 msgid "Popular"
-msgstr "Populaire"
+msgstr "Populares"
 
 msgctxt "#30009"
 msgid "Trending"
-msgstr "Tendance"
+msgstr "Tendencias"
 
 msgctxt "#30010"
 msgid "Music"
-msgstr "Musique"
+msgstr "Música"
 
 msgctxt "#30011"
 msgid "Gaming"
-msgstr "Jeux vidéo"
+msgstr "Videojuegos"
 
 msgctxt "#30012"
 msgid "News"
-msgstr "Nouveautés"
+msgstr "Novedades"
 
 msgctxt "#30013"
 msgid "Movies"
-msgstr "Films"
+msgstr "Películas"
 
 msgctxt "#30014"
 msgid "Feed"
-msgstr "Flux"
+msgstr "Feed"
 
 # context menus
 
 msgctxt "#30031"
 msgid "Go to channel"
-msgstr "Aller à la chaîne"
+msgstr "Ir a un canal"
 
 msgctxt "#30032"
 msgid "Add channel to favourites"
-msgstr "Ajouter la chaîne aux favoris"
+msgstr "Añadir canal a favoritos"
 
 msgctxt "#30033"
 msgid "Play with YouTube"
-msgstr "Lire avec l'extension YouTube"
+msgstr "Reproducir con el plugin de YouTube"
 
 msgctxt "#30034"
 msgid "Add channel to feed"
-msgstr "Ajouter la chaîne aux flux"
+msgstr "Añadir canal al feed"
 
 msgctxt "#30035"
 msgid "Remove"
-msgstr "Supprimer"
+msgstr "Eliminar"
 
 msgctxt "#30036"
 msgid "Clear search history"
-msgstr "Vider l'historique de recherche"
+msgstr "Borrar historial de búsqueda"
 
 # items
 
 msgctxt "#30056"
 msgid "Author: {0.author}\nTitle: {0.title}"
-msgstr "Auteur: {0.author}\nTitre: {0.title}"
+msgstr "Autor: {0.author}\nTítulo: {0.title}"
 
 msgctxt "#30057"
 msgid "Author: {0.author}\nTitle: {0.title}\nViews: {0.viewCount}\nPublished: {0.published}"
-msgstr "Auteur: {0.author}\nTitre: {0.title}\nVues: {0.viewCount}\nPubliée le: {0.published}"
+msgstr "Autor: {0.author}\nTítulo: {0.title}\nReproducciones: {0.viewCount}\nPublicado: {0.published}"
 
 msgctxt "#30058"
 msgid "Author: {0.author}\nTitle: {0.title}\nViews: {0.viewCount}\nPublished: {0.published}\nDescription: {0.description}"
-msgstr "Auteur: {0.author}\nTitre: {0.title}\nVues: {0.viewCount}\nPubliée le: {0.published}\nDescription: {0.description}"
+msgstr "Autor: {0.author}\nTítulo: {0.title}\nReproducciones: {0.viewCount}\nPublicado: {0.published}\nDescripción: {0.description}"
 
 msgctxt "#30059"
 msgid "[COLOR red][LIVE NOW][/COLOR] {0.title}"
-msgstr "[COLOR red][EN DIRECT][/COLOR] {0.title}"
+msgstr "[COLOR red][EN DIRECTO][/COLOR] {0.title}"
 
 msgctxt "#30060"
 msgid "{0.author}\nDescription: {0.description}"
-msgstr "{0.author}\nDescription: {0.description}"
+msgstr "{0.author}\nDescripción: {0.description}"
 
 msgctxt "#30061"
 msgid "{0.title}\nAuthor: {0.author}\nVideos: {0.videoCount}"
-msgstr "{0.title}\nAuteur: {0.author}\nVidéos: {0.videoCount}"
+msgstr "{0.title}\nAutor: {0.author}\nVídeos: {0.videoCount}"
 
 msgctxt "#30062"
 msgid "New search"
-msgstr "Nouvelle recherche"
+msgstr "Nueva búsqueda"
 
 msgctxt "#30099"
 msgid "More..."
-msgstr "Suivant..."
+msgstr "Más..."
 
 # settings
 
 msgctxt "#30100"
 msgid "Settings"
-msgstr "Paramètres"
+msgstr "Ajustes"
 
 msgctxt "#30101"
 msgid "General"
-msgstr "Général"
+msgstr "General"
 
 msgctxt "#30102"
 msgid "Instance name/ip address"
-msgstr "Nom de l'instance/Adresse IP"
+msgstr "Nombre de la instancia/dirección IP"
 
 msgctxt "#30103"
 msgid "Api path"
-msgstr "Chemin de l'API"
+msgstr "Ruta del API"
 
 msgctxt "#30104"
 msgid "Use ssl"
-msgstr "Utiliser SSL"
+msgstr "Usar SSL"
 
 msgctxt "#30105"
 msgid "Publicly available instances"
-msgstr "Instances publiques"
+msgstr "Instancias públicas"
 
 msgctxt "#30111"
 msgid "Persistent data"
-msgstr "Données persistantes"
+msgstr "Datos persistentes"
 
 msgctxt "#30112"
 msgid "Remove channels from feed"
-msgstr "Supprimer les chaînes des flux"
+msgstr "Eliminar canales del feed"
 
 msgctxt "#30113"
 msgid "Clear all search history"
-msgstr "Vider tout l'historique de recherche"
+msgstr "Borrar todo el historial de búsqueda"
 
 msgctxt "#30114"
 msgid "Search history cleared"
-msgstr "L'historique de recherche est vidé"
+msgstr "Historial de búsqueda borrado"
 
 msgctxt "#30115"
 msgid "Search history"
-msgstr "Historique de recherche"
+msgstr "Historial de búsqueda"
 
 msgctxt "#30121"
 msgid "Folders"
-msgstr "Dossiers"
+msgstr "Carpetas"
 
 msgctxt "#30122"
 msgid "Auto-generated channels"
-msgstr "Chaînes auto-générées"
+msgstr "Canales autogenerados"
 
