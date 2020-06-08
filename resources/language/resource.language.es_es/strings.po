@@ -173,3 +173,15 @@ msgctxt "#30114"
 msgid "Search history cleared"
 msgstr "Historial de búsqueda borrado"
 
+msgctxt "#30115"
+msgid "Search history"
+msgstr "Historial de búsqueda"
+
+msgctxt "#30121"
+msgid "Folders"
+msgstr "Carpetas"
+
+msgctxt "#30122"
+msgid "Auto-generated channels"
+msgstr "Canales autogenerados"
+
