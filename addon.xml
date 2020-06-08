@@ -39,6 +39,8 @@
         <description lang="fr_FR">Extension pour Invidious</description>
         <summary lang="es_ES">Plugin para Invidious</summary>
         <description lang="es_ES">Plugin para Invidious</description>
+        <summary lang="de_DE">Invidious-Addon</summary>
+        <description lang="de_DE">Erweiterung für einen datenschutzfreundlichen Zugriff auf YouTube.</description>
     </extension>
 
 </addon>
