@@ -37,6 +37,8 @@
         <description lang="en_GB">Invidious Addon</description>
         <summary lang="fr_FR">Extension pour Invidious</summary>
         <description lang="fr_FR">Extension pour Invidious</description>
+        <summary lang="es_ES">Plugin para Invidious</summary>
+        <description lang="es_ES">Plugin para Invidious</description>
     </extension>
 
 </addon>
