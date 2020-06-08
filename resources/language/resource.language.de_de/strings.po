@@ -175,3 +175,15 @@ msgstr "Lösche gesamte Such-Historie"
 msgctxt "#30114"
 msgid "Search history cleared"
 msgstr "Such-Historie gelöscht"
+
+msgctxt "#30115"
+msgid "Search history"
+msgstr "Such-Historie"
+
+msgctxt "#30121"
+msgid "Folders"
+msgstr "Ordner"
+
+msgctxt "#30122"
+msgid "Auto-generated channels"
+msgstr "Automatisch erzeugte Kanäle"
