@@ -107,6 +107,12 @@ class Dispatcher(object):
         if mime:
             item.setMimeType(mime)
             item.setContentLookup(False)
+
+        is_proxy_video = getSetting("proxy_video", _type=bool)
+
+        if is_proxy_video:
+            item.setPath(item.getPath() + "?local=true")
+
         xbmcplugin.setResolvedUrl(self.handle, True, item)
         return True
 
