@@ -10,6 +10,7 @@ from six.moves.urllib.parse import urlunsplit, urlsplit
 
 import objects
 from iapc import Client
+from utils import log
 
 
 # ------------------------------------------------------------------------------
@@ -64,6 +65,7 @@ class InvidiousClient(object):
             url = urlunsplit((split.scheme or self.client.scheme(),
                               split.netloc or self.client.netloc(),
                               split.path, "&".join(query), split.fragment))
+            log("video.url: {}".format(url))
             return (video._item(url), manifest, mime)
 
     # --------------------------------------------------------------------------
