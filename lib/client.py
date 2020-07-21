@@ -58,6 +58,7 @@ class InvidiousClient(object):
             url, manifest, mime = (video.dashUrl, "mpd", "application/dash+xml")
             if video.liveNow and hasattr(video, "hlsUrl"):
                 url, manifest, mime = (video.hlsUrl, "hls", None)
+                local = False
             split = urlsplit(url)
             query = split.query.split("&") if split.query else []
             if local:
