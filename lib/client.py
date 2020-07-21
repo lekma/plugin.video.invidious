@@ -50,7 +50,7 @@ class InvidiousClient(object):
 
     # --------------------------------------------------------------------------
 
-    def video(self, **kwargs):
+    def video(self, local=False, **kwargs):
         video = self.query_("video", kwargs.pop("videoId"), **kwargs)
         if video:
             video = objects.Video(video)
@@ -58,9 +58,12 @@ class InvidiousClient(object):
             if video.liveNow:
                 url, manifest, mime = (video.hlsUrl, "hls", None)
             split = urlsplit(url)
+            query = split.query.split("&") if split.query else []
+            if local:
+                query.append("local=true")
             url = urlunsplit((split.scheme or self.client.scheme(),
                               split.netloc or self.client.netloc(),
-                              split.path, split.query, split.fragment))
+                              split.path, "&".join(query), split.fragment))
             return (video._item(url), manifest, mime)
 
     # --------------------------------------------------------------------------

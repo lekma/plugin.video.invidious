@@ -112,7 +112,7 @@ class Dispatcher(object):
 
     @action()
     def video(self, **kwargs):
-        args = client.video(**kwargs)
+        args = client.video(local=getSetting("proxy", bool), **kwargs)
         return self.play(*args) if args else False
 
     @action()

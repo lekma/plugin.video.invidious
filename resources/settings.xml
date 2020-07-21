@@ -16,6 +16,9 @@
         <setting id="ssl" label="30104" type="bool"
                  default="true" />
 
+        <setting id="proxy" label="30106" type="bool"
+                 default="false" />
+
     </category>
 
     <!-- Folders -->

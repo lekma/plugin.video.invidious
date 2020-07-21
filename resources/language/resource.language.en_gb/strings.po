@@ -157,6 +157,10 @@ msgctxt "#30105"
 msgid "Publicly available instances"
 msgstr ""
 
+msgctxt "#30106"
+msgid "Proxy videos"
+msgstr ""
+
 msgctxt "#30111"
 msgid "Persistent data"
 msgstr ""
