@@ -10,7 +10,8 @@ import time
 from six.moves.urllib.parse import urljoin, urlunsplit
 
 from iapc import Service, public
-from utils import getSetting, notify, log, logError, iconError, makeDataDir
+from utils import getSetting, notify, log, logError, iconError
+from utils import makeDataDir, containerRefresh
 from script import _clearSearchHistory
 
 
@@ -118,6 +119,7 @@ class InvidiousService(Service):
         if self._search_history and not getSetting("search_history", bool):
             _clearSearchHistory()
         self.setup()
+        containerRefresh()
 
     def get(self, url, **kwargs):
         return self._session_.get(urljoin(self._url, url), params=kwargs)

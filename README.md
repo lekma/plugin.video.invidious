@@ -1,5 +1,5 @@
 # plugin.video.invidious
-[Invidious](https://invidio.us/) Addon for Kodi.
+[Invidious](https://github.com/iv-org/invidious/) Addon for Kodi.
 
 
 Download the latest version from [here](https://github.com/lekma/plugin.video.invidious/releases/)

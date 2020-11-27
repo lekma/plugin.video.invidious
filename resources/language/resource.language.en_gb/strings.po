@@ -189,3 +189,7 @@ msgctxt "#30122"
 msgid "Auto-generated channels"
 msgstr ""
 
+msgctxt "#30123"
+msgid "Home"
+msgstr ""
+

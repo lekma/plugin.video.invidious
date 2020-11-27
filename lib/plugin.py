@@ -13,14 +13,14 @@ from inputstreamhelper import Helper
 from client import client
 from objects import Home, Folders, Folder, _trending_styles_, _search_styles_
 from persistence import getFeed, newSearch, searchHistory
-from utils import parseQuery, getMoreItem, localizedString
-from utils import searchDialog, getSetting
+from utils import parseQuery, getMoreItem, localizedString, searchDialog
+from utils import getSetting, getSettingsItem, openSettings
 
 
 _invalid_action_ = "Invalid action '{}'"
 
 
-def action(category=0, action=None):
+def action(category=0, action=None, directory=True):
     def decorator(func):
         func.__action__ = True
         @wraps(func)
@@ -34,7 +34,8 @@ def action(category=0, action=None):
                 success = False
                 raise
             finally:
-                self.endDirectory(success)
+                if directory:
+                    self.endDirectory(success)
                 del self.action, self.category
         return wrapper
     return decorator
@@ -110,7 +111,7 @@ class Dispatcher(object):
         xbmcplugin.setResolvedUrl(self.handle, True, item)
         return True
 
-    @action()
+    @action(directory=False)
     def video(self, **kwargs):
         args = client.video(local=getSetting("proxy", bool), **kwargs)
         return self.play(*args) if args else False
@@ -129,7 +130,11 @@ class Dispatcher(object):
 
     @action()
     def home(self, **kwargs):
-        return self.addItems(Home())
+        if self.addItems(Home()):
+            if getSetting("settings", bool):
+                return self.addItem(getSettingsItem(self.url, action="settings"))
+            return True
+        return False
 
     @action(30005)
     def playlists(self, **kwargs):
@@ -153,6 +158,11 @@ class Dispatcher(object):
     @action(30014)
     def feed(self, **kwargs):
         return self.addItems(client.feed(getFeed(), **kwargs), "video", **kwargs)
+
+    @action(directory=False)
+    def settings(self, **kwargs):
+        openSettings()
+        return True
 
     # search -------------------------------------------------------------------
 

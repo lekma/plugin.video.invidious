@@ -11,18 +11,11 @@ from six.moves.urllib.parse import parse_qsl, urlencode
 from kodi_six import xbmc, xbmcaddon, xbmcgui, xbmcvfs
 
 
-_addon_ = xbmcaddon.Addon()
-_addon_id_ = _addon_.getAddonInfo("id")
-_addon_name_ = _addon_.getAddonInfo("name")
-_addon_path_ = xbmc.translatePath(_addon_.getAddonInfo("path"))
-_addon_icon_ = xbmc.translatePath(_addon_.getAddonInfo("icon"))
-_addon_profile_ = xbmc.translatePath(_addon_.getAddonInfo("profile"))
-
-_dialog_ = xbmcgui.Dialog()
-
-
-def getWindowId():
-    return xbmcgui.getCurrentWindowId()
+_addon_id_ = xbmcaddon.Addon().getAddonInfo("id")
+_addon_name_ = xbmcaddon.Addon().getAddonInfo("name")
+_addon_path_ = xbmc.translatePath(xbmcaddon.Addon().getAddonInfo("path"))
+_addon_icon_ = xbmc.translatePath(xbmcaddon.Addon().getAddonInfo("icon"))
+_addon_profile_ = xbmc.translatePath(xbmcaddon.Addon().getAddonInfo("profile"))
 
 def getAddonId():
     return _addon_id_
@@ -38,6 +31,10 @@ def getAddonIcon():
 
 def getAddonProfile():
     return _addon_profile_
+
+
+def getWindowId():
+    return xbmcgui.getCurrentWindowId()
 
 
 def parseQuery(query):
@@ -61,12 +58,21 @@ def localizedString(id):
 def getMediaPath(*args):
     return join(_addon_path_, "resources", "media", *args)
 
-def getIcon(name):
+def getThumb(name):
     return getMediaPath("{}.png".format(name))
+
 
 def makeDataDir():
     if not xbmcvfs.exists(_addon_profile_):
         xbmcvfs.mkdirs(_addon_profile_)
+
+
+def containerRefresh():
+    xbmc.executebuiltin("Container.Refresh()")
+
+
+def openSettings():
+    xbmcaddon.Addon().openSettings()
 
 
 # logging ----------------------------------------------------------------------
@@ -123,7 +129,7 @@ def notify(message, heading=_addon_name_, icon=_addon_icon_, time=5000):
         message = localizedString(message)
     if isinstance(heading, int):
         heading = localizedString(heading)
-    _dialog_.notification(heading, message, icon, time)
+    xbmcgui.Dialog().notification(heading, message, icon, time)
 
 
 # select -----------------------------------------------------------------------
@@ -132,8 +138,8 @@ def selectDialog(_list, heading=_addon_name_, multi=False, **kwargs):
     if isinstance(heading, int):
         heading = localizedString(heading)
     if multi:
-        return _dialog_.multiselect(heading, _list, **kwargs)
-    return _dialog_.select(heading, _list, **kwargs)
+        return xbmcgui.Dialog().multiselect(heading, _list, **kwargs)
+    return xbmcgui.Dialog().select(heading, _list, **kwargs)
 
 
 # input -----------------------------------------------------------------------
@@ -141,7 +147,7 @@ def selectDialog(_list, heading=_addon_name_, multi=False, **kwargs):
 def inputDialog(heading=_addon_name_, **kwargs):
     if isinstance(heading, int):
         heading = localizedString(heading)
-    return _dialog_.input(heading, **kwargs)
+    return xbmcgui.Dialog().input(heading, **kwargs)
 
 
 # search -----------------------------------------------------------------------
@@ -157,15 +163,12 @@ def searchDialog():
 class ListItem(xbmcgui.ListItem):
 
     def __new__(cls, label, path, **kwargs):
-        return super(ListItem, cls).__new__(
-            cls, label=label, path=path, iconImage="", thumbnailImage="",
-            offscreen=True)
+        return super(ListItem, cls).__new__(cls, label=label, path=path)
 
-    def __init__(self, label, path, isFolder=False, infos=None,
-                 streamInfos=None, contextMenus=None, **art):
+    def __init__(self, label, path, isFolder=False, isPlayable=True,
+                 infos=None, streamInfos=None, contextMenus=None, **art):
         self.setIsFolder(isFolder)
-        self.setIsPlayable(not isFolder)
-        self.isFolder = isFolder
+        self.setIsPlayable(False if isFolder else isPlayable)
         if infos:
             for info in iteritems(infos):
                 self.setInfo(*info)
@@ -177,18 +180,37 @@ class ListItem(xbmcgui.ListItem):
         if art:
             self.setArt(art)
 
+    def setIsFolder(self, isFolder):
+        super(ListItem, self).setIsFolder(isFolder)
+        #self.setProperty("IsFolder", str(isFolder).lower())
+        self.isFolder = isFolder
+
     def setIsPlayable(self, isPlayable):
-        self.setProperty("IsPlayable", "true" if isPlayable else "false")
+        self.setProperty("IsPlayable", str(isPlayable).lower())
+        self.isPlayable = isPlayable
 
     def asItem(self):
         return self.getPath(), self, self.isFolder
 
 
+# more item --------------------------------------------------------------------
+
 _more_label_ = localizedString(30099)
-_more_icon_ = getIcon("more")
+_more_thumb_ = getThumb("more")
 
 def getMoreItem(url, **kwargs):
     return ListItem(
         _more_label_,  buildUrl(url, **kwargs), isFolder=True,
-        infos={"video": {"plot": _more_label_}}, icon=_more_icon_)
+        infos={"video": {"plot": _more_label_}}, thumb=_more_thumb_)
+
+
+# settings item ----------------------------------------------------------------
+
+_settings_label_ = localizedString(30100)
+_settings_thumb_ = getThumb("settings")
+
+def getSettingsItem(url, **kwargs):
+    return ListItem(
+        _settings_label_,  buildUrl(url, **kwargs), isPlayable=False,
+        infos={"video": {"plot": _settings_label_}}, thumb=_settings_thumb_)
 
