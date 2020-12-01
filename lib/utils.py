@@ -11,6 +11,8 @@ from six.moves.urllib.parse import parse_qsl, urlencode
 from kodi_six import xbmc, xbmcaddon, xbmcgui, xbmcvfs
 
 
+# addon infos ------------------------------------------------------------------
+
 _addon_id_ = xbmcaddon.Addon().getAddonInfo("id")
 _addon_name_ = xbmcaddon.Addon().getAddonInfo("name")
 _addon_path_ = xbmc.translatePath(xbmcaddon.Addon().getAddonInfo("path"))
@@ -33,20 +35,25 @@ def getAddonProfile():
     return _addon_profile_
 
 
+# logging ----------------------------------------------------------------------
+
+def log(message, level=xbmc.LOGNOTICE):
+    xbmc.log("[{}] {}".format(_addon_id_, message), level=level)
+
+def logDebug(message):
+    log(message, xbmc.LOGDEBUG)
+
+def logWarning(message):
+    log(message, xbmc.LOGWARNING)
+
+def logError(message):
+    log(message, xbmc.LOGERROR)
+
+
+# misc utils -------------------------------------------------------------------
+
 def getWindowId():
     return xbmcgui.getCurrentWindowId()
-
-
-def parseQuery(query):
-    if query.startswith("?"):
-        query = query[1:]
-    return dict(parse_qsl(query))
-
-
-def buildUrl(*args, **kwargs):
-    params = {k: v.encode("utf-8") if isinstance(v, text_type) else v
-              for k, v in iteritems(kwargs)}
-    return "?".join(("/".join(args), urlencode(params)))
 
 
 def localizedString(id):
@@ -57,6 +64,7 @@ def localizedString(id):
 
 def getMediaPath(*args):
     return join(_addon_path_, "resources", "media", *args)
+
 
 def getThumb(name):
     return getMediaPath("{}.png".format(name))
@@ -75,22 +83,33 @@ def openSettings():
     xbmcaddon.Addon().openSettings()
 
 
-# logging ----------------------------------------------------------------------
+# parseQuery / buildUrl --------------------------------------------------------
 
-def log(msg, level=xbmc.LOGNOTICE):
-    xbmc.log("[{}] {}".format(_addon_id_, msg), level=level)
+_parse_consts_ = {
+    "none": None,
+    "true": True,
+    "false": False
+}
 
-def logDebug(msg):
-    log(msg, xbmc.LOGDEBUG)
+def parseValue(value):
+    try:
+        return _parse_consts_[value.lower()]
+    except KeyError:
+        return value
 
-def logWarning(msg):
-    log(msg, xbmc.LOGWARNING)
+def parseQuery(query):
+    if query.startswith("?"):
+        query = query[1:]
+    return {k: parseValue(v) for k, v in parse_qsl(query)}
 
-def logError(msg):
-    log(msg, xbmc.LOGERROR)
+
+def buildUrl(*args, **kwargs):
+    params = {k: v.encode("utf-8") if isinstance(v, text_type) else v
+              for k, v in iteritems(kwargs)}
+    return "?".join(("/".join(args), urlencode(params)))
 
 
-# settings ---------------------------------------------------------------------
+# get/set settings -------------------------------------------------------------
 
 _get_settings_ = {
     bool: "getSettingBool",
