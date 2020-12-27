@@ -5,90 +5,49 @@ from __future__ import absolute_import, division, unicode_literals
 
 
 import sys
-import json
 
-from kodi_six import xbmc
+from six import iterkeys, itervalues, iteritems
 
-from client import client
-from iapc import JSONRPCError
-from persistence import addChannelToFeed, removeChannelsFromFeed
-from persistence import removeSearchQuery, clearSearchHistory
-from utils import getAddonId, selectDialog, getSetting, setSetting, notify
+from tools import getAddonId, selectDialog, getSetting, setSetting
 
-
-# utils ------------------------------------------------------------------------
-
-# xbmc.executebuiltin
-def _executeBuiltin_(function, *args):
-    xbmc.executebuiltin("{}({})".format(function, ",".join(args)))
+from invidious.client import client
+from invidious.persistence import (
+    addChannelToFeed, removeChannelsFromFeed,
+    removeSearchQuery, clearSearchHistory
+)
+from invidious.utils import containerUpdate, addFavourite, playMedia
+from invidious.youtube.params import languages, locations
 
 
-# xbmc.executeJSONRPC
-_jsonrpc_request_ = {
-    "id": 1,
-    "jsonrpc": "2.0",
-}
+# channel stuff ----------------------------------------------------------------
 
-def _executeJSONRPC_(method, **kwargs):
-    request = dict(_jsonrpc_request_, method=method, params=kwargs)
-    error = json.loads(xbmc.executeJSONRPC(json.dumps(request))).get("error")
-    if error:
-        raise JSONRPCError(error)
-
-
-# _containerUpdate -------------------------------------------------------------
-
-def _containerUpdate(*args):
-    _executeBuiltin_("Container.Update", *args)
-
-
-# _addFavourite ----------------------------------------------------------------
-
-def _addFavourite(title, type, **kwargs):
-    _executeJSONRPC_("Favourites.AddFavourite", title=title, type=type, **kwargs)
-
-
-# _playMedia -------------------------------------------------------------------
-
-def _playMedia(*args):
-    _executeBuiltin_("PlayMedia", *args)
-
-
-# ------------------------------------------------------------------------------
-# actions
-# ------------------------------------------------------------------------------
-
-_channel_url_ = "plugin://{}/?action=channel&authorId={{}}".format(getAddonId())
-
-
-# goToChannel ------------------------------------------------------------------
+__channel_url__ = "plugin://{}/?action=channel&authorId={{}}".format(getAddonId())
 
 def goToChannel(authorId):
-    _containerUpdate(_channel_url_.format(authorId))
-
-
-# addChannelToFavourites -------------------------------------------------------
+    containerUpdate(__channel_url__.format(authorId))
 
 def addChannelToFavourites(authorId):
-    channel = client.channel_(authorId)
-    _addFavourite(channel.author, "window",
-                  window="videos", thumbnail=channel.thumbnail,
-                  windowparameter=_channel_url_.format(authorId))
+    channel = client._channel(authorId)
+    addFavourite(
+        channel.author, "window",
+        window="videos", thumbnail=channel.thumbnail,
+        windowparameter=__channel_url__.format(authorId)
+    )
 
 
 # playWithYouTube --------------------------------------------------------------
 
-_youtube_url_ = "plugin://plugin.video.youtube/play/?incognito=true&video_id={}"
+_youtube_url_ = "plugin://{}/?action=video&youtube=true&videoId={{}}".format(getAddonId())
 
 def playWithYouTube(videoId):
-    _playMedia(_youtube_url_.format(videoId))
+    playMedia(_youtube_url_.format(videoId))
 
 
 # selectInstance ---------------------------------------------------------------
 
 def selectInstance():
     instance = getSetting("instance", unicode)
-    instances = client.instances_(sort_by="health")
+    instances = client._instances(sort_by="health")
     if instances:
         preselect = instances.index(instance) if instance in instances else -1
         index = selectDialog(instances, heading=30105, preselect=preselect)
@@ -96,43 +55,54 @@ def selectInstance():
             setSetting("instance", instances[index], unicode)
 
 
-# search history ---------------------------------------------------------------
+# selectLanguage ---------------------------------------------------------------
 
-_search_url_ = "plugin://{}/?action=search&type={{}}".format(getAddonId())
+def selectLanguage():
+    hl = getSetting("youtube.hl", unicode)
+    keys = list(iterkeys(languages))
+    values = list(itervalues(languages))
+    preselect = keys.index(hl) if hl in languages else -1
+    index = selectDialog(values, heading=30125, preselect=preselect)
+    if index >= 0:
+        setSetting("youtube.hl", keys[index], unicode)
+        setSetting("youtube.hl.text", values[index], unicode)
 
-def _removeSearchQuery(_type, key):
-    removeSearchQuery(_type, key)
-    _containerUpdate(_search_url_.format(_type))
 
-def _clearSearchHistory(_type=None):
-    clearSearchHistory(_type)
-    if _type:
-        _containerUpdate(_search_url_.format(_type))
-    else:
-        notify(30114, time=2000)
+# selectLocation ---------------------------------------------------------------
+
+def selectLocation():
+    gl = getSetting("youtube.gl", unicode)
+    keys = list(iterkeys(locations))
+    values = list(itervalues(locations))
+    preselect = keys.index(gl) if gl in locations else -1
+    index = selectDialog(values, heading=30127, preselect=preselect)
+    if index >= 0:
+        setSetting("youtube.gl", keys[index], unicode)
+        setSetting("youtube.gl.text", values[index], unicode)
 
 
 # __main__ ---------------------------------------------------------------------
 
-_dispatch_ = {
+__dispatch__ = {
     "goToChannel": goToChannel,
     "addChannelToFavourites": addChannelToFavourites,
     "playWithYouTube": playWithYouTube,
     "selectInstance": selectInstance,
+    "selectLanguage": selectLanguage,
+    "selectLocation": selectLocation,
     "addChannelToFeed": addChannelToFeed,
     "removeChannelsFromFeed": removeChannelsFromFeed,
-    "removeSearchQuery": _removeSearchQuery,
-    "clearSearchHistory": _clearSearchHistory
+    "removeSearchQuery": removeSearchQuery,
+    "clearSearchHistory": clearSearchHistory
 }
 
 def dispatch(name, *args):
-    action = _dispatch_.get(name)
+    action = __dispatch__.get(name)
     if not action or not callable(action):
-        raise Exception("Invalid script action '{}'".format(name))
+        raise Exception("Invalid script '{}'".format(name))
     action(*args)
 
 
 if __name__ == "__main__":
-
     dispatch(*sys.argv[1:])
 

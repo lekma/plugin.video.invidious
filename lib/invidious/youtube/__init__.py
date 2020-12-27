@@ -3,3 +3,8 @@
 
 from __future__ import absolute_import, division, unicode_literals
 
+
+from .httpd import YouTubeServer
+
+del httpd
+

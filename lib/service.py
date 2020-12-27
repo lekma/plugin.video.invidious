@@ -7,45 +7,21 @@ from __future__ import absolute_import, division, unicode_literals
 import requests
 import time
 
-from six.moves.urllib.parse import urljoin, urlunsplit
+from six.moves.urllib.parse import urlunsplit, urlsplit, urljoin
 
 from iapc import Service, public
-from utils import getSetting, notify, log, logError, iconError
-from utils import makeDataDir, containerRefresh
-from script import _clearSearchHistory
+
+from tools import (
+    buildUrl, log, LOGERROR, notify, ICONERROR, makeDataDir, getSetting
+)
+
+from invidious.persistence import clearSearchHistory
+from invidious.utils import containerRefresh
+from invidious.youtube import YouTubeServer
 
 
 # ------------------------------------------------------------------------------
-# Session
-# ------------------------------------------------------------------------------
-
-class InvidiousSession(requests.Session):
-
-    def __init__(self, headers=None):
-        super(InvidiousSession, self).__init__()
-        if headers:
-            self.headers.update(headers)
-
-    def request(self, *args, **kwargs):
-        response = super(InvidiousSession, self).request(*args, **kwargs)
-        log("request.url: {}".format(response.url))
-        try:
-            response.raise_for_status()
-        except Exception as err:
-            try:
-                msg = response.json().get("error")
-            except Exception:
-                msg = None
-            if msg:
-                logError("session: error processing request [{}]".format(msg))
-                return notify(msg, icon=iconError)
-            raise err
-        else:
-            return response.json()
-
-
-# ------------------------------------------------------------------------------
-# Service
+# Feed
 # ------------------------------------------------------------------------------
 
 class Feed(list):
@@ -80,97 +56,194 @@ class Feed(list):
         return (self[((page - 1) * self.limit):(page * self.limit)], self.limit)
 
 
+# ------------------------------------------------------------------------------
+# Session
+# ------------------------------------------------------------------------------
+
+class Session(requests.Session):
+
+    @staticmethod
+    def __notify__(result):
+        if isinstance(result, dict):
+            error = result.get("error")
+            if error:
+                notify(error, icon=ICONERROR)
+                return True
+        return False
+
+    def __init__(self, headers=None):
+        super(Session, self).__init__()
+        if headers:
+            self.headers.update(headers)
+
+    def request(self, method, url, **kwargs):
+        log("request.url: {}".format(buildUrl(url, **kwargs.get("params", {}))))
+        response = super(Session, self).request(method, url, **kwargs)
+        try:
+            response.raise_for_status()
+        except Exception as error:
+            try:
+                result = response.json()
+            except Exception:
+                result = None
+            if not self.__notify__(result):
+                raise error
+        else:
+            result = response.json()
+            if not self.__notify__(result):
+                return result
+
+
+# ------------------------------------------------------------------------------
+# InvidiousService
+# ------------------------------------------------------------------------------
+
 class InvidiousService(Service):
 
-    _headers_ = {}
+    __headers__ = {}
 
-    _urls_ = {
-        "videos": "channels/{}/videos",
-        "channel": "channels/{}",
+    __paths__ = {
         "video": "videos/{}",
-        "playlists": "channels/{}/playlists",
-        "playlist": "playlists/{}"
+        "channel": "channels/{}",
+        "playlist": "playlists/{}",
+        "videos": "channels/{}/videos",
+        "playlists": "channels/{}/playlists"
     }
 
-    _instances_url_ = "https://instances.invidio.us/instances.json"
+    __instances__ = "https://instances.invidio.us/instances.json"
 
     def __init__(self, *args, **kwargs):
         super(InvidiousService, self).__init__(*args, **kwargs)
-        self._session_ = InvidiousSession(headers=self._headers_)
-        self._channels_ = {}
-        self._feed_ = Feed()
+        self.__session__ = Session(headers=self.__headers__)
+        self.__channels__ = {}
+        self.__query__ = {}
+        self.__feed__ = Feed()
         makeDataDir()
 
-    def setup(self):
-        self._search_history = getSetting("search_history", bool)
-        self._scheme = "https" if getSetting("ssl", bool) else "http"
-        self._netloc = getSetting("instance", unicode)
-        _path = "{}/".format(getSetting("path", unicode).strip("/"))
-        self._url = urlunsplit((self._scheme, self._netloc, _path, "", ""))
-        log("service.url: '{}'".format(self._url))
+    def serve_forever(self, timeout):
+        self.__httpd__ = YouTubeServer(timeout=timeout)
+        while not self.waitForAbort(timeout):
+            self.__httpd__.handle_request()
+        self.__httpd__.server_close()
 
-    def start(self):
+    def start(self, **kwargs):
         log("starting service...")
-        self.setup()
-        self.serve()
+        self.__setup__()
+        self.serve(**kwargs)
         log("service stopped")
 
     def onSettingsChanged(self):
-        if self._search_history and not getSetting("search_history", bool):
-            _clearSearchHistory()
-        self.setup()
+        if self.__history__ and not getSetting("search_history", bool):
+            update = (
+                (self.__query__.get("action") == "search") and
+                (len(self.__query__) > 1)
+            )
+            clearSearchHistory(update=update)
+        self.__setup__()
         containerRefresh()
 
-    def get(self, url, **kwargs):
-        return self._session_.get(urljoin(self._url, url), params=kwargs)
+    # --------------------------------------------------------------------------
+
+    def __setup__(self):
+        self.__history__ = getSetting("search_history", bool)
+        self.__scheme__ = "https" if getSetting("ssl", bool) else "http"
+        self.__netloc__ = getSetting("instance", unicode)
+        path = "{}/".format(getSetting("path", unicode).strip("/"))
+        self.__url__ = urlunsplit(
+            (self.__scheme__, self.__netloc__, path, "", "")
+        )
+        log("service.url: '{}'".format(self.__url__))
+
+    def __get__(self, path, **kwargs):
+        return self.__session__.get(urljoin(self.__url__, path), params=kwargs)
 
     # public api ---------------------------------------------------------------
 
     @public
-    def query(self, key, *args, **kwargs):
-        return self.get(self._urls_.get(key, key).format(*args), **kwargs)
+    def instances(self, **kwargs):
+        return self.__session__.get(self.__instances__, params=kwargs)
 
-    def _get_channel(self, authorId):
+    @public
+    def query(self, key, *args, **kwargs):
+        return self.__get__(
+            self.__paths__.get(key, key).format(*args), **kwargs
+        )
+
+    def __channel__(self, authorId):
         channel = self.query("channel", authorId)
         if channel:
-            self._channels_[authorId] = channel
+            self.__channels__[authorId] = channel
             return channel
 
     @public
     def channel(self, authorId):
         try:
-            return self._channels_[authorId]
+            return self.__channels__[authorId]
         except KeyError:
-            return self._get_channel(authorId)
+            return self.__channel__(authorId)
 
     @public
-    def scheme(self):
-        return self._scheme
-
-    @public
-    def netloc(self):
-        return self._netloc
-
-    @public
-    def instances(self, **kwargs):
-        return self._session_.get(self._instances_url_, params=kwargs)
+    def pushQuery(self, query):
+        self.__query__ = query
 
     @public
     def feed(self, ids, page=1, **kwargs):
         page = int(page)
-        if page == 1 and self._feed_.invalid(set(ids)):
-            self._feed_.clear()
+        if page == 1 and self.__feed__.invalid(set(ids)):
+            self.__feed__.clear()
             for authorId in ids:
                 try:
-                    self._feed_.update(self.query("channel", authorId))
+                    self.__feed__.update(
+                        self.query("channel", authorId, **kwargs)
+                    )
                 except Exception:
                     continue
-        return self._feed_.page(page)
+        return self.__feed__.page(page)
+
+    # video --------------------------------------------------------------------
+
+    def fixUrl(self, url, proxy=False):
+        split = urlsplit(url)
+        query = split.query.split("&") if split.query else []
+        if proxy:
+            query.append("local=true")
+        return urlunsplit(
+            (
+                split.scheme or self.__scheme__,
+                split.netloc or self.__netloc__,
+                split.path,
+                "&".join(query),
+                split.fragment
+            )
+        )
+
+    @public
+    def video(self, videoId, youtube=False, proxy=False, **kwargs):
+        video = self.query("video", videoId, **kwargs)
+        if video:
+            hlsUrl = video.get("hlsUrl", "")
+            if youtube:
+                video["dashUrl"] = self.__httpd__.dashUrl(videoId)
+                if hlsUrl:
+                    video["hlsUrl"] = self.__httpd__.hlsUrl(videoId)
+            else:
+                video["dashUrl"] = self.fixUrl(video["dashUrl"], proxy=proxy)
+                if hlsUrl:
+                    video["hlsUrl"] = self.fixUrl(hlsUrl, proxy=False)
+            return video
+
+    # autogenerated ------------------------------------------------------------
+
+    @public
+    def autogenerated(self, authorId, **kwargs):
+        return [
+            self.query("playlist", playlistId, **kwargs)
+            for playlistId in self.__httpd__.playlists(authorId)
+        ]
 
 
 # __main__ ---------------------------------------------------------------------
 
 if __name__ == "__main__":
-
-    InvidiousService().start()
+    InvidiousService().start(timeout=0.5)
 

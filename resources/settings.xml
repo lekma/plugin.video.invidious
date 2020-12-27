@@ -19,6 +19,26 @@
         <setting id="proxy" label="30106" type="bool"
                  default="false" />
 
+        <!-- YouTube Language -->
+        <setting id="selectLanguage" label="30125" type="action"
+                 action="RunScript(plugin.video.invidious,selectLanguage)" />
+
+        <setting id="youtube.hl" label="30124" type="text"
+                 default="en" visible="false" />
+
+        <setting id="youtube.hl.text" label="30124" type="text"
+                 default="English (US)" enable="false" />
+
+        <!-- YouTube Location -->
+        <setting id="selectLocation" label="30127" type="action"
+                 action="RunScript(plugin.video.invidious,selectLocation)" />
+
+        <setting id="youtube.gl" label="30126" type="text"
+                 default="US" visible="false" />
+
+        <setting id="youtube.gl.text" label="30126" type="text"
+                 default="United States" enable="false" />
+
     </category>
 
     <!-- Home -->

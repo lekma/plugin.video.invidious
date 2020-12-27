@@ -61,7 +61,7 @@ msgstr "Videojuegos"
 
 msgctxt "#30012"
 msgid "News"
-msgstr "Novedades"
+msgstr "Noticias"
 
 msgctxt "#30013"
 msgid "Movies"
@@ -70,6 +70,22 @@ msgstr "Películas"
 msgctxt "#30014"
 msgid "Feed"
 msgstr "Feed"
+
+msgctxt "#30015"
+msgid "Fashion & Beauty"
+msgstr "Moda y belleza"
+
+msgctxt "#30016"
+msgid "Popular on YouTube"
+msgstr "Populares en YouTube"
+
+msgctxt "#30017"
+msgid "Sports"
+msgstr "Deportes"
+
+msgctxt "#30018"
+msgid "Learning"
+msgstr "Aprendizaje"
 
 # context menus
 
@@ -82,8 +98,8 @@ msgid "Add channel to favourites"
 msgstr "Añadir canal a favoritos"
 
 msgctxt "#30033"
-msgid "Play with YouTube"
-msgstr "Reproducir con el plugin de YouTube"
+msgid "Play from YouTube"
+msgstr "Reproducir desde YouTube"
 
 msgctxt "#30034"
 msgid "Add channel to feed"
@@ -99,29 +115,41 @@ msgstr "Borrar historial de búsqueda"
 
 # items
 
-msgctxt "#30056"
-msgid "Author: {0.author}\nTitle: {0.title}"
-msgstr "Autor: {0.author}\nTítulo: {0.title}"
+msgctxt "#30053"
+msgid "Channel: {0.author}"
+msgstr "Canal: {0.author}"
 
-msgctxt "#30057"
-msgid "Author: {0.author}\nTitle: {0.title}\nViews: {0.viewCount}\nPublished: {0.published}"
-msgstr "Autor: {0.author}\nTítulo: {0.title}\nReproducciones: {0.viewCount}\nPublicado: {0.published}"
+msgctxt "#30054"
+msgid "Views: {0.viewCount}"
+msgstr "Reproducciones: {0.viewCount}"
 
-msgctxt "#30058"
-msgid "Author: {0.author}\nTitle: {0.title}\nViews: {0.viewCount}\nPublished: {0.published}\nDescription: {0.description}"
-msgstr "Autor: {0.author}\nTítulo: {0.title}\nReproducciones: {0.viewCount}\nPublicado: {0.published}\nDescripción: {0.description}"
+msgctxt "#30055"
+msgid "Published: {0.published}"
+msgstr "Publicado: {0.published}"
+
+#msgctxt "#30056"
+#msgid "{0.title}\n\nChannel: {0.author}"
+#msgstr "{0.title}\n\nCanal: {0.author}"
+
+#msgctxt "#30057"
+#msgid "{0.title}\n\nChannel: {0.author}\nViews: {0.viewCount}\nPublished: {0.published}"
+#msgstr "{0.title}\n\nCanal: {0.author}\nReproducciones: {0.viewCount}\nPublicado: {0.published}"
+
+#msgctxt "#30058"
+#msgid "{0.title}\n\nChannel: {0.author}\nViews: {0.viewCount}\nPublished: {0.published}\n\n{0.description}"
+#msgstr "{0.title}\n\nCanal: {0.author}\nReproducciones: {0.viewCount}\nPublicado: {0.published}\n\n{0.description}"
 
 msgctxt "#30059"
 msgid "[COLOR red][LIVE NOW][/COLOR] {0.title}"
 msgstr "[COLOR red][EN DIRECTO][/COLOR] {0.title}"
 
-msgctxt "#30060"
-msgid "{0.author}\nDescription: {0.description}"
-msgstr "{0.author}\nDescripción: {0.description}"
+#msgctxt "#30060"
+#msgid "{0.author}\n\n{0.description}"
+#msgstr "{0.author}\n\n{0.description}"
 
 msgctxt "#30061"
-msgid "{0.title}\nAuthor: {0.author}\nVideos: {0.videoCount}"
-msgstr "{0.title}\nAutor: {0.author}\nVídeos: {0.videoCount}"
+msgid "{0.title}\n\nChannel: {0.author}\nVideos: {0.videoCount}"
+msgstr "{0.title}\n\nCanal: {0.author}\nVídeos: {0.videoCount}"
 
 msgctxt "#30062"
 msgid "New search"
@@ -184,4 +212,24 @@ msgstr "Carpetas"
 msgctxt "#30122"
 msgid "Auto-generated channels"
 msgstr "Canales autogenerados"
+
+msgctxt "#30123"
+msgid "Home"
+msgstr ""
+
+msgctxt "#30124"
+msgid "Language"
+msgstr "Idioma"
+
+msgctxt "#30125"
+msgid "Choose your language"
+msgstr "Selecciona tu idioma"
+
+msgctxt "#30126"
+msgid "Location"
+msgstr "Ubicación"
+
+msgctxt "#30127"
+msgid "Choose your location"
+msgstr "Selecciona tu ubicación"
 

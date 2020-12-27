@@ -71,6 +71,22 @@ msgctxt "#30014"
 msgid "Feed"
 msgstr ""
 
+msgctxt "#30015"
+msgid "Fashion & Beauty"
+msgstr ""
+
+msgctxt "#30016"
+msgid "Popular on YouTube"
+msgstr ""
+
+msgctxt "#30017"
+msgid "Sports"
+msgstr ""
+
+msgctxt "#30018"
+msgid "Learning"
+msgstr ""
+
 # context menus
 
 msgctxt "#30031"
@@ -82,7 +98,7 @@ msgid "Add channel to favourites"
 msgstr ""
 
 msgctxt "#30033"
-msgid "Play with YouTube"
+msgid "Play from YouTube"
 msgstr ""
 
 msgctxt "#30034"
@@ -99,28 +115,40 @@ msgstr ""
 
 # items
 
-msgctxt "#30056"
-msgid "Author: {0.author}\nTitle: {0.title}"
+msgctxt "#30053"
+msgid "Channel: {0.author}"
 msgstr ""
 
-msgctxt "#30057"
-msgid "Author: {0.author}\nTitle: {0.title}\nViews: {0.viewCount}\nPublished: {0.published}"
+msgctxt "#30054"
+msgid "Views: {0.viewCount}"
 msgstr ""
 
-msgctxt "#30058"
-msgid "Author: {0.author}\nTitle: {0.title}\nViews: {0.viewCount}\nPublished: {0.published}\nDescription: {0.description}"
+msgctxt "#30055"
+msgid "Published: {0.published}"
 msgstr ""
+
+#msgctxt "#30056"
+#msgid "{0.title}\n\nChannel: {0.author}"
+#msgstr ""
+
+#msgctxt "#30057"
+#msgid "{0.title}\n\nChannel: {0.author}\nViews: {0.viewCount}\nPublished: {0.published}"
+#msgstr ""
+
+#msgctxt "#30058"
+#msgid "{0.title}\n\nChannel: {0.author}\nViews: {0.viewCount}\nPublished: {0.published}\n\n{0.description}"
+#msgstr ""
 
 msgctxt "#30059"
 msgid "[COLOR red][LIVE NOW][/COLOR] {0.title}"
 msgstr ""
 
-msgctxt "#30060"
-msgid "{0.author}\nDescription: {0.description}"
-msgstr ""
+#msgctxt "#30060"
+#msgid "{0.author}\n\n{0.description}"
+#msgstr ""
 
 msgctxt "#30061"
-msgid "{0.title}\nAuthor: {0.author}\nVideos: {0.videoCount}"
+msgid "{0.title}\n\nChannel: {0.author}\nVideos: {0.videoCount}"
 msgstr ""
 
 msgctxt "#30062"
@@ -191,5 +219,21 @@ msgstr ""
 
 msgctxt "#30123"
 msgid "Home"
+msgstr ""
+
+msgctxt "#30124"
+msgid "Language"
+msgstr ""
+
+msgctxt "#30125"
+msgid "Choose your language"
+msgstr ""
+
+msgctxt "#30126"
+msgid "Location"
+msgstr ""
+
+msgctxt "#30127"
+msgid "Choose your location"
 msgstr ""
 

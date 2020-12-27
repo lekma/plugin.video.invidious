@@ -52,7 +52,7 @@ msgstr "Am populärsten"
 
 msgctxt "#30009"
 msgid "Trending"
-msgstr "Jetzt gerade beliebt"
+msgstr "Trends"
 
 msgctxt "#30010"
 msgid "Music"
@@ -60,7 +60,7 @@ msgstr "Musik"
 
 msgctxt "#30011"
 msgid "Gaming"
-msgstr "Spiele"
+msgstr "Gaming"
 
 msgctxt "#30012"
 msgid "News"
@@ -74,6 +74,22 @@ msgctxt "#30014"
 msgid "Feed"
 msgstr "Feed"
 
+msgctxt "#30015"
+msgid "Fashion & Beauty"
+msgstr "Beauty & Fashion"
+
+msgctxt "#30016"
+msgid "Popular on YouTube"
+msgstr "Beliebt auf YouTube"
+
+msgctxt "#30017"
+msgid "Sports"
+msgstr "Sport"
+
+msgctxt "#30018"
+msgid "Learning"
+msgstr "Lehrinhalte"
+
 # context menus
 
 msgctxt "#30031"
@@ -85,8 +101,8 @@ msgid "Add channel to favourites"
 msgstr "Kanal zu Favoriten hinzufügen"
 
 msgctxt "#30033"
-msgid "Play with YouTube"
-msgstr "Abspielen mit YouTube"
+msgid "Play from YouTube"
+msgstr "Abspielen von YouTube"
 
 msgctxt "#30034"
 msgid "Add channel to feed"
@@ -102,29 +118,41 @@ msgstr "Lösche Such-Historie"
 
 # items
 
-msgctxt "#30056"
-msgid "Author: {0.author}\nTitle: {0.title}"
-msgstr "Autor: {0.author}\nTitel: {0.title}"
+msgctxt "#30053"
+msgid "Channel: {0.author}"
+msgstr "Kanal: {0.author}"
 
-msgctxt "#30057"
-msgid "Author: {0.author}\nTitle: {0.title}\nViews: {0.viewCount}\nPublished: {0.published}"
-msgstr "Autor: {0.author}\nTitel: {0.title}\nAufrufe: {0.viewCount}\nVeröffentlicht: {0.published}"
+msgctxt "#30054"
+msgid "Views: {0.viewCount}"
+msgstr "Aufrufe: {0.viewCount}"
 
-msgctxt "#30058"
-msgid "Author: {0.author}\nTitle: {0.title}\nViews: {0.viewCount}\nPublished: {0.published}\nDescription: {0.description}"
-msgstr "Autor: {0.author}\nTitel: {0.title}\nAufrufe: {0.viewCount}\nVeröffentlicht: {0.published}\nBeschreibung: {0.description}"
+msgctxt "#30055"
+msgid "Published: {0.published}"
+msgstr "Veröffentlicht: {0.published}"
+
+#msgctxt "#30056"
+#msgid "{0.title}\n\nChannel: {0.author}"
+#msgstr "{0.title}\n\nKanal: {0.author}"
+
+#msgctxt "#30057"
+#msgid "{0.title}\n\nChannel: {0.author}\nViews: {0.viewCount}\nPublished: {0.published}"
+#msgstr "{0.title}\n\nKanal: {0.author}\nAufrufe: {0.viewCount}\nVeröffentlicht: {0.published}"
+
+#msgctxt "#30058"
+#msgid "{0.title}\n\nChannel: {0.author}\nViews: {0.viewCount}\nPublished: {0.published}\n\n{0.description}"
+#msgstr "{0.title}\n\nKanal: {0.author}\nAufrufe: {0.viewCount}\nVeröffentlicht: {0.published}\n\n{0.description}"
 
 msgctxt "#30059"
 msgid "[COLOR red][LIVE NOW][/COLOR] {0.title}"
 msgstr "[COLOR red][JETZT LIVE][/COLOR] {0.title}"
 
-msgctxt "#30060"
-msgid "{0.author}\nDescription: {0.description}"
-msgstr "{0.author}\nBeschreibung: {0.description}"
+#msgctxt "#30060"
+#msgid "{0.author}\n\n{0.description}"
+#msgstr "{0.author}\n\n{0.description}"
 
 msgctxt "#30061"
-msgid "{0.title}\nAuthor: {0.author}\nVideos: {0.videoCount}"
-msgstr "{0.title}\nAutor: {0.author}\nVideos: {0.videoCount}"
+msgid "{0.title}\n\nChannel: {0.author}\nVideos: {0.videoCount}"
+msgstr "{0.title}\n\nKanal: {0.author}\nVideos: {0.videoCount}"
 
 msgctxt "#30062"
 msgid "New search"
@@ -187,3 +215,24 @@ msgstr "Ordner"
 msgctxt "#30122"
 msgid "Auto-generated channels"
 msgstr "Automatisch erzeugte Kanäle"
+
+msgctxt "#30123"
+msgid "Home"
+msgstr ""
+
+msgctxt "#30124"
+msgid "Language"
+msgstr "Sprache"
+
+msgctxt "#30125"
+msgid "Choose your language"
+msgstr "Sprache auswählen"
+
+msgctxt "#30126"
+msgid "Location"
+msgstr "Ort"
+
+msgctxt "#30127"
+msgid "Choose your location"
+msgstr "Standort auswählen"
+
