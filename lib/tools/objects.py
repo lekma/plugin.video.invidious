@@ -84,5 +84,5 @@ class List(list):
         self.content = content
 
     def getItems(self, *args):
-        return (item.getItem(*args) for item in self)
+        return (item.getItem(*args) for item in self if item)
 
