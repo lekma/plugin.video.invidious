@@ -145,6 +145,7 @@ class InvidiousService(Service):
     # --------------------------------------------------------------------------
 
     def __setup__(self):
+        self.__region__ = getSetting("youtube.gl", unicode)
         self.__history__ = getSetting("search_history", bool)
         self.__scheme__ = "https" if getSetting("ssl", bool) else "http"
         self.__netloc__ = getSetting("instance", unicode)
@@ -155,6 +156,7 @@ class InvidiousService(Service):
         log("service.url: '{}'".format(self.__url__))
 
     def __get__(self, path, **kwargs):
+        kwargs.setdefault("region", self.__region__)
         return self.__session__.get(urljoin(self.__url__, path), params=kwargs)
 
     # public api ---------------------------------------------------------------
