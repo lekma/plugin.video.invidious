@@ -5,7 +5,7 @@
     <category label="30101">
 
         <setting id="selectInstance" label="30105" type="action"
-                 action="RunScript(plugin.video.invidious,selectInstance)" />
+                 action="RunScript($ID,selectInstance)" />
 
         <setting id="instance" label="30102" type="text"
                  default="invidious.snopyta.org" />
@@ -19,9 +19,12 @@
         <setting id="proxy" label="30106" type="bool"
                  default="false" />
 
+        <setting id="timeout" label="30128" type="slider"
+                 default="10" range="0,10,120" option="float" />
+
         <!-- YouTube Language -->
         <setting id="selectLanguage" label="30125" type="action"
-                 action="RunScript(plugin.video.invidious,selectLanguage)" />
+                 action="RunScript($ID,selectLanguage)" />
 
         <setting id="youtube.hl" label="30124" type="text"
                  default="en" visible="false" />
@@ -31,7 +34,7 @@
 
         <!-- YouTube Location -->
         <setting id="selectLocation" label="30127" type="action"
-                 action="RunScript(plugin.video.invidious,selectLocation)" />
+                 action="RunScript($ID,selectLocation)" />
 
         <setting id="youtube.gl" label="30126" type="text"
                  default="US" visible="false" />
@@ -70,7 +73,7 @@
         <setting label="30014" type="lsep" />
 
         <setting id="removeChannelsFromFeed" label="30112" type="action"
-                 action="RunScript(plugin.video.invidious,removeChannelsFromFeed)" />
+                 action="RunScript($ID,removeChannelsFromFeed)" />
 
         <setting label="30115" type="lsep" />
 
@@ -78,7 +81,7 @@
                  default="true" />
 
         <setting id="clearAllSearchHistory" label="30113" type="action"
-                 action="RunScript(plugin.video.invidious,clearSearchHistory)"
+                 action="RunScript($ID,clearSearchHistory)"
                  subsetting="true" enable="eq(-1,true)" />
 
     </category>

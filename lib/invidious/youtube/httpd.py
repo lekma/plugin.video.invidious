@@ -58,9 +58,17 @@ class Session(object):
 
     def get(self, url, **kwargs):
         log("youtube.url: {}".format(buildUrl(url, **kwargs.get("params", {}))))
-        response = requests.get(url, headers=self.__headers__, **kwargs)
-        response.raise_for_status()
-        return response.text
+        try:
+            response = requests.get(
+                url, headers=self.__headers__, timeout=(9.05, 10.0), **kwargs
+            )
+        except requests.Timeout as error:
+            message = "youtube: {}".format(error)
+            log(message, LOGERROR)
+            notify(message, icon=ICONERROR)
+        else:
+            response.raise_for_status()
+            return response.text
 
     def js(self, jsUrl):
         return self.get("".join((self.__baseUrl__, jsUrl)))

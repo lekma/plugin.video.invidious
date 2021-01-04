@@ -64,11 +64,15 @@ class Session(requests.Session):
 
     @staticmethod
     def __notify__(result):
-        if isinstance(result, dict):
-            error = result.get("error")
-            if error:
-                notify(error, icon=ICONERROR)
-                return True
+        message = None
+        if isinstance(result, Exception):
+            message = "session: request error [{}]".format(result)
+            log(message, LOGERROR)
+        elif isinstance(result, dict):
+            message = result.get("error")
+        if message:
+            notify(message, icon=ICONERROR)
+            return True
         return False
 
     def __init__(self, headers=None):
@@ -76,22 +80,28 @@ class Session(requests.Session):
         if headers:
             self.headers.update(headers)
 
-    def request(self, method, url, **kwargs):
+    def request(self, method, url, timeout=None, **kwargs):
         log("request.url: {}".format(buildUrl(url, **kwargs.get("params", {}))))
-        response = super(Session, self).request(method, url, **kwargs)
         try:
-            response.raise_for_status()
-        except Exception as error:
-            try:
-                result = response.json()
-            except Exception:
-                result = None
-            if not self.__notify__(result):
-                raise error
+            response = super(Session, self).request(
+                method, url, timeout=timeout, **kwargs
+            )
+        except requests.Timeout as error:
+            self.__notify__(error)
         else:
-            result = response.json()
-            if not self.__notify__(result):
-                return result
+            try:
+                response.raise_for_status()
+            except Exception as error:
+                try:
+                    result = response.json()
+                except Exception:
+                    result = None
+                if not self.__notify__(result):
+                    raise error
+            else:
+                result = response.json()
+                if not self.__notify__(result):
+                    return result
 
 
 # ------------------------------------------------------------------------------
@@ -145,6 +155,11 @@ class InvidiousService(Service):
     # --------------------------------------------------------------------------
 
     def __setup__(self):
+        timeout = getSetting("timeout", float)
+        if timeout <= 0:
+            self.__timeout__ = None
+        else:
+            self.__timeout__ = (((timeout - (timeout % 3)) + 0.05), timeout)
         self.__region__ = getSetting("youtube.gl", unicode)
         self.__history__ = getSetting("search_history", bool)
         self.__scheme__ = "https" if getSetting("ssl", bool) else "http"
@@ -154,16 +169,21 @@ class InvidiousService(Service):
             (self.__scheme__, self.__netloc__, path, "", "")
         )
         log("service.url: '{}'".format(self.__url__))
+        log("service.timeout: {}".format(self.__timeout__))
 
     def __get__(self, path, **kwargs):
         kwargs.setdefault("region", self.__region__)
-        return self.__session__.get(urljoin(self.__url__, path), params=kwargs)
+        return self.__session__.get(
+            urljoin(self.__url__, path), timeout=self.__timeout__, params=kwargs
+        )
 
     # public api ---------------------------------------------------------------
 
     @public
     def instances(self, **kwargs):
-        return self.__session__.get(self.__instances__, params=kwargs)
+        return self.__session__.get(
+            self.__instances__, timeout=self.__timeout__, params=kwargs
+        )
 
     @public
     def query(self, key, *args, **kwargs):

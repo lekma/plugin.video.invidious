@@ -237,3 +237,7 @@ msgctxt "#30127"
 msgid "Choose your location"
 msgstr ""
 
+msgctxt "#30128"
+msgid "Timeout (0.0 means no timeout)"
+msgstr ""
+
