@@ -6,7 +6,7 @@ from __future__ import absolute_import, division, unicode_literals
 
 __all__ = [
     "getWindowId", "ICONINFO", "ICONWARNING", "ICONERROR", "notify",
-    "selectDialog", "inputDialog", "ListItem"
+    "selectDialog", "inputDialog", "contextMenu", "ListItem"
 ]
 
 
@@ -52,6 +52,12 @@ def selectDialog(_list, heading=__addon_name__, multi=False, **kwargs):
 
 def inputDialog(heading=__addon_name__, **kwargs):
     return xbmcgui.Dialog().input(maybeLocalize(heading), **kwargs)
+
+
+# contextmenu -----------------------------------------------------------------------
+
+def contextMenu(_list):
+    return xbmcgui.Dialog().contextmenu(_list)
 
 
 # listitem ---------------------------------------------------------------------

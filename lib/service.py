@@ -15,7 +15,7 @@ from tools import (
     buildUrl, log, LOGERROR, notify, ICONERROR, makeDataDir, getSetting
 )
 
-from invidious.persistence import clearSearchHistory
+from invidious.persistence import updateSearchHistory, clearSearchHistory
 from invidious.utils import containerRefresh
 from invidious.youtube import YouTubeServer
 
@@ -129,6 +129,7 @@ class InvidiousService(Service):
         self.__query__ = {}
         self.__feed__ = Feed()
         makeDataDir()
+        updateSearchHistory()
 
     def serve_forever(self, timeout):
         self.__httpd__ = YouTubeServer(timeout=timeout)

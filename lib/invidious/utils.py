@@ -60,3 +60,7 @@ def playMedia(*args):
 def addFavourite(title, type, **kwargs):
     executeJSONRPC("Favourites.AddFavourite", title=title, type=type, **kwargs)
 
+# setFocus
+def setFocus(*args):
+    executeBuiltin("Control.SetFocus", *args)
+

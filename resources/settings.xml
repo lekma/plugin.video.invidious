@@ -4,6 +4,9 @@
     <!-- General -->
     <category label="30101">
 
+        <!-- Instance -->
+        <setting label="30107" type="lsep" />
+
         <setting id="selectInstance" label="30105" type="action"
                  action="RunScript($ID,selectInstance)" />
 
@@ -22,7 +25,19 @@
         <setting id="timeout" label="30128" type="slider"
                  default="10" range="0,10,120" option="float" />
 
-        <!-- YouTube Language -->
+        <!-- Search -->
+        <setting label="30002" type="lsep" />
+
+        <setting id="sort_by" label="30130" type="enum"
+                 lvalues="30131|30132|30133|30134|30135"
+                 default="0" />
+
+    </category>
+
+    <!-- Regional -->
+    <category label="14222">
+
+        <!-- Language -->
         <setting id="selectLanguage" label="30125" type="action"
                  action="RunScript($ID,selectLanguage)" />
 
@@ -32,7 +47,7 @@
         <setting id="youtube.hl.text" label="30124" type="text"
                  default="English (US)" enable="false" />
 
-        <!-- YouTube Location -->
+        <!-- Location -->
         <setting id="selectLocation" label="30127" type="action"
                  action="RunScript($ID,selectLocation)" />
 
@@ -70,11 +85,13 @@
     <!-- Persistent data -->
     <category label="30111">
 
+        <!-- Feed -->
         <setting label="30014" type="lsep" />
 
         <setting id="removeChannelsFromFeed" label="30112" type="action"
                  action="RunScript($ID,removeChannelsFromFeed)" />
 
+        <!-- Search history -->
         <setting label="30115" type="lsep" />
 
         <setting id="search_history" label="30115" type="bool"

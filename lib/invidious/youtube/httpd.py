@@ -60,7 +60,7 @@ class Session(object):
         log("youtube.url: {}".format(buildUrl(url, **kwargs.get("params", {}))))
         try:
             response = requests.get(
-                url, headers=self.__headers__, timeout=(9.05, 10.0), **kwargs
+                url, headers=self.__headers__, timeout=(9.05, 30.0), **kwargs
             )
         except requests.Timeout as error:
             message = "youtube: {}".format(error)

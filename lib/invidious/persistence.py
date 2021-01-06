@@ -12,10 +12,10 @@ from six.moves.urllib.parse import unquote_plus, quote_plus
 
 from tools import (
     getAddonId, getAddonProfile, dumpObject, loadObject,
-    selectDialog, inputDialog, notify
+    selectDialog, inputDialog, notify, localizedString
 )
 
-from . import __query_types__
+from . import __query_types__, __sort_by__
 from .objects.queries import Queries
 from .utils import containerRefresh, containerUpdate
 
@@ -61,11 +61,23 @@ def _dumpSearchHistory(search_history):
 def _loadSearchHistory():
     return loadObject(__search_history_path__, default=defaultdict(OrderedDict))
 
-def _recordSearchQuery(type, query):
+def _recordSearchQuery(type, query, sort_by):
     search_history = _loadSearchHistory()
-    search_history[type][quote_plus(query.encode("utf-8"))] = query
+    search_history[type][quote_plus(query.encode("utf-8"))] = {
+        "query": query, "sort_by": sort_by
+    }
     _dumpSearchHistory(search_history)
 
+
+def updateSearchHistory():
+    search_history = _loadSearchHistory()
+    for type in search_history:
+        for key, value in search_history[type].items():
+            if not isinstance(value, dict):
+                search_history[type][key] = {
+                    "query": value, "sort_by": "relevance"
+                }
+    _dumpSearchHistory(search_history)
 
 def removeSearchQuery(type, key):
     search_history = _loadSearchHistory()
@@ -89,17 +101,38 @@ def clearSearchHistory(type=None, update=False):
         else:
             containerRefresh()
 
-def newSearch(type, history=False):
+def getSortBy(sort_by="relevance"):
+    keys = __sort_by__.keys()
+    index = selectDialog(
+        [localizedString(value) for value in __sort_by__.values()],
+        heading=30130, preselect=keys.index(sort_by)
+    )
+    if index >= 0:
+        sort_by = keys[index]
+    return sort_by
+
+def newSearch(type, sort_by=None, history=False):
     query = inputDialog(heading=30002)
-    if query and history:
-        _recordSearchQuery(type, query)
-    return query
+    if query:
+        if sort_by is None:
+            sort_by = getSortBy()
+        if history:
+            _recordSearchQuery(type, query, sort_by)
+    return query, sort_by
 
 def searchHistory(type):
     return Queries(
         type, reversed(list(iteritems(_loadSearchHistory()[type]))),
         category=__query_types__[type]
     )
+
+def updateSortBy(type, key, sort_by):
+    _tmp = getSortBy(sort_by=sort_by)
+    if sort_by != _tmp:
+        search_history = _loadSearchHistory()
+        search_history[type][key]["sort_by"] = _tmp
+        _dumpSearchHistory(search_history)
+        containerRefresh()
 
 
 # searches ---------------------------------------------------------------------

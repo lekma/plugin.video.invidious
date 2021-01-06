@@ -189,6 +189,10 @@ msgctxt "#30106"
 msgid "Proxy videos"
 msgstr ""
 
+msgctxt "#30107"
+msgid "Instance"
+msgstr ""
+
 msgctxt "#30111"
 msgid "Persistent data"
 msgstr ""
@@ -239,5 +243,29 @@ msgstr ""
 
 msgctxt "#30128"
 msgid "Timeout (0.0 means no timeout)"
+msgstr ""
+
+msgctxt "#30130"
+msgid "Sort by"
+msgstr ""
+
+msgctxt "#30131"
+msgid "Relevance"
+msgstr ""
+
+msgctxt "#30132"
+msgid "Upload date"
+msgstr ""
+
+msgctxt "#30133"
+msgid "View count"
+msgstr ""
+
+msgctxt "#30134"
+msgid "Rating"
+msgstr ""
+
+msgctxt "#30135"
+msgid "Always ask"
 msgstr ""
 

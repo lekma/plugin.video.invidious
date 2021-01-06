@@ -13,7 +13,7 @@ from tools import getAddonId, selectDialog, getSetting, setSetting
 from invidious.client import client
 from invidious.persistence import (
     addChannelToFeed, removeChannelsFromFeed,
-    removeSearchQuery, clearSearchHistory
+    removeSearchQuery, clearSearchHistory, updateSortBy
 )
 from invidious.utils import containerUpdate, addFavourite, playMedia
 from invidious.youtube.params import languages, locations
@@ -93,7 +93,8 @@ __dispatch__ = {
     "addChannelToFeed": addChannelToFeed,
     "removeChannelsFromFeed": removeChannelsFromFeed,
     "removeSearchQuery": removeSearchQuery,
-    "clearSearchHistory": clearSearchHistory
+    "clearSearchHistory": clearSearchHistory,
+    "updateSortBy": updateSortBy
 }
 
 def dispatch(name, *args):

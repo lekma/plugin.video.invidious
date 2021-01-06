@@ -10,7 +10,7 @@ from inputstreamhelper import Helper
 
 from tools import Plugin, action, parseQuery, openSettings, getSetting
 
-from invidious import home, styles
+from invidious import home, styles, sortBy
 from invidious.client import client
 from invidious.objects.folders import Folders
 from invidious.persistence import getFeed, newSearch, searchHistory, Searches
@@ -177,7 +177,14 @@ class InvidiousPlugin(Plugin):
         try:
             query, kwargs = self.__searches__.pop()
         except IndexError:
-            query = newSearch(kwargs["type"], history=history)
+            index = getSetting("sort_by", int)
+            try:
+                sort_by = sortBy[index]
+            except IndexError:
+                sort_by = None
+            query, kwargs["sort_by"] = newSearch(
+                kwargs["type"], sort_by=sort_by, history=history
+            )
         if query:
             return self._search(query, **kwargs)
         return False

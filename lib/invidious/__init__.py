@@ -4,6 +4,9 @@
 from __future__ import absolute_import, division, unicode_literals
 
 
+from collections import OrderedDict
+
+
 __schema__ = {
     "feed": {
         "": {
@@ -114,6 +117,18 @@ __query_types__ = {
     "channel": 30004,
     "playlist": 30005
 }
+
+
+__sort_by__ = OrderedDict(
+    (
+        ("relevance", 30131),
+        ("upload_date", 30132),
+        ("view_count", 30133),
+        ("rating", 30134)
+    )
+)
+
+sortBy = __sort_by__.keys()
 
 
 home = (
