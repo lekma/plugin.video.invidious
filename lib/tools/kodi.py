@@ -26,9 +26,9 @@ from kodi_six import xbmc, xbmcaddon, xbmcvfs
 __addon_id__ = xbmcaddon.Addon().getAddonInfo("id")
 __addon_name__ = xbmcaddon.Addon().getAddonInfo("name")
 __addon_version__ = xbmcaddon.Addon().getAddonInfo("version")
-__addon_path__ = xbmc.translatePath(xbmcaddon.Addon().getAddonInfo("path"))
-__addon_icon__ = xbmc.translatePath(xbmcaddon.Addon().getAddonInfo("icon"))
-__addon_profile__ = xbmc.translatePath(xbmcaddon.Addon().getAddonInfo("profile"))
+__addon_path__ = xbmcvfs.translatePath(xbmcaddon.Addon().getAddonInfo("path"))
+__addon_icon__ = xbmcvfs.translatePath(xbmcaddon.Addon().getAddonInfo("icon"))
+__addon_profile__ = xbmcvfs.translatePath(xbmcaddon.Addon().getAddonInfo("profile"))
 
 def getAddonId():
     return __addon_id__
