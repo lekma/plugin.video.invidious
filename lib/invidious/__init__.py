@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
+
 
 
 from collections import OrderedDict
@@ -128,7 +128,7 @@ __sort_by__ = OrderedDict(
     )
 )
 
-sortBy = __sort_by__.keys()
+sortBy = list(__sort_by__.keys())
 
 
 home = (

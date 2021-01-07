@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
+
 
 
 import sys
@@ -46,39 +46,39 @@ def playWithYouTube(videoId):
 # selectInstance ---------------------------------------------------------------
 
 def selectInstance():
-    instance = getSetting("instance", unicode)
+    instance = getSetting("instance", str)
     instances = client._instances(sort_by="health")
     if instances:
         preselect = instances.index(instance) if instance in instances else -1
         index = selectDialog(instances, heading=30105, preselect=preselect)
         if index >= 0:
-            setSetting("instance", instances[index], unicode)
+            setSetting("instance", instances[index], str)
 
 
 # selectLanguage ---------------------------------------------------------------
 
 def selectLanguage():
-    hl = getSetting("youtube.hl", unicode)
+    hl = getSetting("youtube.hl", str)
     keys = list(iterkeys(languages))
     values = list(itervalues(languages))
     preselect = keys.index(hl) if hl in languages else -1
     index = selectDialog(values, heading=30125, preselect=preselect)
     if index >= 0:
-        setSetting("youtube.hl", keys[index], unicode)
-        setSetting("youtube.hl.text", values[index], unicode)
+        setSetting("youtube.hl", keys[index], str)
+        setSetting("youtube.hl.text", values[index], str)
 
 
 # selectLocation ---------------------------------------------------------------
 
 def selectLocation():
-    gl = getSetting("youtube.gl", unicode)
+    gl = getSetting("youtube.gl", str)
     keys = list(iterkeys(locations))
     values = list(itervalues(locations))
     preselect = keys.index(gl) if gl in locations else -1
     index = selectDialog(values, heading=30127, preselect=preselect)
     if index >= 0:
-        setSetting("youtube.gl", keys[index], unicode)
-        setSetting("youtube.gl.text", values[index], unicode)
+        setSetting("youtube.gl", keys[index], str)
+        setSetting("youtube.gl.text", values[index], str)
 
 
 # __main__ ---------------------------------------------------------------------

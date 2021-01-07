@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
+
 
 
 import requests
@@ -161,11 +161,11 @@ class InvidiousService(Service):
             self.__timeout__ = None
         else:
             self.__timeout__ = (((timeout - (timeout % 3)) + 0.05), timeout)
-        self.__region__ = getSetting("youtube.gl", unicode)
+        self.__region__ = getSetting("youtube.gl", str)
         self.__history__ = getSetting("search_history", bool)
         self.__scheme__ = "https" if getSetting("ssl", bool) else "http"
-        self.__netloc__ = getSetting("instance", unicode)
-        path = "{}/".format(getSetting("path", unicode).strip("/"))
+        self.__netloc__ = getSetting("instance", str)
+        path = "{}/".format(getSetting("path", str).strip("/"))
         self.__url__ = urlunsplit(
             (self.__scheme__, self.__netloc__, path, "", "")
         )

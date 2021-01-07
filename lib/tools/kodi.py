@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
+
 
 
 __all__ = [
@@ -101,7 +101,7 @@ __get_settings__ = {
     bool: "getSettingBool",
     int: "getSettingInt",
     float: "getSettingNumber",
-    unicode: "getSettingString"
+    str: "getSettingString"
 }
 
 def getSetting(id, _type=None):
@@ -114,7 +114,7 @@ __set_settings__ = {
     bool: "setSettingBool",
     int: "setSettingInt",
     float: "setSettingNumber",
-    unicode: "setSettingString"
+    str: "setSettingString"
 }
 
 def setSetting(id, value, _type=None):

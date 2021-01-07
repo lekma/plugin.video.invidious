@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
+
 
 
 # lifted from: https://github.com/ytdl-org/youtube-dl/blob/master/youtube_dl/jsinterp.py
@@ -275,7 +275,7 @@ class Interpreter(object):
 
     def build_function(self, argnames, code):
         def resf(args):
-            local_vars = dict(zip(argnames, args))
+            local_vars = dict(list(zip(argnames, args)))
             for stmt in code.split(';'):
                 res, abort = self.interpret_statement(stmt, local_vars)
                 if abort:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
+
 
 
 import re
@@ -32,10 +32,10 @@ def __find__(pattern, string):
 
 def findInValues(values, pattern, callback):
     for value in values:
-        if isinstance(value, (str, unicode)) and (pattern in value):
+        if isinstance(value, str) and (pattern in value):
             callback(value)
         elif isinstance(value, list):
             findInValues(value, pattern, callback)
         elif isinstance(value, dict):
-            findInValues(value.values(), pattern, callback)
+            findInValues(list(value.values()), pattern, callback)
 

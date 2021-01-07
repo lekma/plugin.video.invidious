@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
+
 
 
 import requests
@@ -39,8 +39,8 @@ def find(html, *patterns):
 
 def findPlaylists(data):
     result = OrderedDict()
-    findInValues(data.values(), "/playlist?list=", result.setdefault)
-    return [playlist.split("=")[1] for playlist in result.keys()]
+    findInValues(list(data.values()), "/playlist?list=", result.setdefault)
+    return [playlist.split("=")[1] for playlist in list(result.keys())]
 
 
 # ------------------------------------------------------------------------------
@@ -74,15 +74,15 @@ class Session(object):
         return self.get("".join((self.__baseUrl__, jsUrl)))
 
     def video(self, videoId):
-        params = {"v": videoId, "hl": getSetting("youtube.hl", unicode)}
+        params = {"v": videoId, "hl": getSetting("youtube.hl", str)}
         return self.get("".join((self.__baseUrl__, "/watch")), params=params)
 
     def playlists(self, authorId):
         params = {
             "view": "1",
             "sort": "lad",
-            "hl": getSetting("youtube.hl", unicode),
-            "gl": getSetting("youtube.gl", unicode)
+            "hl": getSetting("youtube.hl", str),
+            "gl": getSetting("youtube.gl", str)
         }
         return self.get(
             "".join((self.__baseUrl__, "/channel/{}/playlists".format(authorId))),

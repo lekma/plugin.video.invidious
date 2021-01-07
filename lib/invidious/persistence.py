@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
+
 
 
 from os.path import join
@@ -72,7 +72,7 @@ def _recordSearchQuery(type, query, sort_by):
 def updateSearchHistory():
     search_history = _loadSearchHistory()
     for type in search_history:
-        for key, value in search_history[type].items():
+        for key, value in list(search_history[type].items()):
             if not isinstance(value, dict):
                 search_history[type][key] = {
                     "query": value, "sort_by": "relevance"
@@ -102,9 +102,9 @@ def clearSearchHistory(type=None, update=False):
             containerRefresh()
 
 def getSortBy(sort_by="relevance"):
-    keys = __sort_by__.keys()
+    keys = list(__sort_by__.keys())
     index = selectDialog(
-        [localizedString(value) for value in __sort_by__.values()],
+        [localizedString(value) for value in list(__sort_by__.values())],
         heading=30130, preselect=keys.index(sort_by)
     )
     if index >= 0:
