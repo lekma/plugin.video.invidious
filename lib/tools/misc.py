@@ -67,12 +67,11 @@ def buildUrl(*args, **kwargs):
 # pickle -----------------------------------------------------------------------
 
 def dumpObject(obj, path):
-    with open(path, "w+") as f:
+    with open(path, "wb+") as f:
         dump(obj, f, -1)
 
 def loadObject(path, default=None):
     if exists(path):
-        with open(path, "r") as f:
+        with open(path, "rb") as f:
             return load(f)
     return default
-
