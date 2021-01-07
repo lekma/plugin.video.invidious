@@ -80,7 +80,7 @@ class InvidiousPlugin(Plugin):
     def playItem(self, item, manifestType, mimeType=None):
         if not Helper(manifestType).check_inputstream():
             return False
-        item.setProperty("inputstreamaddon", "inputstream.adaptive")
+        item.setProperty("inputstream", "inputstream.adaptive")
         item.setProperty("inputstream.adaptive.manifest_type", manifestType)
         return super(InvidiousPlugin, self).playItem(item, mimeType=mimeType)
 
@@ -221,4 +221,3 @@ def dispatch(url, handle, query, *args):
 
 if __name__ == "__main__":
     dispatch(*sys.argv)
-
