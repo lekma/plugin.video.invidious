@@ -52,7 +52,7 @@ def getAddonProfile():
 # logging ----------------------------------------------------------------------
 
 LOGDEBUG=xbmc.LOGDEBUG
-LOGINFO=xbmc.LOGNOTICE
+LOGINFO=xbmc.LOGINFO
 LOGWARNING=xbmc.LOGWARNING
 LOGERROR=xbmc.LOGERROR
 
@@ -173,4 +173,3 @@ def executeJSONRPC(method, **kwargs):
     error = loads(xbmc.executeJSONRPC(dumps(request))).get("error")
     if error:
         raise JSONRPCError(error)
-
