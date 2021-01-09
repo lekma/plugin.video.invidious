@@ -258,15 +258,15 @@ msgstr "Pertinence"
 
 msgctxt "#30132"
 msgid "Upload date"
-msgstr "Date de téléversement"
+msgstr "Date de mise en ligne"
 
 msgctxt "#30133"
 msgid "View count"
-msgstr "Compteur de vues"
+msgstr "Nombre de vues"
 
 msgctxt "#30134"
 msgid "Rating"
-msgstr "Taux"
+msgstr "Avis"
 
 msgctxt "#30135"
 msgid "Always ask"
