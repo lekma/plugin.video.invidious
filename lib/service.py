@@ -110,7 +110,7 @@ class Session(requests.Session):
 
 class InvidiousService(Service):
 
-    __headers__ = {}
+    __headers__ = {"User-Agent": "Mozilla/5.0"}
 
     __paths__ = {
         "video": "videos/{}",
