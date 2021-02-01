@@ -188,6 +188,14 @@ msgctxt "#30105"
 msgid "Publicly available instances"
 msgstr "Instances publiques"
 
+msgctxt "#30106"
+msgid "Proxy videos"
+msgstr "Mandataire vidéos"
+
+msgctxt "#30107"
+msgid "Instance"
+msgstr "Instance"
+
 msgctxt "#30111"
 msgid "Persistent data"
 msgstr "Données persistantes"
@@ -235,4 +243,32 @@ msgstr "Pays"
 msgctxt "#30127"
 msgid "Choose your location"
 msgstr "Sélectionnez votre pays"
+
+msgctxt "#30128"
+msgid "Timeout (0.0 means no timeout)"
+msgstr "Expiration (0.0 pas d'expiration)"
+
+msgctxt "#30130"
+msgid "Sort by"
+msgstr "Trier par"
+
+msgctxt "#30131"
+msgid "Relevance"
+msgstr "Pertinence"
+
+msgctxt "#30132"
+msgid "Upload date"
+msgstr "Date de mise en ligne"
+
+msgctxt "#30133"
+msgid "View count"
+msgstr "Nombre de vues"
+
+msgctxt "#30134"
+msgid "Rating"
+msgstr "Avis"
+
+msgctxt "#30135"
+msgid "Always ask"
+msgstr "Toujours demander"
 
