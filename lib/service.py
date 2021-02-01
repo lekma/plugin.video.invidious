@@ -120,7 +120,7 @@ class InvidiousService(Service):
         "playlists": "channels/{}/playlists"
     }
 
-    __instances__ = "https://instances.invidio.us/instances.json"
+    __instances__ = "https://api.invidious.io/instances.json"
 
     def __init__(self, *args, **kwargs):
         super(InvidiousService, self).__init__(*args, **kwargs)
