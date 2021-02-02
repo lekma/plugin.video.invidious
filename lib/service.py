@@ -110,7 +110,10 @@ class Session(requests.Session):
 
 class InvidiousService(Service):
 
-    __headers__ = {"User-Agent": "Mozilla/5.0"}
+    __headers__ = {
+        "User-Agent": "Mozilla/5.0",
+        "Accept-Language": "*"
+    }
 
     __paths__ = {
         "video": "videos/{}",
