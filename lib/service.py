@@ -110,7 +110,10 @@ class Session(requests.Session):
 
 class InvidiousService(Service):
 
-    __headers__ = {}
+    __headers__ = {
+        "User-Agent": "Mozilla/5.0",
+        "Accept-Language": "*"
+    }
 
     __paths__ = {
         "video": "videos/{}",
@@ -120,7 +123,7 @@ class InvidiousService(Service):
         "playlists": "channels/{}/playlists"
     }
 
-    __instances__ = "https://instances.invidio.us/instances.json"
+    __instances__ = "https://api.invidious.io/instances.json"
 
     def __init__(self, *args, **kwargs):
         super(InvidiousService, self).__init__(*args, **kwargs)
