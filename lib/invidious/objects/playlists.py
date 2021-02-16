@@ -9,7 +9,7 @@ __all__ = ["Playlist", "Playlists"]
 
 from tools import localizedString, ListItem, buildUrl
 
-from .base import Item, Items
+from .base import Url, Item, Items
 
 
 # ------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ class Playlist(Item):
 
     @property
     def thumbnail(self):
-        return self.playlistThumbnail or "DefaultPlaylist.png"
+        return Url(self.playlistThumbnail) or "DefaultPlaylist.png"
 
     def getItem(self, url, action):
         return ListItem(

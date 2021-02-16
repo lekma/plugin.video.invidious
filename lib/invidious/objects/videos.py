@@ -11,7 +11,7 @@ from six.moves.urllib.parse import quote_plus
 
 from tools import localizedString, ListItem, buildUrl
 
-from .base import Thumbnails, Item, Items
+from .base import Url, Thumbnails, Item, Items
 
 
 # ------------------------------------------------------------------------------
@@ -26,7 +26,7 @@ class VideoThumbnails(Thumbnails):
         for thumbnail in thumbnails:
             if isinstance(thumbnail, list):
                 thumbnail = thumbnail[0]
-            setattr(self, thumbnail["quality"], thumbnail["url"])
+            setattr(self, thumbnail["quality"], Url(thumbnail["url"]))
 
 
 class Video(Item):
@@ -77,7 +77,7 @@ class Video(Item):
     @property
     def thumbnail(self):
         return getattr(
-            self.videoThumbnails, "sddefault", "DefaultAddonVideo.png"
+            self.videoThumbnails, "high", "DefaultAddonVideo.png"
         )
 
     def makeItem(self, path):
