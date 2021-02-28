@@ -4,7 +4,7 @@
 
 
 
-__all__ = ["Thumbnails", "Item", "Items"]
+__all__ = ["Url", "Thumbnails", "Item", "Items"]
 
 
 from datetime import datetime
@@ -13,6 +13,14 @@ from six import with_metaclass
 
 from tools import maybeLocalize, getAddonId
 from tools.objects import Type, Object, List
+
+
+# ------------------------------------------------------------------------------
+# Url
+# ------------------------------------------------------------------------------
+
+def Url(url):
+    return "https:{}".format(url) if url.startswith("//") else url
 
 
 # ------------------------------------------------------------------------------

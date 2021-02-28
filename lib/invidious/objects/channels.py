@@ -11,7 +11,7 @@ from six.moves.urllib.parse import quote_plus
 
 from tools import localizedString, ListItem, buildUrl
 
-from .base import Thumbnails, Item, Items
+from .base import Url, Thumbnails, Item, Items
 
 
 # ------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ class ChannelThumbnails(Thumbnails):
 
     def __init__(self, thumbnails):
         for thumbnail in thumbnails:
-            setattr(self, str(thumbnail["height"]), thumbnail["url"])
+            setattr(self, str(thumbnail["height"]), Url(thumbnail["url"]))
 
 
 class Channel(Item):
