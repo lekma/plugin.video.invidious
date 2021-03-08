@@ -1,38 +1,30 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
-
-
-import re
+from re import search
 
 
 class MatchError(Exception):
 
-    __msg__ = "No matches found for {}"
-
     def __init__(self, msg):
-        super(MatchError, self).__init__(self.__msg__.format(msg))
+        super().__init__(f"No matches found for {msg}")
 
 
 class PatternsError(MatchError):
 
-    __patterns__ = "patterns: {}"
-
     def __init__(self, *patterns):
-        super(PatternsError, self).__init__(self.__patterns__.format(patterns))
+        super().__init__(f"patterns: {patterns}")
 
 
 def __find__(pattern, string):
-    match = re.search(pattern, string)
-    if match:
+    if (match := search(pattern, string)):
         return match
     raise PatternsError(pattern)
 
 
 def findInValues(values, pattern, callback):
     for value in values:
-        if isinstance(value, (str, unicode)) and (pattern in value):
+        if isinstance(value, str) and (pattern in value):
             callback(value)
         elif isinstance(value, list):
             findInValues(value, pattern, callback)

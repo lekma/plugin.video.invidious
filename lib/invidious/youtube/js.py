@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
-
-
 # lifted from: https://github.com/ytdl-org/youtube-dl/blob/master/youtube_dl/jsinterp.py
 # LICENSE: The Unlicense, https://github.com/ytdl-org/youtube-dl/blob/master/LICENSE
 # AUTHORS: https://github.com/ytdl-org/youtube-dl/blob/master/AUTHORS
@@ -18,8 +15,7 @@ from .find import MatchError, __find__
 
 
 # ------------------------------------------------------------------------------
-# Interpreter
-# ------------------------------------------------------------------------------
+# JSInterpreter
 
 def remove_quotes(s):
     if s is None or len(s) < 2:
@@ -48,8 +44,7 @@ _ASSIGN_OPERATORS.append(('=', lambda cur, right: right))
 _NAME_RE = r'[a-zA-Z_$][a-zA-Z_$0-9]*'
 
 
-class Interpreter(object):
-
+class JSInterpreter(object):
     def __init__(self, code, objects=None):
         if objects is None:
             objects = {}
@@ -286,11 +281,13 @@ class Interpreter(object):
 
 # ------------------------------------------------------------------------------
 # Solver
-# ------------------------------------------------------------------------------
 
 __patterns__ = (
     r'\b[cs]\s*&&\s*[adf]\.set\([^,]+\s*,\s*encodeURIComponent\s*\(\s*(?P<sig>[a-zA-Z0-9$]+)\(',
     r'\b[a-zA-Z0-9]+\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*encodeURIComponent\s*\(\s*(?P<sig>[a-zA-Z0-9$]+)\(',
+    r'\bm=(?P<sig>[a-zA-Z0-9$]{2})\(decodeURIComponent\(h\.s\)\)',
+    r'\bc&&\(c=(?P<sig>[a-zA-Z0-9$]{2})\(decodeURIComponent\(c\)\)',
+    r'(?:\b|[^a-zA-Z0-9$])(?P<sig>[a-zA-Z0-9$]{2})\s*=\s*function\(\s*a\s*\)\s*{\s*a\s*=\s*a\.split\(\s*""\s*\);[a-zA-Z0-9$]{2}\.[a-zA-Z0-9$]{2}\(a,\d+\)',
     r'(?:\b|[^a-zA-Z0-9$])(?P<sig>[a-zA-Z0-9$]{2})\s*=\s*function\(\s*a\s*\)\s*{\s*a\s*=\s*a\.split\(\s*""\s*\)',
     r'(?P<sig>[a-zA-Z0-9$]+)\s*=\s*function\(\s*a\s*\)\s*{\s*a\s*=\s*a\.split\(\s*""\s*\)',
     # Obsolete patterns
@@ -301,7 +298,7 @@ __patterns__ = (
     #r'\b[a-zA-Z0-9]+\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*(?P<sig>[a-zA-Z0-9$]+)\(',
     #r'\bc\s*&&\s*a\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*(?P<sig>[a-zA-Z0-9$]+)\(',
     #r'\bc\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*(?P<sig>[a-zA-Z0-9$]+)\(',
-    #r'\bc\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*(?P<sig>[a-zA-Z0-9$]+)\(',
+    #r'\bc\s*&&\s*[a-zA-Z0-9]+\.set\([^,]+\s*,\s*\([^)]*\)\s*\(\s*(?P<sig>[a-zA-Z0-9$]+)\('
 )
 
 def findName(js):
@@ -317,7 +314,7 @@ class Solver(object):
 
     def __init__(self, js, expire=3600):
         self.__expire__ = time.time() + expire
-        self.__solve__ = Interpreter(js).extract_function(findName(js))
+        self.__solve__ = JSInterpreter(js).extract_function(findName(js))
 
     def extractUrl(self, cipher):
         url = cipher['url'][0]
@@ -330,5 +327,4 @@ class Solver(object):
         return '&'.join(
             (url, '='.join((cipher['sp'][0], self.__solve__(cipher['s']))))
         )
-
 

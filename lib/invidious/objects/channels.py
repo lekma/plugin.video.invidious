@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
-
-
 __all__ = ["Channel", "Channels"]
 
 
-from six.moves.urllib.parse import quote_plus
+from urllib.parse import quote_plus
 
 from tools import localizedString, ListItem, buildUrl
 
@@ -16,7 +13,6 @@ from .base import Url, Thumbnails, Item, Items
 
 # ------------------------------------------------------------------------------
 # Channels
-# ------------------------------------------------------------------------------
 
 class ChannelThumbnails(Thumbnails):
 
@@ -46,7 +42,7 @@ class Channel(Item):
             infos={"video": {"title": self.author, "plot": self.plot}},
             contextMenus=self.menus(
                 authorId=self.authorId,
-                author=quote_plus(self.author.encode("utf-8"))
+                author=quote_plus(self.author)
             ),
             poster=self.thumbnail
         )

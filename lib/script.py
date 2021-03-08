@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
-
-
-import sys
-
-from six import iterkeys, itervalues, iteritems
+from sys import argv
 
 from tools import getAddonId, selectDialog, getSetting, setSetting
 
@@ -19,15 +14,18 @@ from invidious.utils import containerUpdate, addFavourite, playMedia
 from invidious.youtube.params import languages, locations
 
 
+__plugin_url__ = f"plugin://{getAddonId()}"
+
+
 # channel stuff ----------------------------------------------------------------
 
-__channel_url__ = "plugin://{}/?action=channel&authorId={{}}".format(getAddonId())
+__channel_url__ = f"{__plugin_url__}/?action=channel&authorId={{}}"
 
 def goToChannel(authorId):
     containerUpdate(__channel_url__.format(authorId))
 
 def addChannelToFavourites(authorId):
-    channel = client._channel(authorId)
+    channel = client.__channel__(authorId)
     addFavourite(
         channel.author, "window",
         window="videos", thumbnail=channel.thumbnail,
@@ -37,48 +35,46 @@ def addChannelToFavourites(authorId):
 
 # playWithYouTube --------------------------------------------------------------
 
-_youtube_url_ = "plugin://{}/?action=video&youtube=true&videoId={{}}".format(getAddonId())
+__youtube_url__ = f"{__plugin_url__}/?action=video&youtube=true&videoId={{}}"
 
 def playWithYouTube(videoId):
-    playMedia(_youtube_url_.format(videoId))
+    playMedia(__youtube_url__.format(videoId))
 
 
 # selectInstance ---------------------------------------------------------------
 
 def selectInstance():
-    instance = getSetting("instance", unicode)
-    instances = client._instances(sort_by="health")
+    instance = getSetting("instance", str)
+    instances = client.instances(sort_by="health")
     if instances:
         preselect = instances.index(instance) if instance in instances else -1
         index = selectDialog(instances, heading=30105, preselect=preselect)
         if index >= 0:
-            setSetting("instance", instances[index], unicode)
+            setSetting("instance", instances[index], str)
 
 
 # selectLanguage ---------------------------------------------------------------
 
 def selectLanguage():
-    hl = getSetting("youtube.hl", unicode)
-    keys = list(iterkeys(languages))
-    values = list(itervalues(languages))
+    hl = getSetting("hl", str)
+    keys = list(languages.keys())
+    values = list(languages.values())
     preselect = keys.index(hl) if hl in languages else -1
-    index = selectDialog(values, heading=30125, preselect=preselect)
-    if index >= 0:
-        setSetting("youtube.hl", keys[index], unicode)
-        setSetting("youtube.hl.text", values[index], unicode)
+    if (index := selectDialog(values, heading=30125, preselect=preselect)) >= 0:
+        setSetting("hl", keys[index], str)
+        setSetting("hl.text", values[index], str)
 
 
 # selectLocation ---------------------------------------------------------------
 
 def selectLocation():
-    gl = getSetting("youtube.gl", unicode)
-    keys = list(iterkeys(locations))
-    values = list(itervalues(locations))
+    gl = getSetting("gl", str)
+    keys = list(locations.keys())
+    values = list(locations.values())
     preselect = keys.index(gl) if gl in locations else -1
-    index = selectDialog(values, heading=30127, preselect=preselect)
-    if index >= 0:
-        setSetting("youtube.gl", keys[index], unicode)
-        setSetting("youtube.gl.text", values[index], unicode)
+    if (index := selectDialog(values, heading=30127, preselect=preselect)) >= 0:
+        setSetting("gl", keys[index], str)
+        setSetting("gl.text", values[index], str)
 
 
 # __main__ ---------------------------------------------------------------------
@@ -98,12 +94,15 @@ __dispatch__ = {
 }
 
 def dispatch(name, *args):
-    action = __dispatch__.get(name)
-    if not action or not callable(action):
-        raise Exception("Invalid script '{}'".format(name))
+
+    if (
+        not (action := __dispatch__.get(name)) or
+        not callable(action)
+    ):
+        raise Exception(f"Invalid script '{name}'")
     action(*args)
 
 
 if __name__ == "__main__":
-    dispatch(*sys.argv[1:])
+    dispatch(*argv[1:])
 

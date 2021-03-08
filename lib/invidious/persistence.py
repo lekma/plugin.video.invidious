@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
-
-
 from os.path import join
 from collections import OrderedDict, defaultdict, deque
 
-from six import iterkeys, itervalues, iteritems
-from six.moves.urllib.parse import unquote_plus, quote_plus
+from urllib.parse import unquote_plus, quote_plus
 
 from tools import (
     getAddonId, getAddonProfile, dumpObject, loadObject,
@@ -16,7 +12,7 @@ from tools import (
 )
 
 from . import __query_types__, __sort_by__
-from .objects.queries import Queries
+from .objects import Queries
 from .utils import containerRefresh, containerUpdate
 
 
@@ -33,20 +29,20 @@ def _loadFeed():
 
 def addChannelToFeed(authorId, author):
     feed = _loadFeed()
-    feed[authorId] = unquote_plus(author).decode("utf-8")
+    feed[authorId] = unquote_plus(author)
     _dumpFeed(feed)
 
 def removeChannelsFromFeed():
     feed = _loadFeed()
-    indices = selectDialog(list(itervalues(feed)), heading=30014, multi=True)
+    indices = selectDialog(list(feed.values()), heading=30014, multi=True)
     if indices:
-        keys = list(iterkeys(feed))
+        keys = list(feed.keys())
         for index in indices:
             del feed[keys[index]]
         _dumpFeed(feed)
 
 def getFeed():
-    return list(iterkeys(_loadFeed()))
+    return list(_loadFeed().keys())
 
 
 # search history ---------------------------------------------------------------
@@ -63,21 +59,21 @@ def _loadSearchHistory():
 
 def _recordSearchQuery(type, query, sort_by):
     search_history = _loadSearchHistory()
-    search_history[type][quote_plus(query.encode("utf-8"))] = {
+    search_history[type][quote_plus(query)] = {
         "query": query, "sort_by": sort_by
     }
     _dumpSearchHistory(search_history)
 
 
-def updateSearchHistory():
-    search_history = _loadSearchHistory()
-    for type in search_history:
-        for key, value in search_history[type].items():
-            if not isinstance(value, dict):
-                search_history[type][key] = {
-                    "query": value, "sort_by": "relevance"
-                }
-    _dumpSearchHistory(search_history)
+#def updateSearchHistory():
+#    search_history = _loadSearchHistory()
+#    for type in search_history:
+#        for key, value in search_history[type].items():
+#            if not isinstance(value, dict):
+#                search_history[type][key] = {
+#                    "query": value, "sort_by": "relevance"
+#                }
+#    _dumpSearchHistory(search_history)
 
 def removeSearchQuery(type, key):
     search_history = _loadSearchHistory()
@@ -102,7 +98,7 @@ def clearSearchHistory(type=None, update=False):
             containerRefresh()
 
 def getSortBy(sort_by="relevance"):
-    keys = __sort_by__.keys()
+    keys = list(__sort_by__.keys())
     index = selectDialog(
         [localizedString(value) for value in __sort_by__.values()],
         heading=30130, preselect=keys.index(sort_by)
@@ -122,7 +118,7 @@ def newSearch(type, sort_by=None, history=False):
 
 def searchHistory(type):
     return Queries(
-        type, reversed(list(iteritems(_loadSearchHistory()[type]))),
+        type, reversed(list(_loadSearchHistory()[type].items())),
         category=__query_types__[type]
     )
 
@@ -160,17 +156,17 @@ class Searches(deque):
         dumpObject(list(self), self.__path__)
 
     def __init__(self):
-        super(Searches, self).__init__(self.__load__())
+        super().__init__(self.__load__())
 
     @save
     def clear(self):
-        super(Searches, self).clear()
+        super().clear()
 
     @save
     def push(self, *args):
-        super(Searches, self).append(*args)
+        super().append(*args)
 
     @save
     def pop(self):
-        return super(Searches, self).pop()
+        return super().pop()
 

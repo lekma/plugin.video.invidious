@@ -1,106 +1,229 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<settings>
 
-    <!-- General -->
-    <category label="30101">
+<settings version="1">
 
-        <!-- Instance -->
-        <setting label="30107" type="lsep" />
+    <section id="plugin.video.invidious">
 
-        <setting id="selectInstance" label="30105" type="action"
-                 action="RunScript($ID,selectInstance)" />
+        <!-- General -->
+        <category id="general" label="30101">
 
-        <setting id="instance" label="30102" type="text"
-                 default="invidious.snopyta.org" />
+            <!-- Instance -->
+            <group id="instance" label="30107">
 
-        <setting id="path" label="30103" type="text"
-                 default="api/v1" />
+                <setting id="selectInstance" label="30105" type="action">
+                    <level>0</level>
+                    <data>RunScript($ID,selectInstance)</data>
+                    <control type="button" format="action" />
+                </setting>
 
-        <setting id="ssl" label="30104" type="bool"
-                 default="true" />
+                <setting id="instance" label="30102" type="string">
+                    <level>0</level>
+                    <default>invidious.snopyta.org</default>
+                    <control type="edit" format="string">
+                        <heading>30102</heading>
+                    </control>
+                </setting>
 
-        <setting id="proxy" label="30106" type="bool"
-                 default="false" />
+                <setting id="path" label="30103" type="string">
+                    <level>0</level>
+                    <default>api/v1</default>
+                    <constraints>
+                        <allowempty>true</allowempty>
+                    </constraints>
+                    <control type="edit" format="string">
+                        <heading>30103</heading>
+                    </control>
+                </setting>
 
-        <setting id="timeout" label="30128" type="slider"
-                 default="10" range="0,10,120" option="float" />
+                <setting id="ssl" label="30104" type="boolean">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle" />
+                </setting>
 
-        <!-- Search -->
-        <setting label="30002" type="lsep" />
+                <setting id="proxy" label="30106" type="boolean">
+                    <level>0</level>
+                    <default>false</default>
+                    <control type="toggle" />
+                </setting>
 
-        <setting id="sort_by" label="30130" type="enum"
-                 lvalues="30131|30132|30133|30134|30135"
-                 default="0" />
+                <setting id="timeout" label="30128" type="number">
+                    <level>0</level>
+                    <default>10.0</default>
+                    <constraints>
+                        <minimum>0.0</minimum>
+                        <step>10.0</step>
+                        <maximum>120.0</maximum>
+                    </constraints>
+                    <control type="slider" format="number" />
+                </setting>
 
-    </category>
+            </group>
 
-    <!-- Regional -->
-    <category label="14222">
+            <!-- Search -->
+            <group id="search" label="30002">
 
-        <!-- Language -->
-        <setting id="selectLanguage" label="30125" type="action"
-                 action="RunScript($ID,selectLanguage)" />
+                <setting id="sort_by" label="30130" type="integer">
+                    <level>0</level>
+                    <default>0</default>
+                    <constraints>
+                        <options>
+                            <option label="30131">0</option>
+                            <option label="30132">1</option>
+                            <option label="30133">2</option>
+                            <option label="30134">3</option>
+                            <option label="30135">4</option>
+                        </options>
+                    </constraints>
+                    <control type="spinner" format="string" />
+                </setting>
 
-        <setting id="youtube.hl" label="30124" type="text"
-                 default="en" visible="false" />
+            </group>
 
-        <setting id="youtube.hl.text" label="30124" type="text"
-                 default="English (US)" enable="false" />
+        </category>
 
-        <!-- Location -->
-        <setting id="selectLocation" label="30127" type="action"
-                 action="RunScript($ID,selectLocation)" />
+        <!-- Regional -->
+        <category id="regional" label="14222">
 
-        <setting id="youtube.gl" label="30126" type="text"
-                 default="US" visible="false" />
+            <group id="youtube" label="">
 
-        <setting id="youtube.gl.text" label="30126" type="text"
-                 default="United States" enable="false" />
+                <setting id="selectLanguage" label="30125" type="action">
+                    <level>0</level>
+                    <data>RunScript($ID,selectLanguage)</data>
+                    <control type="button" format="action" />
+                </setting>
 
-    </category>
+                <setting id="hl" label="30124" type="string">
+                    <level>0</level>
+                    <default>en</default>
+                    <visible>false</visible>
+                    <control type="edit" format="string">
+                        <heading>30124</heading>
+                    </control>
+                </setting>
 
-    <!-- Home -->
-    <category label="30123">
+                <setting id="hl.text" label="30124" type="string">
+                    <level>0</level>
+                    <default>English (US)</default>
+                    <enable>false</enable>
+                    <control type="edit" format="string">
+                        <heading>30124</heading>
+                    </control>
+                </setting>
 
-        <setting id="feed" label="30014" type="bool"
-                 default="true" />
+                <setting id="selectLocation" label="30127" type="action">
+                    <level>0</level>
+                    <data>RunScript($ID,selectLocation)</data>
+                    <control type="button" format="action" />
+                </setting>
 
-        <setting id="top" label="30007" type="bool"
-                 default="true" />
+                <setting id="gl" label="30126" type="string">
+                    <level>0</level>
+                    <default>US</default>
+                    <visible>false</visible>
+                    <control type="edit" format="string">
+                        <heading>30126</heading>
+                    </control>
+                </setting>
 
-        <setting id="popular" label="30008" type="bool"
-                 default="true" />
+                <setting id="gl.text" label="30126" type="string">
+                    <level>0</level>
+                    <default>United States</default>
+                    <enable>false</enable>
+                    <control type="edit" format="string">
+                        <heading>30126</heading>
+                    </control>
+                </setting>
 
-        <setting id="trending" label="30009" type="bool"
-                 default="true" />
+            </group>
 
-        <setting id="autogenerated" label="30122" type="bool"
-                 default="true" />
+        </category>
 
-        <setting id="settings" label="30100" type="bool"
-                 default="true" />
+        <!-- Home -->
+        <category id="home" label="30123">
 
-    </category>
+            <group id="folders" label="">
 
-    <!-- Persistent data -->
-    <category label="30111">
+                <setting id="feed" label="30014" type="boolean">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle" />
+                </setting>
 
-        <!-- Feed -->
-        <setting label="30014" type="lsep" />
+                <!--<setting id="top" label="30007" type="boolean">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle" />
+                </setting>-->
 
-        <setting id="removeChannelsFromFeed" label="30112" type="action"
-                 action="RunScript($ID,removeChannelsFromFeed)" />
+                <setting id="popular" label="30008" type="boolean">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle" />
+                </setting>
 
-        <!-- Search history -->
-        <setting label="30115" type="lsep" />
+                <setting id="trending" label="30009" type="boolean">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle" />
+                </setting>
 
-        <setting id="search_history" label="30115" type="bool"
-                 default="true" />
+                <setting id="autogenerated" label="30122" type="boolean">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle" />
+                </setting>
 
-        <setting id="clearAllSearchHistory" label="30113" type="action"
-                 action="RunScript($ID,clearSearchHistory)"
-                 subsetting="true" enable="eq(-1,true)" />
+                <setting id="settings" label="30100" type="boolean">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle" />
+                </setting>
 
-    </category>
+            </group>
+
+        </category>
+
+        <!-- Persistent data -->
+        <category id="persistence" label="30111">
+
+            <!-- Feed -->
+            <group id="feed" label="30014">
+
+                <setting id="removeChannelsFromFeed" label="30112" type="action">
+                    <level>0</level>
+                    <data>RunScript($ID,removeChannelsFromFeed)</data>
+                    <control type="button" format="action" />
+                </setting>
+
+            </group>
+
+            <!-- Search history -->
+            <group id="search_history" label="30115">
+
+                <setting id="history" label="30115" type="boolean">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle" />
+                </setting>
+
+                <setting id="clearAllSearchHistory" label="30113" type="action"
+                         parent="history">
+                    <level>0</level>
+                    <data>RunScript($ID,clearSearchHistory)</data>
+                    <dependencies>
+                        <dependency type="enable" setting="history">
+                            <![CDATA[true]]>
+                        </dependency>
+                    </dependencies>
+                    <control type="button" format="action" />
+                </setting>
+
+            </group>
+
+        </category>
+
+    </section>
 
 </settings>
+

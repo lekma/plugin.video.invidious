@@ -1,18 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
-
-
-from tools import (
-    localizedString, ListItem, buildUrl, getMedia,
-    executeBuiltin, executeJSONRPC
-)
+from tools import localizedString, ListItem, buildUrl, getMedia, executeBuiltin
 
 
 # misc useful items ------------------------------------------------------------
 
-def _makeItem(label, url, thumb=None, isFolder=True, **kwargs):
+def __makeItem__(label, url, art=None, isFolder=True, **kwargs):
     label = localizedString(label)
     return ListItem(
         label,
@@ -20,26 +14,33 @@ def _makeItem(label, url, thumb=None, isFolder=True, **kwargs):
         isFolder=isFolder,
         isPlayable=False,
         infos={"video": {"title": label, "plot": label}},
-        poster=thumb
+        poster=art,
+        icon=art
     )
+
 
 # settings item
 def settingsItem(url, **kwargs):
-    return _makeItem(
+    return __makeItem__(
         30100, url, "icons/settings/system.png", isFolder=False, **kwargs
     )
 
+
 # more item
+__more_art__ = getMedia("more")
+
 def moreItem(url, **kwargs):
-    return _makeItem(30099, url, getMedia("more"), **kwargs)
+    return __makeItem__(30099, url, __more_art__, **kwargs)
+
 
 # newSearch item
 def newSearchItem(url, **kwargs):
-    return _makeItem(30062, url, "DefaultAddSource.png", **kwargs)
+    return __makeItem__(30062, url, "DefaultAddSource.png", **kwargs)
+
 
 # playlists item
 def playlistsItem(url, **kwargs):
-    return _makeItem(30005, url, "DefaultPlaylist.png", **kwargs)
+    return __makeItem__(30005, url, "DefaultPlaylist.png", **kwargs)
 
 
 # misc execute utils -----------------------------------------------------------
@@ -47,6 +48,7 @@ def playlistsItem(url, **kwargs):
 # containerRefresh
 def containerRefresh(*args):
     executeBuiltin("Container.Refresh", *args)
+
 
 # containerUpdate
 def containerUpdate(*args):
@@ -59,8 +61,4 @@ def playMedia(*args):
 # addFavourite
 def addFavourite(title, type, **kwargs):
     executeJSONRPC("Favourites.AddFavourite", title=title, type=type, **kwargs)
-
-# setFocus
-def setFocus(*args):
-    executeBuiltin("Control.SetFocus", *args)
 

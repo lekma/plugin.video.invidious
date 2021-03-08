@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
-
-
 __all__ = ["Video", "Videos"]
 
 
-from six.moves.urllib.parse import quote_plus
+from urllib.parse import quote_plus
 
 from tools import localizedString, ListItem, buildUrl
 
@@ -16,7 +13,6 @@ from .base import Url, Thumbnails, Item, Items
 
 # ------------------------------------------------------------------------------
 # Videos
-# ------------------------------------------------------------------------------
 
 class VideoThumbnails(Thumbnails):
 
@@ -90,10 +86,10 @@ class Video(Item):
             streamInfos={"video": {"duration": self.lengthSeconds}},
             contextMenus=self.menus(
                 authorId=self.authorId,
-                author=quote_plus(self.author.encode("utf-8")),
+                author=quote_plus(self.author),
                 videoId=self.videoId
             ),
-            thumb=self.thumbnail
+            poster=self.thumbnail
         )
 
     def getItem(self, url, action):

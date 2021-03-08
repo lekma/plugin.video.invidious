@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
-
-
-import sys
+from sys import argv
 
 from inputstreamhelper import Helper
 
@@ -12,25 +9,24 @@ from tools import Plugin, action, parseQuery, openSettings, getSetting
 
 from invidious import home, styles, sortBy
 from invidious.client import client
-from invidious.objects.folders import Folders
+from invidious.objects import Folders
 from invidious.persistence import getFeed, newSearch, searchHistory, Searches
-from invidious.utils import newSearchItem, moreItem, settingsItem, playlistsItem
+from invidious.utils import moreItem, newSearchItem, playlistsItem, settingsItem
 
 
 # ------------------------------------------------------------------------------
 # InvidiousPlugin
-# ------------------------------------------------------------------------------
 
 class InvidiousPlugin(Plugin):
 
     def __init__(self, *args):
-        super(InvidiousPlugin, self).__init__(*args)
+        super().__init__(*args)
         self.__searches__ = Searches()
 
     # dispatch -----------------------------------------------------------------
 
     def dispatch(self, **kwargs):
-        super(InvidiousPlugin, self).dispatch(**kwargs)
+        super().dispatch(**kwargs)
         client.pushQuery(kwargs)
 
     # helpers ------------------------------------------------------------------
@@ -70,26 +66,28 @@ class InvidiousPlugin(Plugin):
         return True
 
     def addDirectory(self, items, *args, **kwargs):
-        if super(InvidiousPlugin, self).addDirectory(items, *args):
-            more = getattr(items, "more", None)
-            if more:
+        if super().addDirectory(items, *args):
+            if (more := getattr(items, "more", None)):
                 return self.addMore(more, **kwargs)
             return True
         return False
 
-    def playItem(self, item, manifestType, mimeType=None):
+    def playItem(self, item, manifestType, mimeType=None, headers=None):
         if not Helper(manifestType).check_inputstream():
             return False
-        item.setProperty("inputstreamaddon", "inputstream.adaptive")
+        item.setProperty("inputstream", "inputstream.adaptive")
         item.setProperty("inputstream.adaptive.manifest_type", manifestType)
-        return super(InvidiousPlugin, self).playItem(item, mimeType=mimeType)
+        if headers and isinstance(headers, dict):
+            headers = "&".join(("=".join(header) for header in headers.items()))
+            item.setProperty("inputstream.adaptive.stream_headers", headers)
+        return super().playItem(item, mimeType=mimeType)
 
     # video --------------------------------------------------------------------
 
     @action()
     def video(self, **kwargs):
-        args = client.video(proxy=getSetting("proxy", bool), **kwargs)
-        return self.playItem(*args) if args else False
+        args, kwargs = client.video(proxy=getSetting("proxy", bool), **kwargs)
+        return self.playItem(*args, **kwargs) if args else False
 
     # channel ------------------------------------------------------------------
 
@@ -123,9 +121,9 @@ class InvidiousPlugin(Plugin):
 
     # top ----------------------------------------------------------------------
 
-    @action(category=30007)
-    def top(self, **kwargs):
-        return self.addDirectory(client.top(**kwargs), "video")
+    #@action(category=30007)
+    #def top(self, **kwargs):
+    #    return self.addDirectory(client.top(**kwargs), "video")
 
     # popular ------------------------------------------------------------------
 
@@ -160,20 +158,20 @@ class InvidiousPlugin(Plugin):
 
     # search -------------------------------------------------------------------
 
-    def _history(self, **kwargs):
+    def __history__(self, **kwargs):
         self.__searches__.clear()
         if self.addNewSearch(**kwargs):
             return self.addDirectory(searchHistory(kwargs["type"]))
         return False
 
-    def _search(self, query, **kwargs):
+    def __search__(self, query, **kwargs):
         self.__searches__.push((query, kwargs))
         return self.addDirectory(
             client.search(query, **kwargs), kwargs["type"],
             query=query, **kwargs
         )
 
-    def _new_search(self, history=False, **kwargs):
+    def __new_search__(self, history=False, **kwargs):
         try:
             query, kwargs = self.__searches__.pop()
         except IndexError:
@@ -186,20 +184,20 @@ class InvidiousPlugin(Plugin):
                 kwargs["type"], sort_by=sort_by, history=history
             )
         if query:
-            return self._search(query, **kwargs)
+            return self.__search__(query, **kwargs)
         return False
 
     @action(category=30002)
     def search(self, **kwargs):
-        history = getSetting("search_history", bool)
+        history = getSetting("history", bool)
         if "type" in kwargs:
             query = kwargs.pop("query", "")
             new = kwargs.pop("new", False)
             if query:
-                return self._search(query, **kwargs)
+                return self.__search__(query, **kwargs)
             if new:
-                return self._new_search(history=history, **kwargs)
-            return self._history(**kwargs)
+                return self.__new_search__(history=history, **kwargs)
+            return self.__history__(**kwargs)
         self.__searches__.clear()
         return self.addDirectory(
             self.getSubfolders("search", new=(not history))
@@ -220,5 +218,5 @@ def dispatch(url, handle, query, *args):
 
 
 if __name__ == "__main__":
-    dispatch(*sys.argv)
+    dispatch(*argv)
 

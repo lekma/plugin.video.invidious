@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
-
-
 __all__ = ["Queries"]
 
 
@@ -14,7 +11,6 @@ from .base import Item, Items
 
 # ------------------------------------------------------------------------------
 # Queries
-# ------------------------------------------------------------------------------
 
 class Query(Item):
 
@@ -46,7 +42,7 @@ class Queries(Items):
 
     def __init__(self, type, items, **kwargs):
         # this is braindead, but, the base class really expect a dict...
-        super(Queries, self).__init__(
+        super().__init__(
             (dict({"type": type, "key": key}, **value) for key, value in items),
             **kwargs
         )

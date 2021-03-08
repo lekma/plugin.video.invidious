@@ -1,22 +1,18 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
-
-
 __all__ = ["Folder", "Folders"]
 
 
 from tools import ListItem, buildUrl, maybeLocalize, getSetting
 
-from .base import Item, Items
-
 from .. import __schema__
+
+from .base import Item, Items
 
 
 # ------------------------------------------------------------------------------
 # Folders
-# ------------------------------------------------------------------------------
 
 class Folder(Item):
 

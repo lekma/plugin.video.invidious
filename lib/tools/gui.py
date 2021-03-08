@@ -1,26 +1,18 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
-
-
 __all__ = [
     "getWindowId", "ICONINFO", "ICONWARNING", "ICONERROR", "notify",
     "selectDialog", "inputDialog", "contextMenu", "ListItem"
 ]
 
 
-from six import iteritems
-from kodi_six import xbmcgui
+import xbmcgui
 
-from .kodi import getAddonName, getAddonIcon, maybeLocalize
-
-
-__addon_name__ = getAddonName()
-__addon_icon__ = getAddonIcon()
+from .addon import __addon_name__,__addon_icon__,  maybeLocalize
 
 
-# getWindowId -------------------------------------------------------------------
+# getWindowId ------------------------------------------------------------------
 
 def getWindowId():
     return xbmcgui.getCurrentWindowId()
@@ -34,27 +26,27 @@ ICONERROR = xbmcgui.NOTIFICATION_ERROR
 
 def notify(message, heading=__addon_name__, icon=__addon_icon__, time=5000):
     xbmcgui.Dialog().notification(
-        maybeLocalize(heading), maybeLocalize(message), icon, time
+        maybeLocalize(heading), maybeLocalize(message), icon=icon, time=time
     )
 
 
 # select -----------------------------------------------------------------------
 
-def selectDialog(_list, heading=__addon_name__, multi=False, **kwargs):
+def selectDialog(_list_, heading=__addon_name__, multi=False, **kwargs):
     if multi:
         return xbmcgui.Dialog().multiselect(
-            maybeLocalize(heading), _list, **kwargs
+            maybeLocalize(heading), _list_, **kwargs
         )
-    return xbmcgui.Dialog().select(maybeLocalize(heading), _list, **kwargs)
+    return xbmcgui.Dialog().select(maybeLocalize(heading), _list_, **kwargs)
 
 
-# input -----------------------------------------------------------------------
+# input ------------------------------------------------------------------------
 
 def inputDialog(heading=__addon_name__, **kwargs):
     return xbmcgui.Dialog().input(maybeLocalize(heading), **kwargs)
 
 
-# contextmenu -----------------------------------------------------------------------
+# contextmenu ------------------------------------------------------------------
 
 def contextMenu(_list):
     return xbmcgui.Dialog().contextmenu(_list)
@@ -65,25 +57,26 @@ def contextMenu(_list):
 class ListItem(xbmcgui.ListItem):
 
     def __new__(cls, label, path, **kwargs):
-        return super(ListItem, cls).__new__(cls, label=label, path=path)
+        return super().__new__(cls, label=label, path=path)
 
     def __init__(self, label, path, isFolder=False, isPlayable=True,
                  infos=None, streamInfos=None, contextMenus=None, **art):
+        super().__init__(label=label, path=path)
         self.setIsFolder(isFolder)
         self.setIsPlayable(False if isFolder else isPlayable)
         if infos:
-            for info in iteritems(infos):
+            for info in infos.items():
                 self.setInfo(*info)
         if streamInfos:
-            for info in iteritems(streamInfos):
-                self.addStreamInfo(*info)
+            for streamInfo in streamInfos.items():
+                self.addStreamInfo(*streamInfo)
         if contextMenus:
             self.addContextMenuItems(contextMenus)
         if art:
             self.setArt(art)
 
     def setIsFolder(self, isFolder):
-        super(ListItem, self).setIsFolder(isFolder)
+        super().setIsFolder(isFolder)
         #self.setProperty("IsFolder", str(isFolder).lower())
         self.isFolder = isFolder
 
@@ -92,5 +85,5 @@ class ListItem(xbmcgui.ListItem):
         self.isPlayable = isPlayable
 
     def asItem(self):
-        return self.getPath(), self, self.isFolder
+        return (self.getPath(), self, self.isFolder)
 

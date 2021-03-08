@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
-
-
-from .kodi import *
+from .addon import *
+from .execute import *
 from .gui import *
-from .plugin import *
 from .misc import *
+from .plugin import *
 
-del kodi, gui, plugin, misc
+del addon, execute, gui, misc, plugin
 

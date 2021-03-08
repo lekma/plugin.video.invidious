@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
-
-
 __all__ = ["action", "Plugin"]
 
 
-from six import wraps, raise_from
-from kodi_six import xbmcplugin
+from functools import wraps
 
-from .kodi import maybeLocalize
+import xbmcplugin
+
+from .addon import maybeLocalize
 from .objects import List
+
+
+__invalid_action__ = "Invalid action '{}'"
 
 
 # action -----------------------------------------------------------------------
@@ -27,9 +28,9 @@ def action(action=None, category=None, content=None, directory=True):
                 self.category = maybeLocalize(category)
                 self.content = content
                 success = func(self, **kwargs)
-            except Exception:
+            except Exception as error:
                 success = False
-                raise
+                raise error
             finally:
                 if directory:
                     self.endDirectory(success)
@@ -42,7 +43,6 @@ def action(action=None, category=None, content=None, directory=True):
 
 # ------------------------------------------------------------------------------
 # Plugin
-# ------------------------------------------------------------------------------
 
 class Plugin(object):
 
@@ -55,44 +55,44 @@ class Plugin(object):
 
     # dispatch -----------------------------------------------------------------
 
-    __invalid_action__ = "Invalid action '{}'"
-
     def dispatch(self, **kwargs):
-        name = kwargs.pop("action", "home")
         try:
-            action = getattr(self, name)
+            action = getattr(self, (name := kwargs.pop("action", "home")))
         except AttributeError:
-            raise_from(AttributeError(self.__invalid_action__.format(name)), None)
+            raise AttributeError(__invalid_action__.format(name)) from None
         if not callable(action) or not getattr(action, "__action__", False):
-            raise Exception(self.__invalid_action__.format(name))
+            raise Exception(__invalid_action__.format(name))
         return action(**kwargs)
 
     # utils --------------------------------------------------------------------
 
     def addItem(self, item):
-        if item and not xbmcplugin.addDirectoryItem(self.handle, *item.asItem()):
+        if (
+            item and
+            not xbmcplugin.addDirectoryItem(self.handle, *item.asItem())
+        ):
             raise
         return True
 
     def addItems(self, items, *args):
         if isinstance(items, List):
             items = items.getItems(self.url, *args)
-        if not xbmcplugin.addDirectoryItems(
-            self.handle, [item.asItem() for item in items if item]
+        if (
+            not xbmcplugin.addDirectoryItems(
+                self.handle, [item.asItem() for item in items if item]
+            )
         ):
             raise
         return True
 
     def addDirectory(self, items, *args):
         if isinstance(items, List):
-            category = items.category
-            if category:
+            if (category := items.category):
                 self.category = (
-                    "{} / {}".format(self.category, maybeLocalize(category))
+                    f"{self.category} / {maybeLocalize(category)}"
                     if self.category else maybeLocalize(category)
                 )
-            content = items.content
-            if content:
+            if (content := items.content):
                 self.content = content
         return self.addItems(items, *args)
 

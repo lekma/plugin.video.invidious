@@ -1,35 +1,27 @@
 # -*- coding: utf-8 -*-
 
 
-from __future__ import absolute_import, division, unicode_literals
-
-
-import requests
-import re
-import json
-import time
-
 from collections import OrderedDict
-
-from six.moves.urllib.parse import parse_qs
+from json import JSONDecoder
+from requests import get, Timeout
+from time import time
+from urllib.parse import parse_qs
 
 from iapc import Server, http
 
-from tools import buildUrl, getSetting, notify, ICONERROR, log
+from tools import buildUrl, getSetting, notify, ICONERROR
 
 from .find import PatternsError, __find__, findInValues
 from .playlists import adaptive
 from .js import Solver
 
 
-# ------------------------------------------------------------------------------
-# find
-# ------------------------------------------------------------------------------
+# find -------------------------------------------------------------------------
 
 def find(html, *patterns):
     for pattern in patterns:
         try:
-            return json.JSONDecoder(strict=False).raw_decode(
+            return JSONDecoder(strict=False).raw_decode(
                 html[__find__(pattern, html).end():]
             )[0]
         except (PatternsError, ValueError):
@@ -44,70 +36,69 @@ def findPlaylists(data):
 
 
 # ------------------------------------------------------------------------------
-# Session
-# ------------------------------------------------------------------------------
+# YouTubeSession
 
-class Session(object):
+class YouTubeSession(object):
 
     __headers__ = {}
     __baseUrl__ = "https://www.youtube.com"
 
-    def __init__(self, headers=None):
+    def __init__(self, logger, headers=None):
+        self.logger = logger.getLogger("youtube")
         if headers:
-            self.__headers__.update(headers)
+            self.headers.update(headers)
 
-    def get(self, url, **kwargs):
-        log("youtube.url: {}".format(buildUrl(url, **kwargs.get("params", {}))))
+    def __get__(self, url, **kwargs):
+        self.logger.info(
+            f"request: {buildUrl(url, **kwargs.get('params', {}))}"
+        )
         try:
-            response = requests.get(
-                url, headers=self.__headers__, timeout=(9.05, 30.0), **kwargs
+            response = get(
+                url, headers=self.__headers__, timeout=(60.05, 60.0), **kwargs
             )
-        except requests.Timeout as error:
-            message = "youtube: {}".format(error)
-            log(message, LOGERROR)
+        except Timeout as error:
+            self.logger.error(message := f"error: {error}")
             notify(message, icon=ICONERROR)
         else:
             response.raise_for_status()
             return response.text
 
     def js(self, jsUrl):
-        return self.get("".join((self.__baseUrl__, jsUrl)))
+        return self.__get__(f"{self.__baseUrl__}{jsUrl}")
 
     def video(self, videoId):
-        params = {"v": videoId, "hl": getSetting("youtube.hl", unicode)}
-        return self.get("".join((self.__baseUrl__, "/watch")), params=params)
+        params = {"v": videoId, "hl": getSetting("hl", str)}
+        return self.__get__(f"{self.__baseUrl__}/watch", params=params)
 
     def playlists(self, authorId):
         params = {
             "view": "1",
             "sort": "lad",
-            "hl": getSetting("youtube.hl", unicode),
-            "gl": getSetting("youtube.gl", unicode)
+            "hl": getSetting("hl", str),
+            "gl": getSetting("gl", str)
         }
-        return self.get(
-            "".join((self.__baseUrl__, "/channel/{}/playlists".format(authorId))),
-            params=params
+        return self.__get__(
+            f"{self.__baseUrl__}/channel/{authorId}/playlists", params=params
         )
 
 
 # ------------------------------------------------------------------------------
 # YouTubeServer
-# ------------------------------------------------------------------------------
 
 class YouTubeServer(Server):
 
-    def __init__(self, headers=None, timeout=1):
-        Server.__init__(self, timeout=timeout)
+    def __init__(self, id, timeout=-1, headers=None):
+        super().__init__(id, timeout=timeout)
         self.__manifestUrl__ = "http://{}:{}/manifest?videoId={{}}".format(
             *self.server_address
         )
-        self.__session__ = Session(headers=headers)
+        self.__session__ = YouTubeSession(self.logger, headers=headers)
         self.__solvers__ = {}
 
     def __raise__(self, error):
         if not isinstance(error, Exception):
             error = Exception(error)
-        notify("{}".format(error), icon=ICONERROR)
+        notify(f"{error}", icon=ICONERROR)
         raise error
 
     # --------------------------------------------------------------------------
@@ -120,7 +111,7 @@ class YouTubeServer(Server):
     def solver(self, jsUrl):
         try:
             solver = self.__solvers__[jsUrl]
-            if time.time() >= solver.__expire__:
+            if time() >= solver.__expire__:
                 solver = self.__solver__(jsUrl)
             return solver
         except KeyError:
@@ -170,21 +161,16 @@ class YouTubeServer(Server):
         video = self.video(videoId)
         streamingData = video["streamingData"]
         videoDetails = video["videoDetails"]
-        isLive = videoDetails.get("isLive", False)
-        if isLive:
-            #Content-Type: application/vnd.apple.mpegurl
-            hlsUrl = streamingData.get("hlsManifestUrl", "")
-            if hlsUrl:
+        if (isLive := videoDetails.get("isLive", False)):
+            if (hlsUrl := streamingData.get("hlsManifestUrl", "")):
+                # Content-Type: application/vnd.apple.mpegurl
                 return (302, None, {"Location": hlsUrl})
-        else:
-            #Content-Type: video/vnd.mpeg.dash.mpd
-            streams = streamingData.get("adaptiveFormats", [])
-            if streams:
-                jsUrl = videoDetails["jsUrl"]
-                for stream in streams:
-                    if "url" not in stream:
-                        stream["url"] = self.extractUrl(stream, jsUrl)
-                duration = videoDetails["lengthSeconds"]
-                return (200, adaptive(duration, streams), None)
-        self.__raise__("Cannot play video: '{0}'".format(videoId))
+        elif (streams := streamingData.get("adaptiveFormats", [])):
+            jsUrl = videoDetails["jsUrl"]
+            for stream in streams:
+                if "url" not in stream:
+                    stream["url"] = self.extractUrl(stream, jsUrl)
+            # Content-Type: video/vnd.mpeg.dash.mpd
+            return (200, adaptive(videoDetails["lengthSeconds"], streams), None)
+        self.__raise__(f"Cannot play video: '{videoId}'")
 
