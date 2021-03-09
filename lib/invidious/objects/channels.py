@@ -44,7 +44,8 @@ class Channel(Item):
                 authorId=self.authorId,
                 author=quote_plus(self.author)
             ),
-            poster=self.thumbnail
+            poster=self.thumbnail,
+            thumb=self.thumbnail
         )
 
 

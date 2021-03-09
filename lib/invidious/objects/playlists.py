@@ -26,7 +26,8 @@ class Playlist(Item):
             buildUrl(url, action=action, playlistId=self.playlistId),
             isFolder=True,
             infos={"video": {"title": self.title, "plot": self.plot}},
-            poster=self.thumbnail
+            poster=self.thumbnail,
+            thumb=self.thumbnail
         )
 
 

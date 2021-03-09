@@ -89,7 +89,7 @@ class Video(Item):
                 author=quote_plus(self.author),
                 videoId=self.videoId
             ),
-            poster=self.thumbnail
+            thumb=self.thumbnail
         )
 
     def getItem(self, url, action):
