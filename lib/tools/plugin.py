@@ -25,8 +25,8 @@ def action(action=None, category=None, content=None, directory=True):
             success = False
             try:
                 self.action = action or func.__name__
-                self.category = maybeLocalize(category)
-                self.content = content
+                self.__category__ = maybeLocalize(category)
+                self.__content__ = content
                 success = func(self, **kwargs)
             except Exception as error:
                 success = False
@@ -34,8 +34,8 @@ def action(action=None, category=None, content=None, directory=True):
             finally:
                 if directory:
                     self.endDirectory(success)
-                self.content = None
-                self.category = None
+                self.__content__ = None
+                self.__category__ = None
                 self.action = None
         return wrapper
     return decorator
@@ -48,10 +48,10 @@ class Plugin(object):
 
     def __init__(self, url, handle):
         self.url = url
-        self.handle = handle
+        self.__handle__ = handle
         self.action = None
-        self.category = None
-        self.content = None
+        self.__category__ = None
+        self.__content__ = None
 
     # dispatch -----------------------------------------------------------------
 
@@ -69,7 +69,7 @@ class Plugin(object):
     def addItem(self, item):
         if (
             item and
-            not xbmcplugin.addDirectoryItem(self.handle, *item.asItem())
+            not xbmcplugin.addDirectoryItem(self.__handle__, *item.asItem())
         ):
             raise
         return True
@@ -79,7 +79,7 @@ class Plugin(object):
             items = items.getItems(self.url, *args)
         if (
             not xbmcplugin.addDirectoryItems(
-                self.handle, [item.asItem() for item in items if item]
+                self.__handle__, [item.asItem() for item in items if item]
             )
         ):
             raise
@@ -88,26 +88,26 @@ class Plugin(object):
     def addDirectory(self, items, *args):
         if isinstance(items, List):
             if (category := items.category):
-                self.category = (
-                    f"{self.category} / {maybeLocalize(category)}"
-                    if self.category else maybeLocalize(category)
+                self.__category__ = (
+                    f"{self.__category__} / {maybeLocalize(category)}"
+                    if self.__category__ else maybeLocalize(category)
                 )
             if (content := items.content):
-                self.content = content
+                self.__content__ = content
         return self.addItems(items, *args)
 
     def endDirectory(self, success):
         if success:
-            if self.content:
-                xbmcplugin.setContent(self.handle, self.content)
-            if self.category:
-                xbmcplugin.setPluginCategory(self.handle, self.category)
-        xbmcplugin.endOfDirectory(self.handle, success)
+            if self.__content__:
+                xbmcplugin.setContent(self.__handle__, self.__content__)
+            if self.__category__:
+                xbmcplugin.setPluginCategory(self.__handle__, self.__category__)
+        xbmcplugin.endOfDirectory(self.__handle__, success)
 
     def playItem(self, item, mimeType=None):
         if mimeType:
             item.setMimeType(mimeType)
             item.setContentLookup(False)
-        xbmcplugin.setResolvedUrl(self.handle, True, item)
+        xbmcplugin.setResolvedUrl(self.__handle__, True, item)
         return True
 
