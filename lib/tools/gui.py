@@ -48,8 +48,8 @@ def inputDialog(heading=__addon_name__, **kwargs):
 
 # contextmenu ------------------------------------------------------------------
 
-def contextMenu(_list):
-    return xbmcgui.Dialog().contextmenu(_list)
+def contextMenu(_list_):
+    return xbmcgui.Dialog().contextmenu(_list_)
 
 
 # listitem ---------------------------------------------------------------------
