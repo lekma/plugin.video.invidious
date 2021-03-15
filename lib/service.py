@@ -7,10 +7,11 @@ from urllib.parse import urlunsplit, urlsplit, urljoin
 
 from iapc import Service, public
 
-from tools import buildUrl, notify, ICONERROR, makeDataDir, getSetting
+from tools import (
+    buildUrl, notify, ICONERROR, makeDataDir, getSetting, containerRefresh
+)
 
 from invidious.persistence import clearSearchHistory
-from invidious.utils import containerRefresh
 from invidious.youtube import YouTubeServer
 
 

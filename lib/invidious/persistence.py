@@ -8,12 +8,12 @@ from urllib.parse import unquote_plus, quote_plus
 
 from tools import (
     getAddonId, getAddonProfile, dumpObject, loadObject,
-    selectDialog, inputDialog, notify, localizedString
+    selectDialog, inputDialog, notify, localizedString,
+    containerRefresh, containerUpdate
 )
 
 from . import __query_types__, __sort_by__
 from .objects import Queries
-from .utils import containerRefresh, containerUpdate
 
 
 # feed -------------------------------------------------------------------------

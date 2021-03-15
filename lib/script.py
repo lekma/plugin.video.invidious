@@ -3,14 +3,16 @@
 
 from sys import argv
 
-from tools import getAddonId, selectDialog, getSetting, setSetting
+from tools import (
+    getAddonId, selectDialog, getSetting, setSetting,
+    containerUpdate, addFavourite, playMedia
+)
 
 from invidious.client import client
 from invidious.persistence import (
     addChannelToFeed, removeChannelsFromFeed,
     removeSearchQuery, clearSearchHistory, updateSortBy
 )
-from invidious.utils import containerUpdate, addFavourite, playMedia
 from invidious.youtube.params import languages, locations
 
 

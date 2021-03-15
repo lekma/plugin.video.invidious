@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from tools import localizedString, ListItem, buildUrl, getMedia, executeBuiltin
+from tools import localizedString, ListItem, buildUrl, getMedia
 
 
 # misc useful items ------------------------------------------------------------
@@ -41,24 +41,4 @@ def newSearchItem(url, **kwargs):
 # playlists item
 def playlistsItem(url, **kwargs):
     return __makeItem__(30005, url, "DefaultPlaylist.png", **kwargs)
-
-
-# misc execute utils -----------------------------------------------------------
-
-# containerRefresh
-def containerRefresh(*args):
-    executeBuiltin("Container.Refresh", *args)
-
-
-# containerUpdate
-def containerUpdate(*args):
-    executeBuiltin("Container.Update", *args)
-
-# playMedia
-def playMedia(*args):
-    executeBuiltin("PlayMedia", *args)
-
-# addFavourite
-def addFavourite(title, type, **kwargs):
-    executeJSONRPC("Favourites.AddFavourite", title=title, type=type, **kwargs)
 
