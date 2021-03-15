@@ -8,7 +8,7 @@ from functools import wraps
 
 import xbmcplugin
 
-from .addon import maybeLocalize
+from .addon import maybeLocalize, Logger
 from .objects import List
 
 
@@ -47,6 +47,7 @@ def action(action=None, category=None, content=None, directory=True):
 class Plugin(object):
 
     def __init__(self, url, handle):
+        self.logger = Logger(component="plugin")
         self.url = url
         self.__handle__ = handle
         self.action = None
