@@ -4,7 +4,7 @@
 __all__ = ["Playlist", "Playlists"]
 
 
-from tools import localizedString, ListItem, buildUrl
+from iapc.tools import localizedString, ListItem, buildUrl
 
 from .base import Url, Item, Items
 

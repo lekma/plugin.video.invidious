@@ -2,10 +2,9 @@
 
 
 from iapc import Client
+from iapc.tools import Logger
 
-from tools import Logger
-
-from . import __trending_types__
+from . import trendingTypes
 from .objects import Channel, Channels, Playlists, Video, Videos
 
 
@@ -104,8 +103,8 @@ class InvidiousClient(object):
 
     # top ----------------------------------------------------------------------
 
-    #def top(self, **kwargs):
-    #    return Videos(self.__query__("top", **kwargs))
+    def top(self, **kwargs):
+        return Videos(self.__query__("top", **kwargs))
 
     # popular ------------------------------------------------------------------
 
@@ -117,7 +116,7 @@ class InvidiousClient(object):
     def trending(self, **kwargs):
         return Videos(
             self.__query__("trending", **kwargs),
-            category=__trending_types__.get(kwargs.get("type"))
+            category=trendingTypes.get(kwargs.get("type"))
         )
 
     # playlists ----------------------------------------------------------------

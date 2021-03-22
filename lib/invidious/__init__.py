@@ -101,7 +101,7 @@ __schema__ = {
 }
 
 
-__trending_types__ = {
+trendingTypes = {
     "Music": 30010,
     "Gaming": 30011,
     "News": 30012,
@@ -109,14 +109,14 @@ __trending_types__ = {
 }
 
 
-__query_types__ = {
+queryTypes = {
     "video": 30003,
     "channel": 30004,
     "playlist": 30005
 }
 
 
-__sort_by__ = OrderedDict(
+__sortBy__ = OrderedDict(
     (
         ("relevance", 30131),
         ("upload_date", 30132),
@@ -125,7 +125,7 @@ __sort_by__ = OrderedDict(
     )
 )
 
-sortBy = list(__sort_by__.keys())
+sortBy = list(__sortBy__.keys())
 
 
 home = (

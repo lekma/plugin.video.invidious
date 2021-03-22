@@ -4,9 +4,7 @@
 __all__ = ["Video", "Videos"]
 
 
-from urllib.parse import quote_plus
-
-from tools import localizedString, ListItem, buildUrl
+from iapc.tools import localizedString, ListItem, buildUrl
 
 from .base import Url, Thumbnails, Item, Items
 
@@ -86,7 +84,7 @@ class Video(Item):
             streamInfos={"video": {"duration": self.lengthSeconds}},
             contextMenus=self.menus(
                 authorId=self.authorId,
-                author=quote_plus(self.author),
+                author=self.author,
                 videoId=self.videoId
             ),
             thumb=self.thumbnail

@@ -4,9 +4,7 @@
 __all__ = ["Channel", "Channels"]
 
 
-from urllib.parse import quote_plus
-
-from tools import localizedString, ListItem, buildUrl
+from iapc.tools import localizedString, ListItem, buildUrl
 
 from .base import Url, Thumbnails, Item, Items
 
@@ -42,7 +40,7 @@ class Channel(Item):
             infos={"video": {"title": self.author, "plot": self.plot}},
             contextMenus=self.menus(
                 authorId=self.authorId,
-                author=quote_plus(self.author)
+                author=self.author
             ),
             poster=self.thumbnail,
             thumb=self.thumbnail

@@ -8,8 +8,7 @@ from time import time
 from urllib.parse import parse_qs
 
 from iapc import Server, http
-
-from tools import buildUrl, getSetting, notify, ICONERROR
+from iapc.tools import buildUrl, getSetting, notify, ICONERROR
 
 from .find import PatternsError, __find__, findInValues
 from .playlists import adaptive
@@ -41,7 +40,7 @@ def findPlaylists(data):
 class YouTubeSession(object):
 
     __headers__ = {}
-    __baseUrl__ = "https://www.youtube.com"
+    __url__ = "https://www.youtube.com"
 
     def __init__(self, logger, headers=None):
         self.logger = logger.getLogger("youtube")
@@ -49,9 +48,7 @@ class YouTubeSession(object):
             self.headers.update(headers)
 
     def __get__(self, url, **kwargs):
-        self.logger.info(
-            f"request: {buildUrl(url, **kwargs.get('params', {}))}"
-        )
+        self.logger.info(f"request: {buildUrl(url, **kwargs.get('params', {}))}")
         try:
             response = get(
                 url, headers=self.__headers__, timeout=(60.05, 60.0), **kwargs
@@ -64,11 +61,11 @@ class YouTubeSession(object):
             return response.text
 
     def js(self, jsUrl):
-        return self.__get__(f"{self.__baseUrl__}{jsUrl}")
+        return self.__get__(f"{self.__url__}{jsUrl}")
 
     def video(self, videoId):
         params = {"v": videoId, "hl": getSetting("hl", str)}
-        return self.__get__(f"{self.__baseUrl__}/watch", params=params)
+        return self.__get__(f"{self.__url__}/watch", params=params)
 
     def playlists(self, authorId):
         params = {
@@ -78,7 +75,7 @@ class YouTubeSession(object):
             "gl": getSetting("gl", str)
         }
         return self.__get__(
-            f"{self.__baseUrl__}/channel/{authorId}/playlists", params=params
+            f"{self.__url__}/channel/{authorId}/playlists", params=params
         )
 
 

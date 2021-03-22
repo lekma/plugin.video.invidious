@@ -6,12 +6,11 @@ from time import time
 from urllib.parse import urlunsplit, urlsplit, urljoin
 
 from iapc import Service, public
-
-from tools import (
-    buildUrl, notify, ICONERROR, makeDataDir, getSetting, containerRefresh
+from iapc.tools import (
+    makeProfile, containerRefresh, buildUrl, notify, ICONERROR, getSetting
 )
 
-from invidious.persistence import clearSearchHistory
+from invidious.search import clearSearchHistory
 from invidious.youtube import YouTubeServer
 
 
@@ -35,9 +34,6 @@ class InvidiousFeed(list):
             return True
         return ((time() - self.last) > self.timeout)
 
-    def clear(self):
-        self *= 0
-
     def update(self, channel):
         self.extend(channel["latestVideos"][:self.max])
         self.updated = True
@@ -49,11 +45,25 @@ class InvidiousFeed(list):
             self.updated = False
         return (self[((page - 1) * self.limit):(page * self.limit)], self.limit)
 
-
 # ------------------------------------------------------------------------------
 # InvidiousSession
 
 class InvidiousSession(Session):
+
+    def __init__(self, logger, headers=None):
+        super().__init__()
+        self.logger = logger.getLogger("service.session")
+        if headers:
+            self.headers.update(headers)
+        self.__setup__(True)
+
+    def __setup__(self, init=False):
+        if (timeout := getSetting("timeout", float)) <= 0.0:
+            self.timeout = None
+        else:
+            self.timeout = (((timeout - (timeout % 3)) + 0.05), timeout)
+        if not init:
+            self.logger.info(f"timeout: {self.timeout}")
 
     def __notify__(self, result):
         message = None
@@ -67,18 +77,13 @@ class InvidiousSession(Session):
             return True
         return False
 
-    def __init__(self, logger, headers=None):
-        super().__init__()
-        self.logger = logger.getLogger("session")
-        if headers:
-            self.headers.update(headers)
 
-    def request(self, method, url, timeout=None, **kwargs):
-        self.logger.info(
-            f"request: {buildUrl(url, **kwargs.get('params', {}))}"
-        )
+    def request(self, method, url, **kwargs):
+        self.logger.info(f"request: {buildUrl(url, **kwargs.get('params', {}))}")
         try:
-            response = super().request(method, url, timeout=timeout, **kwargs)
+            response = super().request(
+                method, url, timeout=self.timeout, **kwargs
+            )
         except Timeout as error:
             self.__notify__(error)
         else:
@@ -123,7 +128,7 @@ class InvidiousService(Service):
         self.__channels__ = {}
         self.__query__ = {}
         self.__feed__ = InvidiousFeed()
-        makeDataDir()
+        makeProfile()
 
     def serve_forever(self, timeout):
         self.__httpd__ = YouTubeServer(self.id, timeout=timeout)
@@ -150,11 +155,6 @@ class InvidiousService(Service):
     # --------------------------------------------------------------------------
 
     def __setup__(self):
-        timeout = getSetting("timeout", float)
-        if timeout <= 0:
-            self.__timeout__ = None
-        else:
-            self.__timeout__ = (((timeout - (timeout % 3)) + 0.05), timeout)
         self.__region__ = getSetting("gl", str)
         self.__history__ = getSetting("history", bool)
         self.__scheme__ = "https" if getSetting("ssl", bool) else "http"
@@ -163,23 +163,18 @@ class InvidiousService(Service):
         self.__url__ = urlunsplit(
             (self.__scheme__, self.__netloc__, path, "", "")
         )
-        self.logger.info(
-            f"instance: {self.__url__!r}, timeout: {self.__timeout__}"
-        )
+        self.logger.info(f"instance: {self.__url__!r}")
+        self.__session__.__setup__()
 
     def __get__(self, path, **kwargs):
         kwargs.setdefault("region", self.__region__)
-        return self.__session__.get(
-            urljoin(self.__url__, path), timeout=self.__timeout__, params=kwargs
-        )
+        return self.__session__.get(urljoin(self.__url__, path), params=kwargs)
 
     # public api ---------------------------------------------------------------
 
     @public
     def instances(self, **kwargs):
-        return self.__session__.get(
-            self.__instances__, timeout=self.__timeout__, params=kwargs
-        )
+        return self.__session__.get(self.__instances__, params=kwargs)
 
     @public
     def query(self, key, *args, **kwargs):

@@ -2,17 +2,16 @@
 
 
 from sys import argv
+from urllib.parse import unquote_plus
 
-from tools import (
+from iapc.tools import (
     getAddonId, selectDialog, getSetting, setSetting,
     containerUpdate, addFavourite, playMedia
 )
 
 from invidious.client import client
-from invidious.persistence import (
-    addChannelToFeed, removeChannelsFromFeed,
-    removeSearchQuery, clearSearchHistory, updateSortBy
-)
+from invidious.persistence import channel_feed
+from invidious.search import removeSearchQuery, clearSearchHistory, updateSortBy
 from invidious.youtube.params import languages, locations
 
 
@@ -79,6 +78,17 @@ def selectLocation():
         setSetting("gl.text", values[index], str)
 
 
+# feed stuff -------------------------------------------------------------------
+
+def addChannelToFeed(authorId, author):
+    channel_feed.add(authorId, author)
+
+def removeChannelsFromFeed():
+    if (indices := selectDialog(list(channel_feed.values()), heading=30014, multi=True)):
+        keys = list(channel_feed.keys())
+        channel_feed.remove(*(keys[index] for index in indices))
+
+
 # __main__ ---------------------------------------------------------------------
 
 __dispatch__ = {
@@ -102,7 +112,7 @@ def dispatch(name, *args):
         not callable(action)
     ):
         raise Exception(f"Invalid script '{name}'")
-    action(*args)
+    action(*(unquote_plus(arg) for arg in args))
 
 
 if __name__ == "__main__":

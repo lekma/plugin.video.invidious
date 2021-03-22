@@ -5,9 +5,10 @@ __all__ = ["Url", "Thumbnails", "Item", "Items"]
 
 
 from datetime import datetime
+from urllib.parse import quote_plus
 
-from tools import maybeLocalize, getAddonId
-from tools.objects import Type, Object, List
+from iapc.tools import maybeLocalize, getAddonId
+from iapc.tools.objects import Type, Object, List
 
 
 # ------------------------------------------------------------------------------
@@ -51,7 +52,10 @@ class Item(Object, metaclass=ItemType):
         return [
             (
                 maybeLocalize(label).format(**kwargs),
-                action.format(addonId=getAddonId(), **kwargs)
+                action.format(
+                    addonId=getAddonId(),
+                    **{key: quote_plus(value) for key, value in kwargs.items()}
+                )
             )
             for label, action in cls.__menus__
         ]

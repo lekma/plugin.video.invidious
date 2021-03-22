@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from tools import localizedString, ListItem, buildUrl, getMedia
+from iapc.tools import localizedString, ListItem, buildUrl, getMedia
 
 
 # misc useful items ------------------------------------------------------------

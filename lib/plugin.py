@@ -5,12 +5,13 @@ from sys import argv
 
 from inputstreamhelper import Helper
 
-from tools import Plugin, action, parseQuery, openSettings, getSetting
+from iapc.tools import Plugin, action, parseQuery, openSettings, getSetting
 
 from invidious import home, styles, sortBy
 from invidious.client import client
 from invidious.objects import Folders
-from invidious.persistence import getFeed, newSearch, searchHistory, Searches
+from invidious.persistence import channel_feed, search_cache
+from invidious.search import newSearch, searchHistory
 from invidious.utils import moreItem, newSearchItem, playlistsItem, settingsItem
 
 
@@ -18,10 +19,6 @@ from invidious.utils import moreItem, newSearchItem, playlistsItem, settingsItem
 # InvidiousPlugin
 
 class InvidiousPlugin(Plugin):
-
-    def __init__(self, *args):
-        super().__init__(*args)
-        self.__searches__ = Searches()
 
     # dispatch -----------------------------------------------------------------
 
@@ -116,14 +113,14 @@ class InvidiousPlugin(Plugin):
     @action(category=30014)
     def feed(self, **kwargs):
         return self.addDirectory(
-            client.feed(getFeed(), **kwargs), "video", **kwargs
+            client.feed(list(channel_feed), **kwargs), "video", **kwargs
         )
 
     # top ----------------------------------------------------------------------
 
-    #@action(category=30007)
-    #def top(self, **kwargs):
-    #    return self.addDirectory(client.top(**kwargs), "video")
+    @action(category=30007)
+    def top(self, **kwargs):
+        return self.addDirectory(client.top(**kwargs), "video")
 
     # popular ------------------------------------------------------------------
 
@@ -158,14 +155,8 @@ class InvidiousPlugin(Plugin):
 
     # search -------------------------------------------------------------------
 
-    def __history__(self, **kwargs):
-        self.__searches__.clear()
-        if self.addNewSearch(**kwargs):
-            return self.addDirectory(searchHistory(kwargs["type"]))
-        return False
-
     def __search__(self, query, **kwargs):
-        self.__searches__.push((query, kwargs))
+        search_cache.push((query, kwargs))
         return self.addDirectory(
             client.search(query, **kwargs), kwargs["type"],
             query=query, **kwargs
@@ -173,7 +164,7 @@ class InvidiousPlugin(Plugin):
 
     def __new_search__(self, history=False, **kwargs):
         try:
-            query, kwargs = self.__searches__.pop()
+            query, kwargs = search_cache.pop()
         except IndexError:
             index = getSetting("sort_by", int)
             try:
@@ -187,6 +178,12 @@ class InvidiousPlugin(Plugin):
             return self.__search__(query, **kwargs)
         return False
 
+    def __history__(self, **kwargs):
+        search_cache.clear()
+        if self.addNewSearch(**kwargs):
+            return self.addDirectory(searchHistory(kwargs["type"]))
+        return False
+
     @action(category=30002)
     def search(self, **kwargs):
         history = getSetting("history", bool)
@@ -198,7 +195,7 @@ class InvidiousPlugin(Plugin):
             if new:
                 return self.__new_search__(history=history, **kwargs)
             return self.__history__(**kwargs)
-        self.__searches__.clear()
+        search_cache.clear()
         return self.addDirectory(
             self.getSubfolders("search", new=(not history))
         )

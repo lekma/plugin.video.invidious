@@ -4,7 +4,7 @@
 __all__ = ["Folder", "Folders"]
 
 
-from tools import ListItem, buildUrl, maybeLocalize, getSetting
+from iapc.tools import ListItem, buildUrl, maybeLocalize, getSetting
 
 from .. import __schema__
 
