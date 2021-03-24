@@ -258,5 +258,5 @@ class InvidiousService(Service):
 # __main__ ---------------------------------------------------------------------
 
 if __name__ == "__main__":
-    InvidiousService().start(timeout=0.1)
+    InvidiousService().start(timeout=0.5)
 
