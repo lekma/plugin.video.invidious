@@ -3,7 +3,7 @@
 
 from collections import OrderedDict
 from json import JSONDecoder
-from requests import get, Timeout
+from requests import Session, Timeout
 from time import time
 from urllib.parse import parse_qs
 
@@ -37,21 +37,22 @@ def findPlaylists(data):
 # ------------------------------------------------------------------------------
 # YouTubeSession
 
-class YouTubeSession(object):
+class YouTubeSession(Session):
 
-    __headers__ = {}
     __url__ = "https://www.youtube.com"
+    __timeout__ = (60.05, 60.0)
 
     def __init__(self, logger, headers=None):
+        super().__init__()
         self.logger = logger.getLogger("youtube")
         if headers:
             self.headers.update(headers)
 
-    def __get__(self, url, **kwargs):
+    def request(self, method, url, **kwargs):
         self.logger.info(f"request: {buildUrl(url, **kwargs.get('params', {}))}")
         try:
-            response = get(
-                url, headers=self.__headers__, timeout=(60.05, 60.0), **kwargs
+            response = super().request(
+                method, url, timeout=self.__timeout__, **kwargs
             )
         except Timeout as error:
             self.logger.error(message := f"error: {error}")
@@ -60,12 +61,24 @@ class YouTubeSession(object):
             response.raise_for_status()
             return response.text
 
+    def get(self, url, **kwargs):
+        if (
+            (not (consent := self.cookies.get("CONSENT"))) or
+            ("YES" not in consent)
+        ):
+            html = super().get(
+                self.__url__, params={"hl": getSetting("hl", str)}
+            )
+            value = __find__(r'cb\..+?(?=\")', html).group()
+            self.cookies.set("CONSENT", f"YES+{value}", domain=".youtube.com")
+        return super().get(url, **kwargs)
+
     def js(self, jsUrl):
-        return self.__get__(f"{self.__url__}{jsUrl}")
+        return self.get(f"{self.__url__}{jsUrl}")
 
     def video(self, videoId):
         params = {"v": videoId, "hl": getSetting("hl", str)}
-        return self.__get__(f"{self.__url__}/watch", params=params)
+        return self.get(f"{self.__url__}/watch", params=params)
 
     def playlists(self, authorId):
         params = {
@@ -74,7 +87,7 @@ class YouTubeSession(object):
             "hl": getSetting("hl", str),
             "gl": getSetting("gl", str)
         }
-        return self.__get__(
+        return self.get(
             f"{self.__url__}/channel/{authorId}/playlists", params=params
         )
 

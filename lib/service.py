@@ -77,7 +77,6 @@ class InvidiousSession(Session):
             return True
         return False
 
-
     def request(self, method, url, **kwargs):
         self.logger.info(f"request: {buildUrl(url, **kwargs.get('params', {}))}")
         try:
