@@ -70,8 +70,8 @@ class InvidiousSession(Session):
         if isinstance(result, Exception):
             message = f"request error [{result}]"
             self.logger.error(message)
-        elif isinstance(result, dict):
-            message = result.get("error")
+        #elif isinstance(result, dict):
+        #    message = result.get("error")
         if message:
             notify(message, icon=ICONERROR)
             return True
