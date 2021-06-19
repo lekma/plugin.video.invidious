@@ -167,8 +167,9 @@ class InvidiousService(Service):
         self.logger.info(f"instance: {self.__url__!r}")
         self.__session__.__setup__()
 
-    def __get__(self, path, **kwargs):
-        kwargs.setdefault("region", self.__region__)
+    def __get__(self, path, regional=True, **kwargs):
+        if regional:
+            kwargs.setdefault("region", self.__region__)
         return self.__session__.get(urljoin(self.__url__, path), params=kwargs)
 
     # public api ---------------------------------------------------------------
@@ -231,7 +232,7 @@ class InvidiousService(Service):
 
     @public
     def video(self, videoId, youtube=False, proxy=False, **kwargs):
-        if (video := self.query("video", videoId, **kwargs)):
+        if (video := self.query("video", videoId, regional=False, **kwargs)):
             headers = {}
             hlsUrl = video.get("hlsUrl", "")
             if youtube:
