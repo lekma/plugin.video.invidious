@@ -177,8 +177,9 @@ class InvidiousService(Service):
         log("service.url: '{}'".format(self.__url__))
         log("service.timeout: {}".format(self.__timeout__))
 
-    def __get__(self, path, **kwargs):
-        kwargs.setdefault("region", self.__region__)
+    def __get__(self, path, regional=True, **kwargs):
+        if regional:
+            kwargs.setdefault("region", self.__region__)
         return self.__session__.get(
             urljoin(self.__url__, path), timeout=self.__timeout__, params=kwargs
         )
@@ -247,7 +248,7 @@ class InvidiousService(Service):
 
     @public
     def video(self, videoId, youtube=False, proxy=False, **kwargs):
-        video = self.query("video", videoId, **kwargs)
+        video = self.query("video", videoId, regional=False, **kwargs)
         if video:
             hlsUrl = video.get("hlsUrl", "")
             if youtube:
