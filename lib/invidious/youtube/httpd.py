@@ -145,8 +145,11 @@ class YouTubeServer(Server):
         video = find(html, r"ytInitialPlayerResponse\s*=\s*")
         status = video["playabilityStatus"]
         if status["status"].lower() == "ok":
-            config = find(html, r"ytplayer.web_player_context_config\s*=\s*")
-            video["videoDetails"]["jsUrl"] = config["jsUrl"]
+            video["videoDetails"]["jsUrl"] = find(
+                html,
+                r"PLAYER_JS_URL\s*['\"]\s*:[^'\"]*",
+                r"jsUrl\s*['\"]\s*:[^'\"]*"
+            )
             return video
         self.__raise__(status.get("reason", "Unknown error"))
 
