@@ -69,8 +69,14 @@ class YouTubeSession(Session):
             html = super().get(
                 self.__url__, params={"hl": getSetting("hl", str)}
             )
-            value = __find__(r'cb\..+?(?=\")', html).group()
-            self.cookies.set("CONSENT", f"YES+{value}", domain=".youtube.com")
+            try:
+                value = __find__(r'cb\..+?(?=\")', html).group()
+            except PatternsError:
+                pass
+            else:
+                self.cookies.set(
+                    "CONSENT", f"YES+{value}", domain=".youtube.com"
+                )
         return super().get(url, **kwargs)
 
     def js(self, jsUrl):
