@@ -139,7 +139,7 @@ class InvidiousPlugin(Plugin):
 
     # playlists ----------------------------------------------------------------
 
-    @action(30005)
+    @action(category=30005)
     def playlists(self, **kwargs):
         return self.addDirectory(
             client.playlists(**kwargs), "playlist", **kwargs

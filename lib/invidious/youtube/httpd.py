@@ -66,9 +66,7 @@ class YouTubeSession(Session):
             (not (consent := self.cookies.get("CONSENT"))) or
             ("YES" not in consent)
         ):
-            html = super().get(
-                self.__url__, params={"hl": getSetting("hl", str)}
-            )
+            html = super().get(url, **kwargs)
             try:
                 value = __find__(r'cb\..+?(?=\")', html).group()
             except PatternsError:
