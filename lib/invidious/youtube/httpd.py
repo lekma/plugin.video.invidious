@@ -73,9 +73,7 @@ class Session(requests.Session):
     def get(self, url, **kwargs):
         consent = self.cookies.get("CONSENT")
         if ((not consent) or ("YES" not in consent)):
-            html = super(Session, self).get(
-                self.__url__, params={"hl": getSetting("youtube.hl", unicode)}
-            )
+            html = super(Session, self).get(url, **kwargs)
             try:
                 value = __find__(r'cb\..+?(?=\")', html).group()
             except PatternsError:
