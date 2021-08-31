@@ -35,16 +35,15 @@ def findPlaylists(data):
 
 
 # ------------------------------------------------------------------------------
-# YouTubeSession
+# HttpSession
 
-class YouTubeSession(Session):
+class HttpSession(Session):
 
-    __url__ = "https://www.youtube.com"
     __timeout__ = (60.05, 60.0)
 
-    def __init__(self, logger, headers=None):
+    def __init__(self, logger, name, headers=None):
         super().__init__()
-        self.logger = logger.getLogger("youtube")
+        self.logger = logger.getLogger(name)
         if headers:
             self.headers.update(headers)
 
@@ -59,7 +58,18 @@ class YouTubeSession(Session):
             notify(message, icon=ICONERROR)
         else:
             response.raise_for_status()
-            return response.text
+            return response
+
+
+# ------------------------------------------------------------------------------
+# YouTubeSession
+
+class YouTubeSession(HttpSession):
+
+    __url__ = "https://www.youtube.com"
+
+    def request(self, *args, **kwargs):
+        return super().request(*args, **kwargs).text
 
     def get(self, url, **kwargs):
         if (
@@ -106,7 +116,7 @@ class YouTubeServer(Server):
         self.__manifestUrl__ = "http://{}:{}/manifest?videoId={{}}".format(
             *self.server_address
         )
-        self.__session__ = YouTubeSession(self.logger, headers=headers)
+        self.__session__ = YouTubeSession(self.logger, "youtube", headers=headers)
         self.__solvers__ = {}
 
     def __raise__(self, error):
@@ -136,13 +146,14 @@ class YouTubeServer(Server):
     def video(self, videoId):
         html = self.__session__.video(videoId)
         video = find(html, r"ytInitialPlayerResponse\s*=\s*")
+        jsUrl = find(
+            html,
+            r"PLAYER_JS_URL\s*['\"]\s*:[^'\"]*",
+            r"jsUrl\s*['\"]\s*:[^'\"]*"
+        )
         status = video["playabilityStatus"]
         if status["status"].lower() == "ok":
-            video["videoDetails"]["jsUrl"] = find(
-                html,
-                r"PLAYER_JS_URL\s*['\"]\s*:[^'\"]*",
-                r"jsUrl\s*['\"]\s*:[^'\"]*"
-            )
+            video["videoDetails"]["jsUrl"] = jsUrl
             return video
         self.__raise__(status.get("reason", "Unknown error"))
 
