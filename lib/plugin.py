@@ -23,7 +23,7 @@ class InvidiousPlugin(Plugin):
     # dispatch -----------------------------------------------------------------
 
     def dispatch(self, **kwargs):
-        super().dispatch(**kwargs)
+        super(InvidiousPlugin, self).dispatch(**kwargs)
         client.pushQuery(kwargs)
 
     # helpers ------------------------------------------------------------------
@@ -63,7 +63,7 @@ class InvidiousPlugin(Plugin):
         return True
 
     def addDirectory(self, items, *args, **kwargs):
-        if super().addDirectory(items, *args):
+        if super(InvidiousPlugin, self).addDirectory(items, *args):
             if (more := getattr(items, "more", None)):
                 return self.addMore(more, **kwargs)
             return True
@@ -77,7 +77,7 @@ class InvidiousPlugin(Plugin):
         if headers and isinstance(headers, dict):
             headers = "&".join(("=".join(header) for header in headers.items()))
             item.setProperty("inputstream.adaptive.stream_headers", headers)
-        return super().playItem(item, mimeType=mimeType)
+        return super(InvidiousPlugin, self).playItem(item, mimeType=mimeType)
 
     # video --------------------------------------------------------------------
 

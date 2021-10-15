@@ -23,7 +23,7 @@ class DashElement(ET.Element):
     __defaults__ = {}
 
     def __init__(self, **kwargs):
-        super().__init__(
+        super(DashElement, self).__init__(
             self.__class__.__name__, attrib=self.__defaults__, **kwargs
         )
 
@@ -41,7 +41,7 @@ class DashElement(ET.Element):
 class Initialization(DashElement):
 
     def __init__(self, **initRange):
-        super().__init__(range=self.range(**initRange))
+        super(Initialization, self).__init__(range=self.range(**initRange))
 
 
 # ------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ class Initialization(DashElement):
 class SegmentBase(DashElement):
 
     def __init__(self, indexRange, data):
-        super().__init__(indexRange=self.range(**indexRange))
+        super(SegmentBase, self).__init__(indexRange=self.range(**indexRange))
         if (initRange := data.get("initRange", {})):
             self.append(Initialization(**initRange))
 
@@ -61,7 +61,7 @@ class SegmentBase(DashElement):
 class BaseURL(DashElement):
 
     def __init__(self, url):
-        super().__init__()
+        super(BaseURL, self).__init__()
         self.text = url
 
 
@@ -75,7 +75,9 @@ class AudioChannelConfiguration(DashElement):
     }
 
     def __init__(self, audioChannels):
-        super().__init__(value=str(audioChannels))
+        super(AudioChannelConfiguration, self).__init__(
+            value=str(audioChannels)
+        )
 
 
 # ------------------------------------------------------------------------------
@@ -98,7 +100,7 @@ class Representation(DashElement):
         # frameRate
         if (frameRate := data.get("fps", 0)):
             kwargs["frameRate"] = str(frameRate)
-        super().__init__(**kwargs)
+        super(Representation, self).__init__(**kwargs)
         if (audioChannels := data.get("audioChannels", 0)):
             self.append(AudioChannelConfiguration(audioChannels))
         self.append(BaseURL(data["url"]))
@@ -120,7 +122,7 @@ class AdaptationSet(DashElement):
     }
 
     def __init__(self, id, mimeType, data):
-        super().__init__(
+        super(AdaptationSet, self).__init__(
             id=id, mimeType=mimeType, contentType=mimeType.split("/")[0]
         )
         self.extend(Representation(d) for d in data)
@@ -136,7 +138,7 @@ class Period(DashElement):
     }
 
     def __init__(self, duration, data):
-        super().__init__(duration=self.duration(duration))
+        super(Period, self).__init__(duration=self.duration(duration))
         self.extend(
             AdaptationSet(str(id), *item)
             for id, item in enumerate(data.items())
@@ -156,7 +158,9 @@ class MPD(DashElement):
     }
 
     def __init__(self, duration, data):
-        super().__init__(mediaPresentationDuration=self.duration(duration))
+        super(MPD, self).__init__(
+            mediaPresentationDuration=self.duration(duration)
+        )
         self.append(Period(duration, data))
 
 

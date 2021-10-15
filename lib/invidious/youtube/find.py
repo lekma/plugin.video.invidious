@@ -7,13 +7,13 @@ from re import search
 class MatchError(Exception):
 
     def __init__(self, msg):
-        super().__init__(f"No matches found for {msg}")
+        super(MatchError, self).__init__(f"No matches found for {msg}")
 
 
 class PatternsError(MatchError):
 
     def __init__(self, *patterns):
-        super().__init__(f"patterns: {patterns}")
+        super(PatternsError, self).__init__(f"patterns: {patterns}")
 
 
 def __find__(pattern, string):

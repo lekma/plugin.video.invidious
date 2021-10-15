@@ -25,7 +25,7 @@ class Thumbnails(object):
 
     def __new__(cls, thumbnails):
         if thumbnails:
-            return super().__new__(cls)
+            return super(Thumbnails, cls).__new__(cls)
         return None
 
 
@@ -73,6 +73,6 @@ class Items(List):
     __ctor__ = Item
 
     def __init__(self, items, continuation=None, limit=0, **kwargs):
-        super().__init__(items, **kwargs)
+        super(Items, self).__init__(items, **kwargs)
         self.more = continuation or ((len(self) >= limit) if limit else False)
 

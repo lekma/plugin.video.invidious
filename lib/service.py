@@ -20,7 +20,7 @@ from invidious.youtube import YouTubeServer
 class InvidiousFeed(list):
 
     def __init__(self, limit=60, timeout=600):
-        super().__init__()
+        super(InvidiousFeed, self).__init__()
         self.limit = limit
         self.max = ((limit // 2) - 1)
         self.timeout = timeout
@@ -51,7 +51,7 @@ class InvidiousFeed(list):
 class InvidiousSession(Session):
 
     def __init__(self, logger, headers=None):
-        super().__init__()
+        super(InvidiousSession, self).__init__()
         self.logger = logger.getLogger("service.session")
         if headers:
             self.headers.update(headers)
@@ -82,7 +82,7 @@ class InvidiousSession(Session):
     def request(self, method, url, **kwargs):
         self.logger.info(f"request: {buildUrl(url, **kwargs.get('params', {}))}")
         try:
-            response = super().request(
+            response = super(InvidiousSession, self).request(
                 method, url, timeout=self.timeout, **kwargs
             )
         except Timeout as error:
@@ -124,7 +124,7 @@ class InvidiousService(Service):
     __instances__ = "https://api.invidious.io/instances.json"
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(InvidiousService, self).__init__(*args, **kwargs)
         self.__session__ = InvidiousSession(self.logger, headers=self.__headers__)
         self.__channels__ = {}
         self.__query__ = {}

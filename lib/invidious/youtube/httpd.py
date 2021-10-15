@@ -42,7 +42,7 @@ class HttpSession(Session):
     __timeout__ = (60.05, 60.0)
 
     def __init__(self, logger, name, headers=None):
-        super().__init__()
+        super(HttpSession, self).__init__()
         self.logger = logger.getLogger(name)
         if headers:
             self.headers.update(headers)
@@ -50,7 +50,7 @@ class HttpSession(Session):
     def request(self, method, url, **kwargs):
         self.logger.info(f"request: {buildUrl(url, **kwargs.get('params', {}))}")
         try:
-            response = super().request(
+            response = super(HttpSession, self).request(
                 method, url, timeout=self.__timeout__, **kwargs
             )
         except Timeout as error:
@@ -69,14 +69,14 @@ class YouTubeSession(HttpSession):
     __url__ = "https://www.youtube.com"
 
     def request(self, *args, **kwargs):
-        return super().request(*args, **kwargs).text
+        return super(YouTubeSession, self).request(*args, **kwargs).text
 
     def get(self, url, **kwargs):
         if (
             (not (consent := self.cookies.get("CONSENT"))) or
             ("YES" not in consent)
         ):
-            html = super().get(url, **kwargs)
+            html = super(YouTubeSession, self).get(url, **kwargs)
             try:
                 value = __find__(r'cb\..+?(?=\")', html).group()
             except PatternsError:
@@ -85,7 +85,7 @@ class YouTubeSession(HttpSession):
                 self.cookies.set(
                     "CONSENT", f"YES+{value}", domain=".youtube.com"
                 )
-        return super().get(url, **kwargs)
+        return super(YouTubeSession, self).get(url, **kwargs)
 
     def js(self, jsUrl):
         return self.get(f"{self.__url__}{jsUrl}")
@@ -112,7 +112,7 @@ class YouTubeSession(HttpSession):
 class YouTubeServer(Server):
 
     def __init__(self, id, timeout=-1, headers=None):
-        super().__init__(id, timeout=timeout)
+        super(YouTubeServer, self).__init__(id, timeout=timeout)
         self.__manifestUrl__ = "http://{}:{}/manifest?videoId={{}}".format(
             *self.server_address
         )

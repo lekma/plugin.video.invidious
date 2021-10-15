@@ -31,15 +31,15 @@ class SearchCache(Persistent, deque):
 
     @save
     def clear(self):
-        super().clear()
+        super(SearchCache, self).clear()
 
     @save
     def push(self, item):
-        super().append(item)
+        super(SearchCache, self).append(item)
 
     @save
     def pop(self):
-        return super().pop()
+        return super(SearchCache, self).pop()
 
 
 search_cache = SearchCache()
@@ -67,7 +67,7 @@ class SearchHistory(Persistent, dict):
         if type:
             self[type].clear()
         else:
-            super().clear()
+            super(SearchHistory, self).clear()
 
 
 search_history = SearchHistory()
