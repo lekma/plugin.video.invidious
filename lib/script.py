@@ -34,11 +34,11 @@ def addChannelToFavourites(authorId):
     )
 
 
-# playWithYouTube --------------------------------------------------------------
+# playFromYouTube --------------------------------------------------------------
 
 __youtube_url__ = f"{__plugin_url__}/?action=video&youtube=true&videoId={{}}"
 
-def playWithYouTube(videoId):
+def playFromYouTube(videoId):
     playMedia(__youtube_url__.format(videoId))
 
 
@@ -94,7 +94,7 @@ def removeChannelsFromFeed():
 __dispatch__ = {
     "goToChannel": goToChannel,
     "addChannelToFavourites": addChannelToFavourites,
-    "playWithYouTube": playWithYouTube,
+    "playFromYouTube": playFromYouTube,
     "selectInstance": selectInstance,
     "selectLanguage": selectLanguage,
     "selectLocation": selectLocation,

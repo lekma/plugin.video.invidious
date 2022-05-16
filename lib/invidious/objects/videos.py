@@ -30,7 +30,7 @@ class Video(Item):
     __infos__ = {"mediatype": "video"}
 
     __menus__ = [
-        (30033, "RunScript({addonId},playWithYouTube,{videoId})"),
+        (30033, "RunScript({addonId},playFromYouTube,{videoId})"),
         (30031, "RunScript({addonId},goToChannel,{authorId})"),
         (30032, "RunScript({addonId},addChannelToFavourites,{authorId})"),
         (30034, "RunScript({addonId},addChannelToFeed,{authorId},{author})")
