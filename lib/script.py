@@ -3,6 +3,7 @@
 
 from sys import argv
 from urllib.parse import unquote_plus
+import json
 
 from iapc.tools import (
     getAddonId, selectDialog, getSetting, setSetting,
@@ -89,6 +90,18 @@ def removeChannelsFromFeed():
         channel_feed.remove(*(keys[index] for index in indices))
 
 
+def newpipeImport():
+    newpipe_filepath = getSetting("newpipe.path")
+
+    with open(newpipe_filepath, 'r', encoding='utf-8') as fp:
+        newpipe_dict = json.load(fp)
+        newpipe_subscriptions = newpipe_dict.get('subscriptions', ())
+        channel_feed.removeAll()
+        for item in newpipe_subscriptions:
+            item_id = item['url'].split('/')[-1]
+            channel_feed.add(item_id, item['name'])
+
+
 # __main__ ---------------------------------------------------------------------
 
 __dispatch__ = {
@@ -100,6 +113,7 @@ __dispatch__ = {
     "selectLocation": selectLocation,
     "addChannelToFeed": addChannelToFeed,
     "removeChannelsFromFeed": removeChannelsFromFeed,
+    "newpipeImport": newpipeImport,
     "removeSearchQuery": removeSearchQuery,
     "clearSearchHistory": clearSearchHistory,
     "updateSortBy": updateSortBy
