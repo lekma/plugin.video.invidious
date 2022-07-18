@@ -278,7 +278,7 @@ msgctxt "#30137"
 msgid "Subscriptions path"
 msgstr ""
 
-
 msgctxt "#30138"
 msgid "Import feed"
 msgstr ""
+
