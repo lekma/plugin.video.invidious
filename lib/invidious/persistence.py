@@ -22,7 +22,7 @@ class ChannelFeed(Persistent, OrderedDict):
 
     @save
     def clear(self):
-        super().clear()
+        super(ChannelFeed, self).clear()
 
 
 channel_feed = ChannelFeed()
