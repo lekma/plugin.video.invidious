@@ -96,7 +96,7 @@ def newpipeImport():
     with open(newpipe_filepath, 'r', encoding='utf-8') as fp:
         newpipe_dict = json.load(fp)
         newpipe_subscriptions = newpipe_dict.get('subscriptions', ())
-        channel_feed.removeAll()
+        channel_feed.clear()
         for item in newpipe_subscriptions:
             item_id = item['url'].split('/')[-1]
             channel_feed.add(item_id, item['name'])
