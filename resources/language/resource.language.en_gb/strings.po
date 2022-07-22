@@ -271,14 +271,6 @@ msgid "Always ask"
 msgstr ""
 
 msgctxt "#30136"
-msgid "Feed: Newpipe Subscriptions"
-msgstr ""
-
-msgctxt "#30137"
-msgid "Subscriptions path"
-msgstr ""
-
-msgctxt "#30138"
-msgid "Import feed"
+msgid "Import NewPipe subscriptions"
 msgstr ""
 

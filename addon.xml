@@ -6,7 +6,7 @@
 
     <requires>
         <import addon="xbmc.python" version="3.0.0" />
-        <import addon="script.module.iapc" version="1.0.1" />
+        <import addon="script.module.iapc" version="1.0.2" />
         <import addon="script.module.requests" version="2.25.1" />
         <import addon="script.module.inputstreamhelper" version="0.5.10" />
     </requires>

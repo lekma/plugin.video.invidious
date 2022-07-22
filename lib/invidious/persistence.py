@@ -21,6 +21,10 @@ class ChannelFeed(Persistent, OrderedDict):
             del self[key]
 
     @save
+    def update(self, others):
+        super(ChannelFeed, self).update(others)
+
+    @save
     def clear(self):
         super(ChannelFeed, self).clear()
 

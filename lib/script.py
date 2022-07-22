@@ -7,7 +7,7 @@ import json
 
 from iapc.tools import (
     getAddonId, selectDialog, getSetting, setSetting,
-    containerUpdate, addFavourite, playMedia
+    containerUpdate, addFavourite, playMedia, browseFiles
 )
 
 from invidious.client import client
@@ -89,17 +89,15 @@ def removeChannelsFromFeed():
         keys = list(channel_feed.keys())
         channel_feed.remove(*(keys[index] for index in indices))
 
-
-def newpipeImport():
-    newpipe_filepath = getSetting("newpipe.path")
-
-    with open(newpipe_filepath, 'r', encoding='utf-8') as fp:
-        newpipe_dict = json.load(fp)
-        newpipe_subscriptions = newpipe_dict.get('subscriptions', ())
-        channel_feed.clear()
-        for item in newpipe_subscriptions:
-            item_id = item['url'].split('/')[-1]
-            channel_feed.add(item_id, item['name'])
+def newPipeImport():
+    if (path:= browseFiles(heading=30136)):
+        with open(path, "r", encoding="utf-8") as fp:
+            channel_feed.update(
+                (
+                    (sub["url"].split("/")[-1], sub["name"])
+                    for sub in json.load(fp).get("subscriptions", ())
+                )
+            )
 
 
 # __main__ ---------------------------------------------------------------------
@@ -113,7 +111,7 @@ __dispatch__ = {
     "selectLocation": selectLocation,
     "addChannelToFeed": addChannelToFeed,
     "removeChannelsFromFeed": removeChannelsFromFeed,
-    "newpipeImport": newpipeImport,
+    "newPipeImport": newPipeImport,
     "removeSearchQuery": removeSearchQuery,
     "clearSearchHistory": clearSearchHistory,
     "updateSortBy": updateSortBy

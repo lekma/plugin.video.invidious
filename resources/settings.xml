@@ -196,29 +196,9 @@
                     <control type="button" format="action" />
                 </setting>
 
-            </group>
-
-
-            <!-- Newpipe -->
-            <group id="newpipe" label="30136">
-                <setting id="newpipe.path" label="30137" type="path">
+                <setting id="newPipeImport" label="30136" type="action">
                     <level>0</level>
-                    <default></default>
-                    <constraints>
-                        <writable>false</writable>
-                        <allowempty>true</allowempty>
-                    </constraints>
-                    <control type="button" format="file">
-                        <heading>30137</heading>
-                    </control>
-                </setting>
-
-                <setting id="newpipe.import" label="30138" type="action" parent="newpipe.path">
-                    <level>0</level>
-                    <data>RunScript($ID,newpipeImport)</data>
-                    <dependencies>
-                        <dependency type="enable" setting="newpipe.path" operator="!is"></dependency>
-                    </dependencies>
+                    <data>RunScript($ID,newPipeImport)</data>
                     <control type="button" format="action" />
                 </setting>
 
