@@ -270,3 +270,7 @@ msgctxt "#30135"
 msgid "Always ask"
 msgstr ""
 
+msgctxt "#30136"
+msgid "Import NewPipe subscriptions"
+msgstr ""
+
