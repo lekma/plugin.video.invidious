@@ -20,6 +20,10 @@ class ChannelFeed(Persistent, OrderedDict):
         for key in keys:
             del self[key]
 
+    @save
+    def clear(self):
+        super(ChannelFeed, self).clear()
+
 
 channel_feed = ChannelFeed()
 

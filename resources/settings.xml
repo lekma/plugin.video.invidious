@@ -198,6 +198,32 @@
 
             </group>
 
+
+            <!-- Newpipe -->
+            <group id="newpipe" label="30136">
+                <setting id="newpipe.path" label="30137" type="path">
+                    <level>0</level>
+                    <default></default>
+                    <constraints>
+                        <writable>false</writable>
+                        <allowempty>true</allowempty>
+                    </constraints>
+                    <control type="button" format="file">
+                        <heading>30137</heading>
+                    </control>
+                </setting>
+
+                <setting id="newpipe.import" label="30138" type="action" parent="newpipe.path">
+                    <level>0</level>
+                    <data>RunScript($ID,newpipeImport)</data>
+                    <dependencies>
+                        <dependency type="enable" setting="newpipe.path" operator="!is"></dependency>
+                    </dependencies>
+                    <control type="button" format="action" />
+                </setting>
+
+            </group>
+
             <!-- Search history -->
             <group id="search_history" label="30115">
 
