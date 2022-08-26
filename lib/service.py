@@ -50,14 +50,14 @@ class InvidiousFeed(list):
 
 class InvidiousSession(Session):
 
-    def __init__(self, logger, headers=None):
+    def __init__(self, logger):
         super(InvidiousSession, self).__init__()
         self.logger = logger.getLogger("service.session")
-        if headers:
-            self.headers.update(headers)
         self.__setup__(True)
 
-    def __setup__(self, init=False):
+    def __setup__(self, init=False, headers=None):
+        if headers:
+            self.headers.update(headers)
         if (timeout := getSetting("timeout", float)) <= 0.0:
             self.timeout = None
         else:
@@ -125,7 +125,7 @@ class InvidiousService(Service):
 
     def __init__(self, *args, **kwargs):
         super(InvidiousService, self).__init__(*args, **kwargs)
-        self.__session__ = InvidiousSession(self.logger, headers=self.__headers__)
+        self.__session__ = InvidiousSession(self.logger)
         self.__channels__ = {}
         self.__query__ = {}
         self.__feed__ = InvidiousFeed()
@@ -164,8 +164,15 @@ class InvidiousService(Service):
         self.__url__ = urlunsplit(
             (self.__scheme__, self.__netloc__, path, "", "")
         )
+
+        token = getSetting("token", str)
+        if token:
+            self.__headers__["Authorization"] = f"Bearer {token}"
+        else:
+            self.__headers__.pop("Authorization", None)
+
         self.logger.info(f"instance: {self.__url__!r}")
-        self.__session__.__setup__()
+        self.__session__.__setup__(headers=self.__headers__)
 
     def __get__(self, path, regional=True, **kwargs):
         if regional:
@@ -212,6 +219,10 @@ class InvidiousService(Service):
                 except Exception:
                     continue
         return self.__feed__.page(page)
+
+    @public
+    def isLoggedIn(self):
+        return self.__headers__.__contains__("Authorization")
 
     # video --------------------------------------------------------------------
 

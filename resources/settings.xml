@@ -35,6 +35,17 @@
                     </control>
                 </setting>
 
+                <setting id="token" label="30108" type="string">
+                    <level>0</level>
+                    <default></default>
+                    <constraints>
+                        <allowempty>true</allowempty>
+                    </constraints>
+                    <control type="edit" format="string">
+                        <heading>30108</heading>
+                    </control>
+                </setting>
+
                 <setting id="ssl" label="30104" type="boolean">
                     <level>0</level>
                     <default>true</default>

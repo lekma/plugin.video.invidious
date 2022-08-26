@@ -194,6 +194,10 @@ msgctxt "#30107"
 msgid "Instance"
 msgstr ""
 
+msgctxt "#30108"
+msgid "Authentication token"
+msgstr "Token de autenticación"
+
 msgctxt "#30111"
 msgid "Persistent data"
 msgstr "Datos persistentes"
