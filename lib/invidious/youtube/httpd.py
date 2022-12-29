@@ -5,7 +5,6 @@ from collections import OrderedDict
 from json import JSONDecoder
 from requests import Session, Timeout
 from time import time
-from urllib.parse import parse_qs
 
 from iapc import Server, http
 from iapc.tools import buildUrl, getSetting, notify, ICONERROR
@@ -166,15 +165,6 @@ class YouTubeServer(Server):
 
     # --------------------------------------------------------------------------
 
-    def extractUrl(self, stream, jsUrl):
-        try:
-            cipher = stream["cipher"]
-        except KeyError:
-            cipher = stream["signatureCipher"]
-        return self.solver(jsUrl).extractUrl(parse_qs(cipher))
-
-    # --------------------------------------------------------------------------
-
     def dashUrl(self, videoId):
         return self.__manifestUrl__.format(videoId)
 
@@ -194,11 +184,9 @@ class YouTubeServer(Server):
                 # Content-Type: application/vnd.apple.mpegurl
                 return (302, None, {"Location": hlsUrl})
         elif (streams := streamingData.get("adaptiveFormats", [])):
-            jsUrl = videoDetails["jsUrl"]
+            solver = self.solver(videoDetails["jsUrl"])
             for stream in streams:
-                if "url" not in stream:
-                    stream["url"] = self.extractUrl(stream, jsUrl)
+                stream["url"] = solver.extractUrl(stream)
             # Content-Type: video/vnd.mpeg.dash.mpd
             return (200, adaptive(videoDetails["lengthSeconds"], streams), None)
         self.__raise__(f"Cannot play video: '{videoId}'")
-

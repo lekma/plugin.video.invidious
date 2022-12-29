@@ -7,7 +7,7 @@ __all__ = ["Url", "Thumbnails", "Item", "Items"]
 from datetime import datetime
 from urllib.parse import quote_plus
 
-from iapc.tools import maybeLocalize, getAddonId
+from iapc.tools import maybeLocalize, getAddonId, getSetting
 from iapc.tools.objects import Type, Object, List
 
 
@@ -57,7 +57,8 @@ class Item(Object, metaclass=ItemType):
                     **{key: quote_plus(value) for key, value in kwargs.items()}
                 )
             )
-            for label, action in cls.__menus__
+            for label, action, *settings in cls.__menus__
+            if all(getSetting(*iargs) == ires for iargs, ires in settings)
         ]
 
     @property
@@ -75,4 +76,3 @@ class Items(List):
     def __init__(self, items, continuation=None, limit=0, **kwargs):
         super(Items, self).__init__(items, **kwargs)
         self.more = continuation or ((len(self) >= limit) if limit else False)
-
