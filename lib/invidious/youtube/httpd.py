@@ -3,6 +3,7 @@
 
 from collections import OrderedDict
 from json import JSONDecoder
+from random import randint
 from requests import Session, Timeout
 from time import time
 
@@ -75,15 +76,19 @@ class YouTubeSession(HttpSession):
             (not (consent := self.cookies.get("CONSENT"))) or
             ("YES" not in consent)
         ):
-            html = super(YouTubeSession, self).get(url, **kwargs)
+            html = super(YouTubeSession, self).get(self.__url__)
             try:
                 value = __find__(r'cb\..+?(?=\")', html).group()
             except PatternsError:
-                pass
-            else:
-                self.cookies.set(
-                    "CONSENT", f"YES+{value}", domain=".youtube.com"
-                )
+                if (
+                    (consent := self.cookies.get("CONSENT")) and
+                    ("PENDING" in consent)
+                ):
+                    cid = consent.split("+")[1]
+                else:
+                    cid = randint(100, 999)
+                value = f"cb.20221213-07-p1.en+FX+{cid}"
+            self.cookies.set("CONSENT", f"YES+{value}", domain=".youtube.com")
         return super(YouTubeSession, self).get(url, **kwargs)
 
     def js(self, jsUrl):
