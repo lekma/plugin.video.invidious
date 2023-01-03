@@ -25,7 +25,10 @@ class Channel(Item):
     __plot__ = "{0.author}\n\n{0.description}"
 
     __menus__ = [
-        (30034, "RunScript({addonId},addChannelToFeed,{authorId},{author})")
+        (
+            30034, "RunScript({addonId},addChannelToFeed,{authorId},{author})",
+            (("feed", bool), True)
+        )
     ]
 
     @property
@@ -50,4 +53,3 @@ class Channel(Item):
 class Channels(Items):
 
     __ctor__ = Channel
-
