@@ -127,7 +127,6 @@ __dispatch__ = {
 }
 
 def dispatch(name, *args):
-
     if (
         not (action := __dispatch__.get(name)) or
         not callable(action)
