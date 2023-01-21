@@ -28,7 +28,7 @@ class Query(Item):
                 type=self.type, query=self.query, sort_by=self.sort_by
             ),
             isFolder=True,
-            infos={"video": {"title": self.query, "plot": self.query}},
+            infoLabels={"video": {"title": self.query, "plot": self.query}},
             contextMenus=self.menus(
                 type=self.type,
                 query=self.query,

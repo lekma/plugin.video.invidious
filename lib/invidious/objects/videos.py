@@ -85,7 +85,7 @@ class Video(Item):
         return ListItem(
             self.label,
             path,
-            infos={
+            infoLabels={
                 "video": dict(self.infos, title=self.title, plot=self.plot)
             },
             streamInfos={"video": {"duration": self.lengthSeconds}},

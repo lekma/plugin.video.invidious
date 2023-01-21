@@ -40,7 +40,7 @@ class Channel(Item):
             self.author,
             buildUrl(url, action=action, authorId=self.authorId),
             isFolder=True,
-            infos={"video": {"title": self.author, "plot": self.plot}},
+            infoLabels={"video": {"title": self.author, "plot": self.plot}},
             contextMenus=self.menus(
                 authorId=self.authorId,
                 author=self.author

@@ -39,7 +39,7 @@ class Folder(Item):
                 label,
                 buildUrl(url, action=folder.get("action", self.type), **kwargs),
                 isFolder=True,
-                infos={
+                infoLabels={
                     "video": {
                         "title": label,
                         "plot": maybeLocalize(folder.get("plot", label))
