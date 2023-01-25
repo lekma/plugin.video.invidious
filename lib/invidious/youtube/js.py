@@ -98,7 +98,7 @@ class Solver(object):
         try:
             return self.__cache__[key]
         except KeyError:
-            return self.__cache__.setdefault(key, func(*args if args else key))
+            return self.__cache__.setdefault(key, func(*(args or (key,))))
 
     def __descramble__(self, n):
         if (r := self.__jsdescramble__(n)) and r.startswith('enhanced_except_'):
