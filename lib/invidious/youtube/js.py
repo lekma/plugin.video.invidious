@@ -95,10 +95,9 @@ class Solver(object):
         )
 
     def __fromCache__(self, key, func, *args):
-        try:
-            return self.__cache__[key]
-        except KeyError:
-            return self.__cache__.setdefault(key, func(*(args or (key,))))
+        if (not (value := self.__cache__.get(key))):
+            value = self.__cache__[key] = func(*(args or (key,)))
+        return value
 
     def __descramble__(self, n):
         if (r := self.__jsdescramble__(n)) and r.startswith('enhanced_except_'):
