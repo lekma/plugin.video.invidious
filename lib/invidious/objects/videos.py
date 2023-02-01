@@ -40,7 +40,10 @@ class Video(Item):
         ),
         (30031, "RunScript({addonId},goToChannel,{authorId})"),
         (30032, "RunScript({addonId},addChannelToFavourites,{authorId})"),
-        (30034, "RunScript({addonId},addChannelToFeed,{authorId},{author})")
+        (
+            30034, "RunScript({addonId},addChannelToFeed,{authorId},{author})",
+            (("feed", bool), True)
+        )
     ]
 
     @property
