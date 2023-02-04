@@ -37,10 +37,18 @@ def addChannelToFavourites(authorId):
 
 # playFromYouTube --------------------------------------------------------------
 
-__youtube_url__ = f"{__plugin_url__}/?action=video&youtube=true&videoId={{}}"
+__fromYoutube_url__ = f"{__plugin_url__}/?action=video&youtube=true&videoId={{}}"
 
 def playFromYouTube(videoId):
-    playMedia(__youtube_url__.format(videoId))
+    playMedia(__fromYoutube_url__.format(videoId))
+
+
+# playWithYouTube --------------------------------------------------------------
+
+__withYoutube_url__ = "plugin://plugin.video.youtube/play/?incognito=true&video_id={}"
+
+def playWithYouTube(videoId):
+    playMedia(__withYoutube_url__.format(videoId))
 
 
 # selectInstance ---------------------------------------------------------------
@@ -106,6 +114,7 @@ __dispatch__ = {
     "goToChannel": goToChannel,
     "addChannelToFavourites": addChannelToFavourites,
     "playFromYouTube": playFromYouTube,
+    "playWithYouTube": playWithYouTube,
     "selectInstance": selectInstance,
     "selectLanguage": selectLanguage,
     "selectLocation": selectLocation,
@@ -118,7 +127,6 @@ __dispatch__ = {
 }
 
 def dispatch(name, *args):
-
     if (
         not (action := __dispatch__.get(name)) or
         not callable(action)
@@ -129,4 +137,3 @@ def dispatch(name, *args):
 
 if __name__ == "__main__":
     dispatch(*argv[1:])
-

@@ -30,10 +30,20 @@ class Video(Item):
     __infos__ = {"mediatype": "video"}
 
     __menus__ = [
-        (30033, "RunScript({addonId},playFromYouTube,{videoId})"),
+        (
+            30033, "RunScript({addonId},playFromYouTube,{videoId})",
+            (("fromyoutube", bool), True)
+        ),
+        (
+            30037, "RunScript({addonId},playWithYouTube,{videoId})",
+            (("withyoutube", bool), True)
+        ),
         (30031, "RunScript({addonId},goToChannel,{authorId})"),
         (30032, "RunScript({addonId},addChannelToFavourites,{authorId})"),
-        (30034, "RunScript({addonId},addChannelToFeed,{authorId},{author})")
+        (
+            30034, "RunScript({addonId},addChannelToFeed,{authorId},{author})",
+            (("feed", bool), True)
+        )
     ]
 
     @property
@@ -78,7 +88,7 @@ class Video(Item):
         return ListItem(
             self.label,
             path,
-            infos={
+            infoLabels={
                 "video": dict(self.infos, title=self.title, plot=self.plot)
             },
             streamInfos={"video": {"duration": self.lengthSeconds}},
@@ -97,4 +107,3 @@ class Video(Item):
 class Videos(Items):
 
     __ctor__ = Video
-

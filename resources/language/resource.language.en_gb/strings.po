@@ -114,6 +114,10 @@ msgctxt "#30036"
 msgid "Clear search history"
 msgstr ""
 
+msgctxt "#30037"
+msgid "Play with the YouTube add-on"
+msgstr ""
+
 # items
 
 msgctxt "#30053"
@@ -278,3 +282,10 @@ msgctxt "#30136"
 msgid "Import NewPipe subscriptions"
 msgstr ""
 
+msgctxt "#30137"
+msgid "Interface"
+msgstr ""
+
+msgctxt "#30138"
+msgid "Context menus"
+msgstr ""

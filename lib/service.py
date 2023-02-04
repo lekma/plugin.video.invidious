@@ -22,7 +22,7 @@ class InvidiousFeed(list):
     def __init__(self, limit=60, timeout=600):
         super(InvidiousFeed, self).__init__()
         self.limit = limit
-        self.max = ((limit // 2) - 1)
+        self.max = ((limit // 4) - 1)
         self.timeout = timeout
         self.updated = False
         self.last = 0
@@ -272,4 +272,3 @@ class InvidiousService(Service):
 
 if __name__ == "__main__":
     InvidiousService().start(timeout=0.5)
-

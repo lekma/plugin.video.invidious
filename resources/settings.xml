@@ -150,10 +150,10 @@
 
         </category>
 
-        <!-- Home -->
-        <category id="home" label="30123">
+        <!-- Interface -->
+        <category id="interface" label="30137">
 
-            <group id="folders" label="">
+            <group id="home" label="30123">
 
                 <setting id="feed" label="30014" type="boolean">
                     <level>0</level>
@@ -188,6 +188,22 @@
                 <setting id="settings" label="30100" type="boolean">
                     <level>0</level>
                     <default>true</default>
+                    <control type="toggle" />
+                </setting>
+
+            </group>
+
+            <group id="context" label="30138">
+
+                <setting id="fromyoutube" label="30033" type="boolean">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle" />
+                </setting>
+
+                <setting id="withyoutube" label="30037" type="boolean">
+                    <level>0</level>
+                    <default>false</default>
                     <control type="toggle" />
                 </setting>
 
@@ -243,4 +259,3 @@
     </section>
 
 </settings>
-

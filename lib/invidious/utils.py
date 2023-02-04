@@ -13,7 +13,7 @@ def __makeItem__(label, url, art=None, isFolder=True, **kwargs):
         buildUrl(url, **kwargs),
         isFolder=isFolder,
         isPlayable=False,
-        infos={"video": {"title": label, "plot": label}},
+        infoLabels={"video": {"title": label, "plot": label}},
         poster=art,
         icon=art
     )
