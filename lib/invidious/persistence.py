@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-from collections import deque, OrderedDict
+from collections import OrderedDict
 
 from iapc.tools import Persistent, save
 
@@ -35,7 +35,7 @@ channel_feed = ChannelFeed()
 # ------------------------------------------------------------------------------
 # SearchCache
 
-class SearchCache(Persistent, deque):
+class SearchCache(Persistent, list):
 
     @save
     def clear(self):
@@ -79,4 +79,36 @@ class SearchHistory(Persistent, dict):
 
 
 search_history = SearchHistory()
+
+
+# ------------------------------------------------------------------------------
+
+# this should take care of migrating
+# from the old pickle format to the new json format
+# (I really, REALLY, hope...)
+
+import os
+import pathlib
+import pickle
+import shutil
+
+from iapc.tools import getAddonProfile, Logger
+
+logger = Logger()
+for root, dirs, filenames in os.walk(getAddonProfile()):
+    for filename in filenames:
+        if (path := pathlib.Path(root, filename)).suffix == ".pickle":
+            logger.info(f"migrating path: {path}")
+            try:
+                if (
+                    not (backup := path.with_name(f"{path.name}.bak")).exists()
+                ):
+                    logger.info(f"backup: {backup}")
+                    shutil.copyfile(path, backup)
+                with open(path, "rb") as f:
+                    pickle.load(f).__save__()
+            except Exception as err:
+                logger.error(f"failed to migrate pickle file: {err}")
+            else:
+                path.unlink()
 
