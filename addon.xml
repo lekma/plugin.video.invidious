@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.invidious"
        name="Invidious"
-       version="1.0.18"
+       version="1.0.20"
        provider-name="lekma">
 
     <requires>
@@ -10,6 +10,7 @@
         <import addon="script.module.iapc" version="1.0.5" />
         <import addon="script.module.requests" version="2.27.1" />
         <import addon="script.module.inputstreamhelper" version="0.5.10" />
+        <import addon="script.module.yt-dlp" version="2023.02.17" />
         <import addon="plugin.video.youtube" version="6.8.24" optional="true" />
     </requires>
 

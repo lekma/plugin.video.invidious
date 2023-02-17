@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
 
 
-# lifted from: https://github.com/ytdl-org/youtube-dl/blob/master/youtube_dl/jsinterp.py
-# LICENSE: The Unlicense, https://github.com/ytdl-org/youtube-dl/blob/master/LICENSE
-# AUTHORS: https://github.com/ytdl-org/youtube-dl/blob/master/AUTHORS
-
-
 from re import escape, search
 from time import time
 from urllib.parse import parse_qs, urlparse, urlunparse, urlencode
 
+from yt_dlp.jsinterp import JSInterpreter
+
 from .find import MatchError, __find__
-from .ytdl import JSInterpreter
 
 # ------------------------------------------------------------------------------
 # Solver
