@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.invidious"
        name="Invidious"
-       version="1.0.20"
+       version="1.0.21"
        provider-name="lekma">
 
     <requires>
         <import addon="xbmc.python" version="3.0.1" />
         <import addon="xbmc.addon" version="20.0.0" />
-        <import addon="script.module.iapc" version="1.0.5" />
+        <import addon="script.module.iapc" version="1.0.6" />
         <import addon="script.module.requests" version="2.27.1" />
         <import addon="script.module.inputstreamhelper" version="0.5.10" />
         <import addon="script.module.yt-dlp" version="2023.02.17" />
