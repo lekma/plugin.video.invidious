@@ -74,5 +74,5 @@ class Items(List):
     __ctor__ = Item
 
     def __init__(self, items, continuation=None, limit=0, **kwargs):
-        super(Items, self).__init__(items, **kwargs)
+        super(Items, self).__init__(items, content="videos", **kwargs)
         self.more = continuation or ((len(self) >= limit) if limit else False)
