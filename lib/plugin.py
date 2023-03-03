@@ -90,9 +90,9 @@ class InvidiousPlugin(Plugin):
 
     @action()
     def channel(self, **kwargs):
-        if self.addPlaylists(**kwargs):
-            return self.addDirectory(client.channel(**kwargs), "video", **kwargs)
-        return False
+        if (not "continuation" in kwargs) and (not self.addPlaylists(**kwargs)):
+            return False
+        return self.addDirectory(client.channel(**kwargs), "video", **kwargs)
 
     # playlist -----------------------------------------------------------------
 
