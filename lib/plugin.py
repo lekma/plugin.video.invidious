@@ -2,6 +2,7 @@
 
 
 from sys import argv
+from urllib.parse import urlencode
 
 from inputstreamhelper import Helper
 
@@ -75,8 +76,9 @@ class InvidiousPlugin(Plugin):
         item.setProperty("inputstream", "inputstream.adaptive")
         item.setProperty("inputstream.adaptive.manifest_type", manifestType)
         if headers and isinstance(headers, dict):
-            headers = "&".join(("=".join(header) for header in headers.items()))
-            item.setProperty("inputstream.adaptive.stream_headers", headers)
+            item.setProperty(
+                "inputstream.adaptive.manifest_headers", urlencode(headers)
+            )
         return super(InvidiousPlugin, self).playItem(item, mimeType=mimeType)
 
     # video --------------------------------------------------------------------
