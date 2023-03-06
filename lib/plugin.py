@@ -70,7 +70,9 @@ class InvidiousPlugin(Plugin):
             return True
         return False
 
-    def playItem(self, item, manifestType, mimeType=None, headers=None):
+    def playItem(
+        self, item, manifestType, mimeType=None, headers=None, params=None
+    ):
         if not Helper(manifestType).check_inputstream():
             return False
         item.setProperty("inputstream", "inputstream.adaptive")
@@ -78,6 +80,10 @@ class InvidiousPlugin(Plugin):
         if headers and isinstance(headers, dict):
             item.setProperty(
                 "inputstream.adaptive.manifest_headers", urlencode(headers)
+            )
+        if params and isinstance(params, dict):
+            item.setProperty(
+                "inputstream.adaptive.manifest_params", urlencode(params)
             )
         return super(InvidiousPlugin, self).playItem(item, mimeType=mimeType)
 
