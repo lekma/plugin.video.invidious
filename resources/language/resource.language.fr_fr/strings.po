@@ -280,12 +280,12 @@ msgstr "Toujours demander"
 
 msgctxt "#30136"
 msgid "Import NewPipe subscriptions"
-msgstr ""
+msgstr "Importer les abonnements de NewPipe"
 
 msgctxt "#30137"
 msgid "Interface"
-msgstr ""
+msgstr "Interface"
 
 msgctxt "#30138"
 msgid "Context menus"
-msgstr ""
+msgstr "Menus contextuels"

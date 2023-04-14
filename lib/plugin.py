@@ -2,6 +2,7 @@
 
 
 from sys import argv
+from urllib.parse import urlencode
 
 from inputstreamhelper import Helper
 
@@ -69,14 +70,21 @@ class InvidiousPlugin(Plugin):
             return True
         return False
 
-    def playItem(self, item, manifestType, mimeType=None, headers=None):
+    def playItem(
+        self, item, manifestType, mimeType=None, headers=None, params=None
+    ):
         if not Helper(manifestType).check_inputstream():
             return False
         item.setProperty("inputstream", "inputstream.adaptive")
         item.setProperty("inputstream.adaptive.manifest_type", manifestType)
         if headers and isinstance(headers, dict):
-            headers = "&".join(("=".join(header) for header in headers.items()))
-            item.setProperty("inputstream.adaptive.stream_headers", headers)
+            item.setProperty(
+                "inputstream.adaptive.manifest_headers", urlencode(headers)
+            )
+        if params and isinstance(params, dict):
+            item.setProperty(
+                "inputstream.adaptive.manifest_params", urlencode(params)
+            )
         return super(InvidiousPlugin, self).playItem(item, mimeType=mimeType)
 
     # video --------------------------------------------------------------------
@@ -90,9 +98,9 @@ class InvidiousPlugin(Plugin):
 
     @action()
     def channel(self, **kwargs):
-        if self.addPlaylists(**kwargs):
-            return self.addDirectory(client.channel(**kwargs), "video", **kwargs)
-        return False
+        if (not "continuation" in kwargs) and (not self.addPlaylists(**kwargs)):
+            return False
+        return self.addDirectory(client.channel(**kwargs), "video", **kwargs)
 
     # playlist -----------------------------------------------------------------
 
