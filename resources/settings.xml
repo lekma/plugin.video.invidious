@@ -190,6 +190,30 @@
                     <control type="toggle" />
                 </setting>
 
+                <setting id="vp9" label="30151" type="boolean"
+                         parent="fromyoutube">
+                    <level>0</level>
+                    <default>true</default>
+                    <dependencies>
+                        <dependency type="enable" setting="fromyoutube">
+                            <![CDATA[true]]>
+                        </dependency>
+                    </dependencies>
+                    <control type="toggle" />
+                </setting>
+
+                <setting id="av01" label="30152" type="boolean"
+                         parent="fromyoutube">
+                    <level>0</level>
+                    <default>true</default>
+                    <dependencies>
+                        <dependency type="enable" setting="fromyoutube">
+                            <![CDATA[true]]>
+                        </dependency>
+                    </dependencies>
+                    <control type="toggle" />
+                </setting>
+
                 <setting id="withyoutube" label="30037" type="boolean">
                     <level>0</level>
                     <default>false</default>

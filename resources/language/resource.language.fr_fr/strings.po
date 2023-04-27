@@ -285,3 +285,11 @@ msgstr "Interface"
 msgctxt "#30138"
 msgid "Context menus"
 msgstr "Menus contextuels"
+
+msgctxt "#30151"
+msgid "VP9"
+msgstr ""
+
+msgctxt "#30152"
+msgid "AV1"
+msgstr ""

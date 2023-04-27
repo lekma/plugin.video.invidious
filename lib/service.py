@@ -151,6 +151,7 @@ class InvidiousService(Service):
             )
             clearSearchHistory(update=update)
         self.__setup__()
+        self.__httpd__.__setup__()
         containerRefresh()
 
     # --------------------------------------------------------------------------
