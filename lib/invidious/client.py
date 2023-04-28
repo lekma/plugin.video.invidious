@@ -54,7 +54,7 @@ class InvidiousClient(object):
     def instances(self, **kwargs):
         return [
             instance[0] for instance in self.__client__.instances(**kwargs)
-            if instance[1]["type"] in ("http", "https")
+            if instance[1]["type"] in ("http", "https") and instance[1]["api"]
         ]
 
     # --------------------------------------------------------------------------
