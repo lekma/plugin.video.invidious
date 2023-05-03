@@ -115,7 +115,7 @@ msgid "Clear search history"
 msgstr "Vider l'historique de recherche"
 
 msgctxt "#30037"
-msgid "Play with the YouTube add-on"
+msgid "Play with YouTube add-on"
 msgstr "Lire avec l'extension YouTube"
 
 # items
