@@ -8,7 +8,7 @@
         <import addon="xbmc.python" version="3.0.1" />
         <import addon="xbmc.addon" version="20.0.0" />
         <import addon="script.module.iapc" version="2.1.0" />
-        <import addon="script.module.yt-dlp" version="2023.03.04-2" />
+        <import addon="script.module.yt-dlp" version="2023.03.04-3" />
         <import addon="script.module.inputstreamhelper" version="0.6.0" />
         <import addon="script.module.requests" version="2.27.1" />
         <import addon="plugin.video.youtube" version="7.0.1" optional="true" />
