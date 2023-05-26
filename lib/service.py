@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
 
+import os
+import threading
+
 from requests import Session, Timeout
 from time import time
 from urllib.parse import urlunsplit, urlsplit, urljoin
+from concurrent.futures import ThreadPoolExecutor
 
 from iapc import Service, public
 from iapc.tools import (
@@ -108,6 +112,19 @@ class InvidiousSession(Session):
 
 class InvidiousService(Service):
 
+    __local__ = threading.local()
+
+    __cpu_count__ = os.cpu_count()
+    """
+    Number of CPU threads available on the system, or None.
+    Stored once as this is not expected to change during runtime.
+    """
+    __workers__ = __cpu_count__ and __cpu_count__ - 1
+    """
+    Maximum number of concurrent requests we'll attempt to make, or None if we
+    shouldn't attempt concurrent requests at all.
+    """
+
     __headers__ = {
         "User-Agent": "Mozilla/5.0",
         "Accept-Language": "*"
@@ -125,7 +142,6 @@ class InvidiousService(Service):
 
     def __init__(self, *args, **kwargs):
         super(InvidiousService, self).__init__(*args, **kwargs)
-        self.__session__ = InvidiousSession(self.logger, headers=self.__headers__)
         self.__channels__ = {}
         self.__query__ = {}
         self.__feed__ = InvidiousFeed()
@@ -154,6 +170,24 @@ class InvidiousService(Service):
         self.__httpd__.__setup__()
         containerRefresh()
 
+    def get_session(self):
+        """
+        It's unclear if the requests package is thread-safe, so it's
+        suggested to have one session per thread to be safe.
+
+        Returns:
+            Existing InvidiousSession if one was already created for this
+            thread, otherwise a new InvidiousSession instance.
+
+        See:
+            * https://github.com/psf/requests/issues/2766
+            * https://github.com/psf/requests/issues/1871#issuecomment-32751346
+        """
+        if not hasattr(self.__local__, "session"):
+            self.__local__.session = InvidiousSession(self.logger, headers=self.__headers__)
+
+        return self.__local__.session
+
     # --------------------------------------------------------------------------
 
     def __setup__(self):
@@ -166,18 +200,26 @@ class InvidiousService(Service):
             (self.__scheme__, self.__netloc__, path, "", "")
         )
         self.logger.info(f"instance: {self.__url__!r}")
-        self.__session__.__setup__()
+        self.get_session().__setup__()
 
     def __get__(self, path, regional=True, **kwargs):
         if regional:
             kwargs.setdefault("region", self.__region__)
-        return self.__session__.get(urljoin(self.__url__, path), params=kwargs)
+        return self.get_session().get(urljoin(self.__url__, path), params=kwargs)
+
+    def __update_channel__(self, author_id, **kwargs):
+        try:
+            self.__feed__.update(
+                self.query("channel", author_id, **kwargs)
+            )
+        except Exception:
+            pass
 
     # public api ---------------------------------------------------------------
 
     @public
     def instances(self, **kwargs):
-        return self.__session__.get(self.__instances__, params=kwargs)
+        return self.get_session().get(self.__instances__, params=kwargs)
 
     @public
     def query(self, key, *args, **kwargs):
@@ -203,15 +245,26 @@ class InvidiousService(Service):
 
     @public
     def feed(self, ids, page=1, **kwargs):
+        """
+        Update all channels in the feed. This aims to do so concurrently, but
+        will fallback to a syncrounous loop if there is only 1 core/thread
+        available (low processing power) or the systems core/thread count is
+        unknown.
+
+        Uses threads rather than coroutines due to limitations of Kodi/asyncio.
+
+        See: https://kodi.wiki/view/Python_Problems#asyncio
+        """
         if ((page := int(page)) == 1) and self.__feed__.invalid(set(ids)):
             self.__feed__.clear()
-            for authorId in ids:
-                try:
-                    self.__feed__.update(
-                        self.query("channel", authorId, **kwargs)
-                    )
-                except Exception:
-                    continue
+
+            if self.__workers__ and self.__workers__ > 1:
+                with ThreadPoolExecutor(max_workers=self.__workers__) as executor:
+                    executor.map(lambda author_id: self.__update_channel__(author_id, **kwargs), ids)
+            else:
+                for author_id in ids:
+                    self.__update_channel__(author_id, **kwargs)
+
         return self.__feed__.page(page)
 
     # video --------------------------------------------------------------------
