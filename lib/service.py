@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
 
-import os
-import threading
-
+from concurrent.futures import ThreadPoolExecutor
+from itertools import chain
 from requests import Session, Timeout
+from threading import local
 from time import time
 from urllib.parse import urlunsplit, urlsplit, urljoin
-from concurrent.futures import ThreadPoolExecutor
 
 from iapc import Service, public
 from iapc.tools import (
@@ -26,7 +25,7 @@ class InvidiousFeed(list):
     def __init__(self, limit=60, timeout=600):
         super(InvidiousFeed, self).__init__()
         self.limit = limit
-        self.max = ((limit // 4) - 1)
+        self.max = (limit // 4)
         self.timeout = timeout
         self.updated = False
         self.last = 0
@@ -38,8 +37,10 @@ class InvidiousFeed(list):
             return True
         return ((time() - self.last) > self.timeout)
 
-    def update(self, channel):
-        self.extend(channel["latestVideos"][:self.max])
+    def update(self, channels):
+        self.extend(
+            chain.from_iterable(channel[:self.max] for channel in channels)
+        )
         self.updated = True
         self.last = time()
 
@@ -112,18 +113,7 @@ class InvidiousSession(Session):
 
 class InvidiousService(Service):
 
-    __local__ = threading.local()
-
-    __cpu_count__ = os.cpu_count()
-    """
-    Number of CPU threads available on the system, or None.
-    Stored once as this is not expected to change during runtime.
-    """
-    __workers__ = __cpu_count__ and __cpu_count__ - 1
-    """
-    Maximum number of concurrent requests we'll attempt to make, or None if we
-    shouldn't attempt concurrent requests at all.
-    """
+    __local__ = local()
 
     __headers__ = {
         "User-Agent": "Mozilla/5.0",
@@ -145,6 +135,7 @@ class InvidiousService(Service):
         self.__channels__ = {}
         self.__query__ = {}
         self.__feed__ = InvidiousFeed()
+        self.__pool__ = ThreadPoolExecutor()
         makeProfile()
 
     def serve_forever(self, timeout):
@@ -157,6 +148,7 @@ class InvidiousService(Service):
         self.logger.info("starting...")
         self.__setup__()
         self.serve(**kwargs)
+        self.__pool__.shutdown(cancel_futures=True)
         self.logger.info("stopped")
 
     def onSettingsChanged(self):
@@ -170,25 +162,14 @@ class InvidiousService(Service):
         self.__httpd__.__setup__()
         containerRefresh()
 
-    def get_session(self):
-        """
-        It's unclear if the requests package is thread-safe, so it's
-        suggested to have one session per thread to be safe.
-
-        Returns:
-            Existing InvidiousSession if one was already created for this
-            thread, otherwise a new InvidiousSession instance.
-
-        See:
-            * https://github.com/psf/requests/issues/2766
-            * https://github.com/psf/requests/issues/1871#issuecomment-32751346
-        """
-        if not hasattr(self.__local__, "session"):
-            self.__local__.session = InvidiousSession(self.logger, headers=self.__headers__)
-
-        return self.__local__.session
-
     # --------------------------------------------------------------------------
+
+    def __session__(self):
+        if not (session := getattr(self.__local__, "session", None)):
+            session = self.__local__.session = InvidiousSession(
+                self.logger, headers=self.__headers__
+            )
+        return session
 
     def __setup__(self):
         self.__region__ = getSetting("gl", str)
@@ -200,26 +181,18 @@ class InvidiousService(Service):
             (self.__scheme__, self.__netloc__, path, "", "")
         )
         self.logger.info(f"instance: {self.__url__!r}")
-        self.get_session().__setup__()
+        self.__session__().__setup__()
 
     def __get__(self, path, regional=True, **kwargs):
         if regional:
             kwargs.setdefault("region", self.__region__)
-        return self.get_session().get(urljoin(self.__url__, path), params=kwargs)
-
-    def __update_channel__(self, author_id, **kwargs):
-        try:
-            self.__feed__.update(
-                self.query("channel", author_id, **kwargs)
-            )
-        except Exception:
-            pass
+        return self.__session__().get(urljoin(self.__url__, path), params=kwargs)
 
     # public api ---------------------------------------------------------------
 
     @public
     def instances(self, **kwargs):
-        return self.get_session().get(self.__instances__, params=kwargs)
+        return self.__session__().get(self.__instances__, params=kwargs)
 
     @public
     def query(self, key, *args, **kwargs):
@@ -243,28 +216,25 @@ class InvidiousService(Service):
     def pushQuery(self, query):
         self.__query__ = query
 
+    # feed ---------------------------------------------------------------------
+
+    def __query_feed__(self, id, **kwargs):
+        try:
+            return self.query("channel", id, **kwargs)["latestVideos"]
+        except Exception:
+            return []
+
     @public
     def feed(self, ids, page=1, **kwargs):
-        """
-        Update all channels in the feed. This aims to do so concurrently, but
-        will fallback to a syncrounous loop if there is only 1 core/thread
-        available (low processing power) or the systems core/thread count is
-        unknown.
-
-        Uses threads rather than coroutines due to limitations of Kodi/asyncio.
-
-        See: https://kodi.wiki/view/Python_Problems#asyncio
-        """
+        t = time()
         if ((page := int(page)) == 1) and self.__feed__.invalid(set(ids)):
             self.__feed__.clear()
-
-            if self.__workers__ and self.__workers__ > 1:
-                with ThreadPoolExecutor(max_workers=self.__workers__) as executor:
-                    executor.map(lambda author_id: self.__update_channel__(author_id, **kwargs), ids)
-            else:
-                for author_id in ids:
-                    self.__update_channel__(author_id, **kwargs)
-
+            self.__feed__.update(
+                self.__pool__.map(
+                    lambda id: self.__query_feed__(id, **kwargs), ids
+                )
+            )
+        self.logger.info(f"time spent in feed(): {time() - t} seconds")
         return self.__feed__.page(page)
 
     # video --------------------------------------------------------------------
