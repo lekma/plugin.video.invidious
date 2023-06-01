@@ -50,6 +50,7 @@ class InvidiousFeed(list):
             self.updated = False
         return (self[((page - 1) * self.limit):(page * self.limit)], self.limit)
 
+
 # ------------------------------------------------------------------------------
 # InvidiousSession
 
@@ -218,22 +219,17 @@ class InvidiousService(Service):
 
     # feed ---------------------------------------------------------------------
 
-    def __query_feed__(self, id, **kwargs):
-        try:
-            return self.query("channel", id, **kwargs)["latestVideos"]
-        except Exception:
-            return []
-
     @public
     def feed(self, ids, page=1, **kwargs):
         t = time()
         if ((page := int(page)) == 1) and self.__feed__.invalid(set(ids)):
+            def __query_feed__(id):
+                try:
+                    return self.query("channel", id, **kwargs)["latestVideos"]
+                except Exception:
+                    return []
             self.__feed__.clear()
-            self.__feed__.update(
-                self.__pool__.map(
-                    lambda id: self.__query_feed__(id, **kwargs), ids
-                )
-            )
+            self.__feed__.update(self.__pool__.map(__query_feed__, ids))
         self.logger.info(f"time spent in feed(): {time() - t} seconds")
         return self.__feed__.page(page)
 
