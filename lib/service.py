@@ -37,10 +37,8 @@ class InvidiousFeed(list):
             return True
         return ((time() - self.last) > self.timeout)
 
-    def update(self, channels):
-        self.extend(
-            chain.from_iterable(channel[:self.max] for channel in channels)
-        )
+    def update(self, feeds):
+        self.extend(chain.from_iterable(feed[:self.max] for feed in feeds))
         self.updated = True
         self.last = time()
 
@@ -118,7 +116,9 @@ class InvidiousService(Service):
 
     __headers__ = {
         "User-Agent": "Mozilla/5.0",
-        "Accept-Language": "*"
+        "Accept-Language": "*",
+        #"Cache-Control": "no-cache",
+        #"Pragma": "no-cache"
     }
 
     __paths__ = {
@@ -221,7 +221,6 @@ class InvidiousService(Service):
 
     @public
     def feed(self, ids, page=1, **kwargs):
-        t = time()
         if ((page := int(page)) == 1) and self.__feed__.invalid(set(ids)):
             def __query_feed__(id):
                 try:
@@ -230,7 +229,6 @@ class InvidiousService(Service):
                     return []
             self.__feed__.clear()
             self.__feed__.update(self.__pool__.map(__query_feed__, ids))
-        self.logger.info(f"time spent in feed(): {time() - t} seconds")
         return self.__feed__.page(page)
 
     # video --------------------------------------------------------------------
