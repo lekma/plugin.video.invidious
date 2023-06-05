@@ -10,7 +10,7 @@
             <!-- Instance -->
             <group id="instance" label="30107">
 
-                <setting id="selectInstance" label="30105" type="action">
+                <setting id="selectInstance" type="action" label="30105" help="30110">
                     <level>0</level>
                     <data>RunScript($ID,selectInstance)</data>
                     <control type="button" format="action" />

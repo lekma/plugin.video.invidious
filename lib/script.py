@@ -57,10 +57,16 @@ def selectInstance():
     instance = getSetting("instance", str)
     instances = client.instances(sort_by="health")
     if instances:
-        preselect = instances.index(instance) if instance in instances else -1
-        index = selectDialog(instances, heading=30105, preselect=preselect)
+        urls, lines = [], []
+
+        for iter in instances:
+            urls.append(iter[0])
+            lines.append(f"{iter[0]} ({iter[1]['region']})")
+
+        preselect = urls.index(instance) if instance in urls else -1
+        index = selectDialog(lines, heading=30105, preselect=preselect)
         if index >= 0:
-            setSetting("instance", instances[index], str)
+            setSetting("instance", urls[index], str)
 
 
 # selectLanguage ---------------------------------------------------------------
