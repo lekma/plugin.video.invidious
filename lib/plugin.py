@@ -11,7 +11,7 @@ from iapc.tools import Plugin, action, parseQuery, openSettings, getSetting
 from invidious import home, styles, sortBy
 from invidious.client import client
 from invidious.objects import Folders
-from invidious.persistence import channel_feed, search_cache
+from invidious.persistence import channel_feed, search_cache, search_history
 from invidious.search import newSearch, searchHistory
 from invidious.utils import moreItem, newSearchItem, playlistsItem, settingsItem
 
@@ -196,9 +196,12 @@ class InvidiousPlugin(Plugin):
     def search(self, **kwargs):
         history = getSetting("history", bool)
         if "type" in kwargs:
+            search_type = kwargs["type"]
             query = kwargs.pop("query", "")
             new = kwargs.pop("new", False)
             if query:
+                if history and query in search_history[search_type]:
+                    search_history.move_to_end(search_type, query)
                 return self.__search__(query, **kwargs)
             if new:
                 return self.__new_search__(history=history, **kwargs)
@@ -224,4 +227,3 @@ def dispatch(url, handle, query, *args):
 
 if __name__ == "__main__":
     dispatch(*argv)
-

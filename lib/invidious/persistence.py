@@ -56,24 +56,40 @@ search_cache = SearchCache()
 # ------------------------------------------------------------------------------
 # SearchHistory
 
-class SearchHistory(Persistent, dict):
+class SearchHistory(Persistent, OrderedDict):
+
+    def __setitem__(self, key, value):
+        """
+        Set self[key] to value.
+
+        As we're only ever expecting the value to be an OrderedDict, convert it
+        to OrderedDict if we receive a regular dict or another subclass.
+
+        See: https://github.com/lekma/script.module.iapc/issues/3
+        """
+        super(SearchHistory, self).__setitem__(key, OrderedDict(value))
 
     def __missing__(self, key):
         self[key] = OrderedDict()
         return self[key]
 
     @save
-    def record(self, type, query, sort_by):
-        self[type][query] = {"type": type, "query": query, "sort_by": sort_by}
+    def record(self, search_type, query, sort_by):
+        self[search_type][query] = {"type": search_type, "query": query, "sort_by": sort_by}
+        self[search_type].move_to_end(query)
 
     @save
-    def remove(self, type, query):
-        del self[type][query]
+    def move_to_end(self, search_type, query):
+        self[search_type].move_to_end(query)
 
     @save
-    def clear(self, type=None):
-        if type:
-            self[type].clear()
+    def remove(self, search_type, query):
+        del self[search_type][query]
+
+    @save
+    def clear(self, search_type=None):
+        if search_type:
+            self[search_type].clear()
         else:
             super(SearchHistory, self).clear()
 
@@ -111,4 +127,3 @@ for root, dirs, filenames in os.walk(getAddonProfile()):
                 logger.error(f"failed to migrate pickle file: {err}")
             else:
                 path.unlink()
-
