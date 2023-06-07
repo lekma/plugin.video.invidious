@@ -195,12 +195,10 @@ class InvidiousPlugin(Plugin):
     @action(category=30002)
     def search(self, **kwargs):
         history = getSetting("history", bool)
-        if "type" in kwargs:
-            search_type = kwargs["type"]
-            query = kwargs.pop("query", "")
+        if (search_type := kwargs.get("type")):
             new = kwargs.pop("new", False)
-            if query:
-                if history and query in search_history[search_type]:
+            if (query := kwargs.pop("query", "")):
+                if (history and (query in search_history[search_type])):
                     search_history.move_to_end(search_type, query)
                 return self.__search__(query, **kwargs)
             if new:

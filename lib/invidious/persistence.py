@@ -2,6 +2,7 @@
 
 
 from collections import OrderedDict
+from collections.abc import Mapping
 
 from iapc.tools import Persistent, save
 
@@ -67,7 +68,9 @@ class SearchHistory(Persistent, OrderedDict):
 
         See: https://github.com/lekma/script.module.iapc/issues/3
         """
-        super(SearchHistory, self).__setitem__(key, OrderedDict(value))
+        if isinstance(value, Mapping):
+            value = OrderedDict(value)
+        super(SearchHistory, self).__setitem__(key, value)
 
     def __missing__(self, key):
         self[key] = OrderedDict()
@@ -75,7 +78,9 @@ class SearchHistory(Persistent, OrderedDict):
 
     @save
     def record(self, search_type, query, sort_by):
-        self[search_type][query] = {"type": search_type, "query": query, "sort_by": sort_by}
+        self[search_type][query] = {
+            "type": search_type, "query": query, "sort_by": sort_by
+        }
         self[search_type].move_to_end(query)
 
     @save
