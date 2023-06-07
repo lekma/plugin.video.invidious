@@ -54,19 +54,14 @@ def playWithYouTube(videoId):
 # selectInstance ---------------------------------------------------------------
 
 def selectInstance():
-    instance = getSetting("instance", str)
-    instances = client.instances(sort_by="health")
-    if instances:
-        urls, lines = [], []
-
-        for iter in instances:
-            urls.append(iter[0])
-            lines.append(f"{iter[0]} ({iter[1]['region']})")
-
-        preselect = urls.index(instance) if instance in urls else -1
-        index = selectDialog(lines, heading=30105, preselect=preselect)
+    if (instances := client.instances(sort_by="location,health")):
+        instance = getSetting("instance", str)
+        keys = list(instances.keys())
+        values = list(instances.values())
+        preselect = keys.index(instance) if instance in keys else -1
+        index = selectDialog(values, heading=30105, preselect=preselect)
         if index >= 0:
-            setSetting("instance", urls[index], str)
+            setSetting("instance", keys[index], str)
 
 
 # selectLanguage ---------------------------------------------------------------
