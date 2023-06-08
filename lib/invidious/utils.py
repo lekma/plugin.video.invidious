@@ -13,7 +13,6 @@ def __makeItem__(label, url, art=None, isFolder=True, **kwargs):
         buildUrl(url, **kwargs),
         isFolder=isFolder,
         isPlayable=False,
-        infoLabels={"video": {"title": label, "plot": label}},
         poster=art,
         icon=art
     )
@@ -41,4 +40,3 @@ def newSearchItem(url, **kwargs):
 # playlists item
 def playlistsItem(url, **kwargs):
     return __makeItem__(30005, url, "DefaultPlaylist.png", **kwargs)
-
