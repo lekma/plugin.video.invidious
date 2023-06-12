@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 
+from concurrent.futures import ThreadPoolExecutor
+from itertools import chain
 from requests import Session, Timeout
+from threading import local
 from time import time
 from urllib.parse import urlunsplit, urlsplit, urljoin
 
@@ -22,7 +25,7 @@ class InvidiousFeed(list):
     def __init__(self, limit=60, timeout=600):
         super(InvidiousFeed, self).__init__()
         self.limit = limit
-        self.max = ((limit // 4) - 1)
+        self.max = (limit // 4)
         self.timeout = timeout
         self.updated = False
         self.last = 0
@@ -34,8 +37,8 @@ class InvidiousFeed(list):
             return True
         return ((time() - self.last) > self.timeout)
 
-    def update(self, channel):
-        self.extend(channel["latestVideos"][:self.max])
+    def update(self, feeds):
+        self.extend(chain.from_iterable(feed[:self.max] for feed in feeds))
         self.updated = True
         self.last = time()
 
@@ -45,19 +48,20 @@ class InvidiousFeed(list):
             self.updated = False
         return (self[((page - 1) * self.limit):(page * self.limit)], self.limit)
 
+
 # ------------------------------------------------------------------------------
 # InvidiousSession
 
 class InvidiousSession(Session):
 
-    def __init__(self, logger):
+    def __init__(self, logger, headers=None):
         super(InvidiousSession, self).__init__()
         self.logger = logger.getLogger("service.session")
-        self.__setup__(True)
-
-    def __setup__(self, init=False, headers=None):
         if headers:
             self.headers.update(headers)
+        self.__setup__(True)
+
+    def __setup__(self, init=False):
         if (timeout := getSetting("timeout", float)) <= 0.0:
             self.timeout = None
         else:
@@ -108,9 +112,13 @@ class InvidiousSession(Session):
 
 class InvidiousService(Service):
 
+    __local__ = local()
+
     __headers__ = {
         "User-Agent": "Mozilla/5.0",
-        "Accept-Language": "*"
+        "Accept-Language": "*",
+        #"Cache-Control": "no-cache",
+        #"Pragma": "no-cache"
     }
 
     __paths__ = {
@@ -125,10 +133,10 @@ class InvidiousService(Service):
 
     def __init__(self, *args, **kwargs):
         super(InvidiousService, self).__init__(*args, **kwargs)
-        self.__session__ = InvidiousSession(self.logger)
         self.__channels__ = {}
         self.__query__ = {}
         self.__feed__ = InvidiousFeed()
+        self.__pool__ = ThreadPoolExecutor()
         makeProfile()
 
     def serve_forever(self, timeout):
@@ -141,6 +149,7 @@ class InvidiousService(Service):
         self.logger.info("starting...")
         self.__setup__()
         self.serve(**kwargs)
+        self.__pool__.shutdown(cancel_futures=True)
         self.logger.info("stopped")
 
     def onSettingsChanged(self):
@@ -151,9 +160,17 @@ class InvidiousService(Service):
             )
             clearSearchHistory(update=update)
         self.__setup__()
+        self.__httpd__.__setup__()
         containerRefresh()
 
     # --------------------------------------------------------------------------
+
+    def __session__(self):
+        if not (session := getattr(self.__local__, "session", None)):
+            session = self.__local__.session = InvidiousSession(
+                self.logger, headers=self.__headers__
+            )
+        return session
 
     def __setup__(self):
         self.__region__ = getSetting("gl", str)
@@ -172,18 +189,18 @@ class InvidiousService(Service):
             self.__headers__.pop("Authorization", None)
 
         self.logger.info(f"instance: {self.__url__!r}")
-        self.__session__.__setup__(headers=self.__headers__)
+        self.__session__().__setup__()
 
     def __get__(self, path, regional=True, **kwargs):
         if regional:
             kwargs.setdefault("region", self.__region__)
-        return self.__session__.get(urljoin(self.__url__, path), params=kwargs)
+        return self.__session__().get(urljoin(self.__url__, path), params=kwargs)
 
     # public api ---------------------------------------------------------------
 
     @public
     def instances(self, **kwargs):
-        return self.__session__.get(self.__instances__, params=kwargs)
+        return self.__session__().get(self.__instances__, params=kwargs)
 
     @public
     def query(self, key, *args, **kwargs):
@@ -207,17 +224,18 @@ class InvidiousService(Service):
     def pushQuery(self, query):
         self.__query__ = query
 
+    # feed ---------------------------------------------------------------------
+
     @public
     def feed(self, ids, page=1, **kwargs):
         if ((page := int(page)) == 1) and self.__feed__.invalid(set(ids)):
-            self.__feed__.clear()
-            for authorId in ids:
+            def __query_feed__(id):
                 try:
-                    self.__feed__.update(
-                        self.query("channel", authorId, **kwargs)
-                    )
+                    return self.query("channel", id, **kwargs)["latestVideos"]
                 except Exception:
-                    continue
+                    return []
+            self.__feed__.clear()
+            self.__feed__.update(self.__pool__.map(__query_feed__, ids))
         return self.__feed__.page(page)
 
     @public
