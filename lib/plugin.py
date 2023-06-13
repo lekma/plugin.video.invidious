@@ -6,7 +6,7 @@ from urllib.parse import urlencode
 
 from inputstreamhelper import Helper
 
-from iapc.tools import Plugin, action, parseQuery, openSettings, getSetting
+from iapc.tools import action, getSetting, openSettings, parseQuery, Plugin
 
 from invidious import home, styles, sortBy
 from invidious.client import client
@@ -14,6 +14,8 @@ from invidious.objects import Folders
 from invidious.persistence import channel_feed, search_cache, search_history
 from invidious.search import newSearch, searchHistory
 from invidious.utils import moreItem, newSearchItem, playlistsItem, settingsItem
+
+from script import selectInstance
 
 
 # ------------------------------------------------------------------------------
@@ -216,6 +218,8 @@ class InvidiousPlugin(Plugin):
 # __main__ ---------------------------------------------------------------------
 
 def dispatch(url, handle, query, *args):
+    if getSetting("firstrun", bool):
+        selectInstance(30108)
     InvidiousPlugin(url, int(handle)).dispatch(**parseQuery(query))
 
 

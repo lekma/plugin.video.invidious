@@ -198,6 +198,10 @@ msgctxt "#30107"
 msgid "Instance"
 msgstr ""
 
+msgctxt "#30108"
+msgid "Select a public instance"
+msgstr ""
+
 msgctxt "#30110"
 msgid "Displays a list of public instances, along with the region the server is hosted in. Selecting one will update the \"Instance hostname/ip address\" setting."
 msgstr ""

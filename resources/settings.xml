@@ -7,6 +7,18 @@
         <!-- General -->
         <category id="general" label="30101">
 
+            <!-- Internal -->
+            <group id="internal" label="">
+
+                <visible>false</visible>
+
+                <setting id="firstrun" label="" type="boolean">
+                    <level>4</level>
+                    <default>false</default>
+                </setting>
+
+            </group>
+
             <!-- Instance -->
             <group id="instance" label="30107">
 
