@@ -105,6 +105,9 @@ class InvidiousClient(object):
     # feed ---------------------------------------------------------------------
 
     def feed(self, ids, page=1, **kwargs):
+        if self.__client__.isLoggedIn():
+            return Videos([y for x in self.__query__("auth/feed", **kwargs).values() for y in x], **kwargs)
+
         data, limit = self.__client__.feed(ids, page=page, **kwargs)
         return Videos(data, limit=limit)
 

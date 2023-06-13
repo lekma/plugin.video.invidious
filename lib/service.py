@@ -181,6 +181,13 @@ class InvidiousService(Service):
         self.__url__ = urlunsplit(
             (self.__scheme__, self.__netloc__, path, "", "")
         )
+
+        token = getSetting("token", str)
+        if token:
+            self.__headers__["Authorization"] = f"Bearer {token}"
+        else:
+            self.__headers__.pop("Authorization", None)
+
         self.logger.info(f"instance: {self.__url__!r}")
         self.__session__().__setup__()
 
@@ -230,6 +237,10 @@ class InvidiousService(Service):
             self.__feed__.clear()
             self.__feed__.update(self.__pool__.map(__query_feed__, ids))
         return self.__feed__.page(page)
+
+    @public
+    def isLoggedIn(self):
+        return self.__headers__.__contains__("Authorization")
 
     # video --------------------------------------------------------------------
 
