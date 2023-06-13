@@ -8,9 +8,10 @@ from threading import local
 from time import time
 from urllib.parse import urlunsplit, urlsplit, urljoin
 
-from iapc import Service, public
+from iapc import public, Service
 from iapc.tools import (
-    makeProfile, containerRefresh, buildUrl, notify, ICONERROR, getSetting
+    buildUrl, containerRefresh, getAddonId, getAddonName, getSetting,
+    localizedString, makeProfile, notify, runScript, ICONERROR
 )
 
 from invidious.search import clearSearchHistory
@@ -137,7 +138,11 @@ class InvidiousService(Service):
         self.__query__ = {}
         self.__feed__ = InvidiousFeed()
         self.__pool__ = ThreadPoolExecutor()
-        makeProfile()
+        if makeProfile(): # first run
+            runScript(
+                getAddonId(), "selectInstance",
+                f"{getAddonName()} - {localizedString(30105)}"
+            )
 
     def serve_forever(self, timeout):
         self.__httpd__ = YouTubeServer(self.id, timeout=timeout)

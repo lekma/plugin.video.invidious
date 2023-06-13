@@ -40,9 +40,7 @@ class InvidiousPlugin(Plugin):
             kwargs["page"] = int(kwargs.get("page", 1)) + 1
         else:
             kwargs["continuation"] = more
-        return self.addItem(
-            moreItem(self.url, action=self.action, **kwargs)
-        )
+        return self.addItem(moreItem(self.url, action=self.action, **kwargs))
 
     def addNewSearch(self, **kwargs):
         return self.addItem(
@@ -58,9 +56,7 @@ class InvidiousPlugin(Plugin):
 
     def addSettings(self):
         if getSetting("settings", bool):
-            return self.addItem(
-                settingsItem(self.url, action="settings")
-            )
+            return self.addItem(settingsItem(self.url, action="settings"))
         return True
 
     def addDirectory(self, items, *args, **kwargs):

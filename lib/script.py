@@ -53,13 +53,13 @@ def playWithYouTube(videoId):
 
 # selectInstance ---------------------------------------------------------------
 
-def selectInstance():
+def selectInstance(heading=30105):
     if (instances := client.instances(sort_by="location,health")):
         instance = getSetting("instance", str)
         keys = list(instances.keys())
         values = list(instances.values())
         preselect = keys.index(instance) if instance in keys else -1
-        index = selectDialog(values, heading=30105, preselect=preselect)
+        index = selectDialog(values, heading=heading, preselect=preselect)
         if index >= 0:
             setSetting("instance", keys[index], str)
 
