@@ -15,8 +15,6 @@ from invidious.persistence import channel_feed, search_cache, search_history
 from invidious.search import newSearch, searchHistory
 from invidious.utils import moreItem, newSearchItem, playlistsItem, settingsItem
 
-from script import selectInstance
-
 
 # ------------------------------------------------------------------------------
 # InvidiousPlugin
@@ -218,8 +216,6 @@ class InvidiousPlugin(Plugin):
 # __main__ ---------------------------------------------------------------------
 
 def dispatch(url, handle, query, *args):
-    if getSetting("firstrun", bool):
-        selectInstance(30108)
     InvidiousPlugin(url, int(handle)).dispatch(**parseQuery(query))
 
 

@@ -55,7 +55,6 @@ def playWithYouTube(videoId):
 
 def selectInstance(heading=30105):
     if (instances := client.instances(sort_by="location,health")):
-        setSetting("firstrun", False, bool)
         instance = getSetting("instance", str)
         keys = list(instances.keys())
         values = list(instances.values())

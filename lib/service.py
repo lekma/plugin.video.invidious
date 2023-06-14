@@ -10,8 +10,7 @@ from urllib.parse import urlunsplit, urlsplit, urljoin
 
 from iapc import public, Service
 from iapc.tools import (
-    buildUrl, containerRefresh, getSetting,
-    makeProfile, notify, setSetting, ICONERROR
+    buildUrl, containerRefresh, getSetting, makeProfile, notify, ICONERROR
 )
 
 from invidious.search import clearSearchHistory
@@ -138,6 +137,7 @@ class InvidiousService(Service):
         self.__query__ = {}
         self.__feed__ = InvidiousFeed()
         self.__pool__ = ThreadPoolExecutor()
+        makeProfile()
 
     def serve_forever(self, timeout):
         self.__httpd__ = YouTubeServer(self.id, timeout=timeout)
@@ -278,6 +278,4 @@ class InvidiousService(Service):
 # __main__ ---------------------------------------------------------------------
 
 if __name__ == "__main__":
-    if makeProfile():
-        setSetting("firstrun", True, bool)
     InvidiousService().start(timeout=0.5)

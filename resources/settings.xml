@@ -12,10 +12,10 @@
 
                 <visible>false</visible>
 
-                <setting id="firstrun" label="" type="boolean">
+                <!--<setting id="firstrun" label="" type="boolean">
                     <level>4</level>
                     <default>false</default>
-                </setting>
+                </setting>-->
 
             </group>
 
