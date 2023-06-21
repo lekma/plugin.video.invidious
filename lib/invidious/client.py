@@ -52,13 +52,11 @@ class InvidiousClient(object):
         self.__client__.pushQuery(query)
 
     def instances(self, **kwargs):
-        return [
-            instance[0] for instance in self.__client__.instances(**kwargs)
-            if (
-                (instance[1]["type"] in ("http", "https")) and
-                instance[1]["api"]
-            )
-        ]
+        return {
+            host: f"[{instance['region']}] - {host}"
+            for host, instance in self.__client__.instances(**kwargs)
+            if (instance["api"] and (instance["type"] in ("http", "https")))
+        }
 
     # --------------------------------------------------------------------------
 

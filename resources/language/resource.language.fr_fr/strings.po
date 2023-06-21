@@ -175,7 +175,7 @@ msgid "General"
 msgstr "Général"
 
 msgctxt "#30102"
-msgid "Instance name/ip address"
+msgid "Instance hostname/ip address"
 msgstr "Nom de l'instance/Adresse IP"
 
 msgctxt "#30103"
@@ -197,6 +197,10 @@ msgstr "Mandataire vidéos"
 msgctxt "#30107"
 msgid "Instance"
 msgstr "Instance"
+
+msgctxt "#30110"
+msgid "Displays a list of public instances, along with the region the server is hosted in. Selecting one will update the \"Instance hostname/ip address\" setting."
+msgstr ""
 
 msgctxt "#30111"
 msgid "Persistent data"
