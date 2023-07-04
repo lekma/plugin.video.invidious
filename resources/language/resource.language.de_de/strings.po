@@ -160,6 +160,10 @@ msgctxt "#30062"
 msgid "New search"
 msgstr "Neue Suche"
 
+msgctxt "#30063"
+msgid "Premieres: "
+msgstr ""
+
 msgctxt "#30099"
 msgid "More..."
 msgstr "Mehr..."
