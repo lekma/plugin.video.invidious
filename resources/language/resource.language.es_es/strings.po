@@ -129,8 +129,8 @@ msgid "Views: {0.viewCount}"
 msgstr "Reproducciones: {0.viewCount}"
 
 msgctxt "#30055"
-msgid "Published: {0.published}"
-msgstr "Publicado: {0.published}"
+msgid "Published: "
+msgstr "Publicado: "
 
 #msgctxt "#30056"
 #msgid "{0.title}\n\nChannel: {0.author}"
@@ -159,6 +159,10 @@ msgstr "{0.title}\n\nCanal: {0.author}\nVídeos: {0.videoCount}"
 msgctxt "#30062"
 msgid "New search"
 msgstr "Nueva búsqueda"
+
+msgctxt "#30063"
+msgid "Premieres: "
+msgstr ""
 
 msgctxt "#30099"
 msgid "More..."

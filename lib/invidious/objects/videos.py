@@ -4,6 +4,8 @@
 __all__ = ["Video", "Videos"]
 
 
+from datetime import datetime
+
 from iapc.tools import localizedString, ListItem, buildUrl
 
 from .base import Url, Thumbnails, Item, Items
@@ -51,6 +53,15 @@ class Video(Item):
         return self.get("liveNow", False)
 
     @property
+    def premiereTimestamp(self):
+        timestamp = self.get("premiereTimestamp", None)
+
+        if not timestamp:
+            return None
+
+        return datetime.fromtimestamp(timestamp)
+
+    @property
     def label(self):
         if self.liveNow:
             return self.__live__.format(self)
@@ -65,10 +76,15 @@ class Video(Item):
     @property
     def subplot(self):
         subplot = [localizedString(30053)]
-        if hasattr(self, "viewCount"):
-            subplot.append(localizedString(30054))
-        if hasattr(self, "published"):
-            subplot.append(localizedString(30055))
+
+        if self.premiereTimestamp:
+            subplot.append(localizedString(30063) + self.premiereTimestamp.strftime("%x %X"))
+        else:
+            if hasattr(self, "viewCount"):
+                subplot.append(localizedString(30054))
+            if hasattr(self, "published"):
+                subplot.append(localizedString(30055) + self.published.strftime("%x %X"))
+
         return "\n".join(subplot)
 
     @property
@@ -88,6 +104,7 @@ class Video(Item):
         return ListItem(
             self.label,
             path,
+            isPlayable=not self.isUpcoming,
             infoLabels={
                 "video": dict(self.infos, title=self.title, plot=self.plot)
             },
