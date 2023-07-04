@@ -78,12 +78,12 @@ class Video(Item):
         subplot = [localizedString(30053)]
 
         if self.premiereTimestamp:
-            subplot.append(localizedString(30063) + str(self.premiereTimestamp))
+            subplot.append(localizedString(30063) + self.premiereTimestamp.strftime("%x %X"))
         else:
             if hasattr(self, "viewCount"):
                 subplot.append(localizedString(30054))
             if hasattr(self, "published"):
-                subplot.append(localizedString(30055))
+                subplot.append(localizedString(30055) + self.published.strftime("%x %X"))
 
         return "\n".join(subplot)
 

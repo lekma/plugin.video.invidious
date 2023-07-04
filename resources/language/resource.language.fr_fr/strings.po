@@ -129,8 +129,8 @@ msgid "Views: {0.viewCount}"
 msgstr "Vues: {0.viewCount}"
 
 msgctxt "#30055"
-msgid "Published: {0.published}"
-msgstr "Publiée le: {0.published}"
+msgid "Published: "
+msgstr "Publiée le: "
 
 #msgctxt "#30056"
 #msgid "{0.title}\n\nChannel: {0.author}"

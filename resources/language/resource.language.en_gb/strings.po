@@ -129,7 +129,7 @@ msgid "Views: {0.viewCount}"
 msgstr ""
 
 msgctxt "#30055"
-msgid "Published: {0.published}"
+msgid "Published: "
 msgstr ""
 
 #msgctxt "#30056"
