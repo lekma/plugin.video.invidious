@@ -115,7 +115,7 @@ msgid "Clear search history"
 msgstr "Vider l'historique de recherche"
 
 msgctxt "#30037"
-msgid "Play with the YouTube add-on"
+msgid "Play with YouTube add-on"
 msgstr "Lire avec l'extension YouTube"
 
 # items
@@ -175,7 +175,7 @@ msgid "General"
 msgstr "Général"
 
 msgctxt "#30102"
-msgid "Instance name/ip address"
+msgid "Instance hostname/ip address"
 msgstr "Nom de l'instance/Adresse IP"
 
 msgctxt "#30103"
@@ -197,6 +197,14 @@ msgstr "Mandataire vidéos"
 msgctxt "#30107"
 msgid "Instance"
 msgstr "Instance"
+
+msgctxt "#30108"
+msgid "Select a public instance"
+msgstr ""
+
+msgctxt "#30110"
+msgid "Displays a list of public instances, along with the region the server is hosted in. Selecting one will update the \"Instance hostname/ip address\" setting."
+msgstr ""
 
 msgctxt "#30111"
 msgid "Persistent data"
@@ -285,3 +293,11 @@ msgstr "Interface"
 msgctxt "#30138"
 msgid "Context menus"
 msgstr "Menus contextuels"
+
+msgctxt "#30151"
+msgid "VP9"
+msgstr ""
+
+msgctxt "#30152"
+msgid "AV1"
+msgstr ""

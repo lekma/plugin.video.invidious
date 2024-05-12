@@ -3,7 +3,6 @@
 
 import io
 import math
-import re
 import xml.etree.ElementTree as ET
 
 
@@ -162,17 +161,3 @@ class MPD(DashElement):
             mediaPresentationDuration=self.duration(duration)
         )
         self.append(Period(duration, data))
-
-
-# adaptive ---------------------------------------------------------------------
-
-__mimeType_regex__ = re.compile(r"^.*(?=;)|(?<=codecs=['\"]).*(?=['\"])")
-
-def adaptive(duration, streams):
-    data = {}
-    for stream in streams:
-        mimeType, codecs = __mimeType_regex__.findall(stream["mimeType"])
-        stream.setdefault("codecs", codecs)
-        data.setdefault(mimeType, []).append(stream)
-    return (MPD(duration, data).toString(), "video/vnd.mpeg.dash.mpd")
-

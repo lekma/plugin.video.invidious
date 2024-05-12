@@ -4,6 +4,7 @@
 from collections import OrderedDict
 from json import JSONDecoder
 from random import randint
+from re import compile
 from requests import Session, Timeout
 from time import time
 
@@ -11,7 +12,7 @@ from iapc import Server, http
 from iapc.tools import buildUrl, getSetting, notify, ICONERROR
 
 from .find import PatternsError, __find__, findInValues
-from .playlists import adaptive
+from .playlists import MPD
 from .js import Solver
 
 
@@ -115,6 +116,8 @@ class YouTubeSession(HttpSession):
 
 class YouTubeServer(Server):
 
+    __regex__ = compile(r"^.*(?=;)|(?<=codecs=['\"]).*(?=['\"])")
+
     def __init__(self, id, timeout=-1, headers=None):
         super(YouTubeServer, self).__init__(id, timeout=timeout)
         self.__manifestUrl__ = "http://{}:{}/manifest?videoId={{}}".format(
@@ -122,6 +125,13 @@ class YouTubeServer(Server):
         )
         self.__session__ = YouTubeSession(self.logger, "youtube", headers=headers)
         self.__solvers__ = {}
+        self.__codecs__ = {"vp9": True, "av01": True}
+        self.__setup__()
+
+    def __setup__(self):
+        for codec in self.__codecs__:
+            self.__codecs__[codec] = getSetting(codec, bool)
+        self.logger.info(f"{self.__codecs__}")
 
     def __raise__(self, error):
         if not isinstance(error, Exception):
@@ -178,6 +188,27 @@ class YouTubeServer(Server):
 
     # http ---------------------------------------------------------------------
 
+    def __manifest__(self, streamingData, videoDetails):
+        if (streams := streamingData.get("adaptiveFormats", [])):
+            solver = self.solver(videoDetails["jsUrl"])
+            data = {}
+            for stream in streams:
+                stream["enabled"] = True
+                mimeType, codecs = self.__regex__.findall(stream["mimeType"])
+                for codec, enabled in self.__codecs__.items():
+                    if codecs.startswith(codec):
+                        stream["enabled"] = enabled
+                        break
+                if stream["enabled"]:
+                    stream["codecs"] = codecs
+                    stream["url"] = solver.extractUrl(stream)
+                    data.setdefault(mimeType, []).append(stream)
+            if data:
+                return (
+                    MPD(videoDetails["lengthSeconds"], data).toString(),
+                    "video/vnd.mpeg.dash.mpd"
+                )
+
     @http()
     def manifest(self, **kwargs):
         videoId = kwargs["videoId"]
@@ -188,10 +219,7 @@ class YouTubeServer(Server):
             if (hlsUrl := streamingData.get("hlsManifestUrl", "")):
                 # Content-Type: application/vnd.apple.mpegurl
                 return (302, None, {"Location": hlsUrl})
-        elif (streams := streamingData.get("adaptiveFormats", [])):
-            solver = self.solver(videoDetails["jsUrl"])
-            for stream in streams:
-                stream["url"] = solver.extractUrl(stream)
+        elif (manifest := self.__manifest__(streamingData, videoDetails)):
             # Content-Type: video/vnd.mpeg.dash.mpd
-            return (200, adaptive(videoDetails["lengthSeconds"], streams), None)
+            return (200, manifest, None)
         self.__raise__(f"Cannot play video: '{videoId}'")

@@ -6,12 +6,12 @@ from urllib.parse import urlencode
 
 from inputstreamhelper import Helper
 
-from iapc.tools import Plugin, action, parseQuery, openSettings, getSetting
+from iapc.tools import action, getSetting, openSettings, parseQuery, Plugin
 
 from invidious import home, styles, sortBy
 from invidious.client import client
 from invidious.objects import Folders
-from invidious.persistence import channel_feed, search_cache
+from invidious.persistence import channel_feed, search_cache, search_history
 from invidious.search import newSearch, searchHistory
 from invidious.utils import moreItem, newSearchItem, playlistsItem, settingsItem
 
@@ -40,9 +40,7 @@ class InvidiousPlugin(Plugin):
             kwargs["page"] = int(kwargs.get("page", 1)) + 1
         else:
             kwargs["continuation"] = more
-        return self.addItem(
-            moreItem(self.url, action=self.action, **kwargs)
-        )
+        return self.addItem(moreItem(self.url, action=self.action, **kwargs))
 
     def addNewSearch(self, **kwargs):
         return self.addItem(
@@ -58,9 +56,7 @@ class InvidiousPlugin(Plugin):
 
     def addSettings(self):
         if getSetting("settings", bool):
-            return self.addItem(
-                settingsItem(self.url, action="settings")
-            )
+            return self.addItem(settingsItem(self.url, action="settings"))
         return True
 
     def addDirectory(self, items, *args, **kwargs):
@@ -195,10 +191,11 @@ class InvidiousPlugin(Plugin):
     @action(category=30002)
     def search(self, **kwargs):
         history = getSetting("history", bool)
-        if "type" in kwargs:
-            query = kwargs.pop("query", "")
+        if (search_type := kwargs.get("type")):
             new = kwargs.pop("new", False)
-            if query:
+            if (query := kwargs.pop("query", "")):
+                if (history and (query in search_history[search_type])):
+                    search_history.move_to_end(search_type, query)
                 return self.__search__(query, **kwargs)
             if new:
                 return self.__new_search__(history=history, **kwargs)
@@ -224,4 +221,3 @@ def dispatch(url, handle, query, *args):
 
 if __name__ == "__main__":
     dispatch(*argv)
-
