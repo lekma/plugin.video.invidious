@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
 
 
-from iapc.tools import localizedString, ListItem, buildUrl, getMedia
+from nuttig import (
+    localizedString, ListItem, buildUrl, getMedia, yesnoDialog
+)
 
 
 # misc useful items ------------------------------------------------------------
 
-def __makeItem__(label, url, art=None, isFolder=True, **kwargs):
+def __makeItem__(label, url, art=None, isFolder=True, properties=None, **kwargs):
     label = localizedString(label)
     return ListItem(
         label,
         buildUrl(url, **kwargs),
         isFolder=isFolder,
         isPlayable=False,
+        properties=properties,
         infoLabels={"video": {"title": label, "plot": label}},
+        thumb=art,
         poster=art,
         icon=art
     )
@@ -22,23 +26,34 @@ def __makeItem__(label, url, art=None, isFolder=True, **kwargs):
 # settings item
 def settingsItem(url, **kwargs):
     return __makeItem__(
-        30100, url, "icons/settings/system.png", isFolder=False, **kwargs
+        5, url, art="DefaultAddonService.png", isFolder=False, **kwargs
     )
+
+
+# newQuery item
+def newQueryItem(url, **kwargs):
+    return __makeItem__(30410, url, art="DefaultAddSource.png", **kwargs)
+
+
+# channels item
+def channelsItem(url, **kwargs):
+    return __makeItem__(30110, url, art="DefaultArtist.png", **kwargs)
 
 
 # more item
 __more_art__ = getMedia("more")
 
 def moreItem(url, **kwargs):
-    return __makeItem__(30099, url, __more_art__, **kwargs)
+    return __makeItem__(
+        30001,
+        url,
+        art=__more_art__,
+        properties={"SpecialSort": "bottom"},
+        **kwargs
+    )
 
 
-# newSearch item
-def newSearchItem(url, **kwargs):
-    return __makeItem__(30062, url, "DefaultAddSource.png", **kwargs)
+# dialogs ----------------------------------------------------------------------
 
-
-# playlists item
-def playlistsItem(url, **kwargs):
-    return __makeItem__(30005, url, "DefaultPlaylist.png", **kwargs)
-
+def confirm():
+    return yesnoDialog(localizedString(90001))

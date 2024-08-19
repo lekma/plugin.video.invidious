@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.invidious"
        name="Invidious"
-       version="2.2.4"
+       version="3.2.0"
        provider-name="lekma">
 
     <requires>
         <import addon="xbmc.python" version="3.0.1" />
-        <import addon="xbmc.addon" version="20.0.0" />
-        <import addon="script.module.iapc" version="2.1.4" />
-        <import addon="script.module.yt-dlp" version="2023.03.04-3" />
-        <import addon="script.module.inputstreamhelper" version="0.6.0" />
-        <import addon="script.module.requests" version="2.27.1" />
-        <import addon="plugin.video.youtube" version="7.0.1" optional="true" />
+        <import addon="xbmc.addon" version="20.2.0" />
+        <import addon="script.module.nuttig" version="1.2.0" />
+        <import addon="script.module.iapc" version="2.2.0" />
+        <import addon="script.module.requests" version="2.31.0" />
+        <import addon="script.module.inputstreamhelper" version="0.6.1" />
+        <import addon="service.yt-dlp" version="1.2.0" optional="true" />
+        <import addon="plugin.video.youtube" version="7.0.9.2" optional="true" />
     </requires>
 
     <extension point="xbmc.python.pluginsource" library="lib/plugin.py">
@@ -20,12 +21,14 @@
 
     <extension point="xbmc.service" library="lib/service.py" />
 
-    <extension point="xbmc.python.script" library="lib/script.py">
+    <extension point="xbmc.python.script" library="lib/scripts.py">
         <provides>executable</provides>
     </extension>
 
     <extension point="xbmc.addon.metadata">
         <reuselanguageinvoker>true</reuselanguageinvoker>
+        <summary lang="en_GB">Invidious addon</summary>
+        <description lang="en_GB">Invidious addon</description>
         <license>GPL-3.0-only</license>
         <platform>all</platform>
         <source>https://github.com/lekma/plugin.video.invidious</source>
@@ -33,14 +36,6 @@
             <icon>resources/media/icon.png</icon>
             <fanart>resources/media/fanart.jpg</fanart>
         </assets>
-        <summary lang="en_GB">Invidious Addon</summary>
-        <description lang="en_GB">Invidious Addon</description>
-        <summary lang="fr_FR">Extension pour Invidious</summary>
-        <description lang="fr_FR">Extension pour Invidious</description>
-        <summary lang="es_ES">Plugin para Invidious</summary>
-        <description lang="es_ES">Plugin para Invidious</description>
-        <summary lang="de_DE">Invidious-Addon</summary>
-        <description lang="de_de">Erweiterung für einen datenschutzfreundlichen Zugriff auf YouTube</description>
     </extension>
 
 </addon>

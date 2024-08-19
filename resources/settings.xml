@@ -4,62 +4,42 @@
 
     <section id="plugin.video.invidious">
 
-        <!-- General -->
-        <category id="general" label="30101">
+        <!-- Instance -->
+        <category id="instance" label="41000">
 
-            <!-- Internal -->
-            <group id="internal" label="">
+            <group id="connection" label="41100">
 
-                <visible>false</visible>
-
-                <!--<setting id="firstrun" label="" type="boolean">
-                    <level>4</level>
-                    <default>false</default>
-                </setting>-->
-
-            </group>
-
-            <!-- Instance -->
-            <group id="instance" label="30107">
-
-                <setting id="selectInstance" type="action" label="30105" help="30110">
+                <setting id="selectInstance" type="action" label="41111" help="41112">
                     <level>0</level>
                     <data>RunScript($ID,selectInstance)</data>
                     <control type="button" format="action" />
                 </setting>
 
-                <setting id="instance" label="30102" type="string">
+                <setting id="instance.uri" type="string" label="41110">
                     <level>0</level>
-                    <default>invidious.snopyta.org</default>
-                    <control type="edit" format="string">
-                        <heading>30102</heading>
-                    </control>
+                    <default />
+                    <constraints>
+                        <allowempty>true</allowempty>
+                    </constraints>
+                    <control type="edit" format="string" />
                 </setting>
 
-                <setting id="path" label="30103" type="string">
+                <setting id="instance.path" type="string" label="41120">
                     <level>0</level>
                     <default>api/v1</default>
                     <constraints>
                         <allowempty>true</allowempty>
                     </constraints>
-                    <control type="edit" format="string">
-                        <heading>30103</heading>
-                    </control>
+                    <control type="edit" format="string" />
                 </setting>
 
-                <setting id="ssl" label="30104" type="boolean">
-                    <level>0</level>
-                    <default>true</default>
-                    <control type="toggle" />
-                </setting>
-
-                <setting id="proxy" label="30106" type="boolean">
+                <setting id="instance.proxy" type="boolean" label="41130">
                     <level>0</level>
                     <default>false</default>
                     <control type="toggle" />
                 </setting>
 
-                <setting id="timeout" label="30128" type="number">
+                <setting id="session.timeout" type="number" label="41140">
                     <level>0</level>
                     <default>10.0</default>
                     <constraints>
@@ -72,19 +52,94 @@
 
             </group>
 
-            <!-- Search -->
-            <group id="search" label="30002">
+            <group id="regional" label="14222">
 
-                <setting id="sort_by" label="30130" type="integer">
+                <setting id="selectLocale" type="action" label="41210">
                     <level>0</level>
-                    <default>0</default>
+                    <data>RunScript($ID,selectLocale)</data>
+                    <control type="button" format="action" />
+                </setting>
+
+                <setting id="regional.locale" type="string" label="41211">
+                    <level>0</level>
+                    <default>en-US</default>
+                    <visible>false</visible>
+                    <control type="edit" format="string" />
+                </setting>
+
+                <setting id="regional.locale.text" type="string" label="41211">
+                    <level>0</level>
+                    <default>English (US)</default>
+                    <enable>false</enable>
+                    <control type="edit" format="string" />
+                </setting>
+
+                <setting id="selectRegion" type="action" label="41220">
+                    <level>0</level>
+                    <data>RunScript($ID,selectRegion)</data>
+                    <control type="button" format="action" />
+                </setting>
+
+                <setting id="regional.region" type="string" label="41221">
+                    <level>0</level>
+                    <default>US</default>
+                    <visible>false</visible>
+                    <control type="edit" format="string" />
+                </setting>
+
+                <setting id="regional.region.text" type="string" label="41221">
+                    <level>0</level>
+                    <default>United States</default>
+                    <enable>false</enable>
+                    <control type="edit" format="string" />
+                </setting>
+
+            </group>
+
+        </category>
+
+        <!-- Search -->
+        <category id="search" label="137">
+
+            <group id="history" label="42100">
+
+                <setting id="search.history" type="boolean" label="42110">
+                    <level>0</level>
+                    <default>true</default>
+                    <control type="toggle" />
+                </setting>
+
+            </group>
+
+            <group id="queries" label="42200">
+
+                <setting id="query.type" type="integer" label="42210">
+                    <level>0</level>
+                    <default>1</default>
                     <constraints>
                         <options>
-                            <option label="30131">0</option>
-                            <option label="30132">1</option>
-                            <option label="30133">2</option>
-                            <option label="30134">3</option>
-                            <option label="30135">4</option>
+                            <option label="42230">0</option>
+                            <option label="42211">1</option>
+                            <option label="42212">2</option>
+                            <option label="42213">3</option>
+                            <option label="42214">4</option>
+                            <option label="42215">5</option>
+                            <option label="42216">6</option>
+                        </options>
+                    </constraints>
+                    <control type="spinner" format="string" />
+                </setting>
+
+                <setting id="query.sort" type="integer" label="42220">
+                    <level>0</level>
+                    <default>1</default>
+                    <constraints>
+                        <options>
+                            <option label="42230">0</option>
+                            <option label="42221">1</option>
+                            <option label="42222">2</option>
+                            <option label="42223">3</option>
+                            <option label="42224">4</option>
                         </options>
                     </constraints>
                     <control type="spinner" format="string" />
@@ -94,99 +149,30 @@
 
         </category>
 
-        <!-- Regional -->
-        <category id="regional" label="14222">
-
-            <group id="youtube" label="">
-
-                <setting id="selectLanguage" label="30125" type="action">
-                    <level>0</level>
-                    <data>RunScript($ID,selectLanguage)</data>
-                    <control type="button" format="action" />
-                </setting>
-
-                <setting id="hl" label="30124" type="string">
-                    <level>0</level>
-                    <default>en</default>
-                    <visible>false</visible>
-                    <control type="edit" format="string">
-                        <heading>30124</heading>
-                    </control>
-                </setting>
-
-                <setting id="hl.text" label="30124" type="string">
-                    <level>0</level>
-                    <default>English (US)</default>
-                    <enable>false</enable>
-                    <control type="edit" format="string">
-                        <heading>30124</heading>
-                    </control>
-                </setting>
-
-                <setting id="selectLocation" label="30127" type="action">
-                    <level>0</level>
-                    <data>RunScript($ID,selectLocation)</data>
-                    <control type="button" format="action" />
-                </setting>
-
-                <setting id="gl" label="30126" type="string">
-                    <level>0</level>
-                    <default>US</default>
-                    <visible>false</visible>
-                    <control type="edit" format="string">
-                        <heading>30126</heading>
-                    </control>
-                </setting>
-
-                <setting id="gl.text" label="30126" type="string">
-                    <level>0</level>
-                    <default>United States</default>
-                    <enable>false</enable>
-                    <control type="edit" format="string">
-                        <heading>30126</heading>
-                    </control>
-                </setting>
-
-            </group>
-
-        </category>
-
         <!-- Interface -->
-        <category id="interface" label="30137">
+        <category id="interface" label="43000">
 
-            <group id="home" label="30123">
+            <group id="home" label="43100">
 
-                <setting id="feed" label="30014" type="boolean">
+                <setting id="home.feed" type="boolean" label="30100">
                     <level>0</level>
                     <default>true</default>
                     <control type="toggle" />
                 </setting>
 
-                <!--<setting id="top" label="30007" type="boolean">
+                <setting id="home.popular" type="boolean" label="30200">
                     <level>0</level>
                     <default>true</default>
                     <control type="toggle" />
-                </setting>-->
+                </setting>>
 
-                <setting id="popular" label="30008" type="boolean">
-                    <level>0</level>
-                    <default>true</default>
-                    <control type="toggle" />
-                </setting>
-
-                <setting id="trending" label="30009" type="boolean">
+                <setting id="home.trending" type="boolean" label="30300">
                     <level>0</level>
                     <default>true</default>
                     <control type="toggle" />
                 </setting>
 
-                <setting id="autogenerated" label="30122" type="boolean">
-                    <level>0</level>
-                    <default>true</default>
-                    <control type="toggle" />
-                </setting>
-
-                <setting id="settings" label="30100" type="boolean">
+                <setting id="home.settings" type="boolean" label="5">
                     <level>0</level>
                     <default>true</default>
                     <control type="toggle" />
@@ -194,87 +180,43 @@
 
             </group>
 
-            <group id="context" label="30138">
+            <group id="context" label="43200">
 
-                <setting id="fromyoutube" label="30033" type="boolean">
+                <setting id="ytdlp.warning" type="action" label="43211">
                     <level>0</level>
-                    <default>true</default>
-                    <control type="toggle" />
-                </setting>
-
-                <setting id="vp9" label="30151" type="boolean"
-                         parent="fromyoutube">
-                    <level>0</level>
-                    <default>true</default>
+                    <control type="button" format="action">
+                        <hidevalue>true</hidevalue>
+                    </control>
                     <dependencies>
-                        <dependency type="enable" setting="fromyoutube">
-                            <![CDATA[true]]>
-                        </dependency>
+                        <dependency type="visible" on="property" name="infobool" operator="!is">System.AddonIsEnabled(service.yt-dlp)</dependency>
                     </dependencies>
-                    <control type="toggle" />
                 </setting>
 
-                <setting id="av01" label="30152" type="boolean"
-                         parent="fromyoutube">
-                    <level>0</level>
-                    <default>true</default>
-                    <dependencies>
-                        <dependency type="enable" setting="fromyoutube">
-                            <![CDATA[true]]>
-                        </dependency>
-                    </dependencies>
-                    <control type="toggle" />
-                </setting>
-
-                <setting id="withyoutube" label="30037" type="boolean">
+                <setting id="context.fromyoutube" type="boolean" label="43210">
                     <level>0</level>
                     <default>false</default>
                     <control type="toggle" />
-                </setting>
-
-            </group>
-
-        </category>
-
-        <!-- Persistent data -->
-        <category id="persistence" label="30111">
-
-            <!-- Feed -->
-            <group id="feed" label="30014">
-
-                <setting id="removeChannelsFromFeed" label="30112" type="action">
-                    <level>0</level>
-                    <data>RunScript($ID,removeChannelsFromFeed)</data>
-                    <control type="button" format="action" />
-                </setting>
-
-                <setting id="newPipeImport" label="30136" type="action">
-                    <level>0</level>
-                    <data>RunScript($ID,newPipeImport)</data>
-                    <control type="button" format="action" />
-                </setting>
-
-            </group>
-
-            <!-- Search history -->
-            <group id="search_history" label="30115">
-
-                <setting id="history" label="30115" type="boolean">
-                    <level>0</level>
-                    <default>true</default>
-                    <control type="toggle" />
-                </setting>
-
-                <setting id="clearAllSearchHistory" label="30113" type="action"
-                         parent="history">
-                    <level>0</level>
-                    <data>RunScript($ID,clearSearchHistory)</data>
                     <dependencies>
-                        <dependency type="enable" setting="history">
-                            <![CDATA[true]]>
-                        </dependency>
+                        <dependency type="enable" on="property" name="infobool" operator="is">System.AddonIsEnabled(service.yt-dlp)</dependency>
                     </dependencies>
-                    <control type="button" format="action" />
+                </setting>
+
+                <setting id="ytdlp.settings" type="action" label="43212">
+                    <level>0</level>
+                    <data>Addon.OpenSettings(service.yt-dlp)</data>
+                    <control type="button" format="action">
+                        <close>true</close>
+                    </control>
+                    <dependencies>
+                        <dependency type="enable" on="property" name="infobool" operator="is">System.AddonIsEnabled(service.yt-dlp)</dependency>
+                        <dependency type="visible" setting="context.fromyoutube" operator="is">true</dependency>
+                    </dependencies>
+                </setting>
+
+                <setting id="context.withyoutube" type="boolean" label="43220">
+                    <level>0</level>
+                    <default>false</default>
+                    <control type="toggle" />
                 </setting>
 
             </group>
