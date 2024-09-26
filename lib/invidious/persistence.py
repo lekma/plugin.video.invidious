@@ -11,6 +11,21 @@ from nuttig import save, Persistent
 
 class IVSearchHistory(Persistent, OrderedDict):
 
+    def __init__(self, *args, **kwargs):
+        old = migrate("searchhistory.json")
+        super(IVSearchHistory, self).__init__(*args, **kwargs)
+        if old:
+            for k, v in old.items():
+                for q in v.values():
+                    self.record(
+                        {
+                            "q": q["query"],
+                            "type": q["type"],
+                            "sort": q["sort_by"],
+                            "page": 1
+                        }
+                    )
+
     @save
     def record(self, query):
         self[(q := query["q"])] = query
@@ -34,6 +49,13 @@ class IVSearchHistory(Persistent, OrderedDict):
 
 class IVFeedChannels(Persistent, OrderedDict):
 
+    def __init__(self, *args, **kwargs):
+        old = migrate("channelfeed.json")
+        super(IVFeedChannels, self).__init__(*args, **kwargs)
+        if old:
+            for k, v in old.items():
+                self.add(k, v)
+
     @save
     def add(self, key, value):
         self[key] = value
@@ -45,3 +67,34 @@ class IVFeedChannels(Persistent, OrderedDict):
     @save
     def clear(self):
         super(IVFeedChannels, self).clear()
+
+
+# ------------------------------------------------------------------------------
+
+# this should take care of migrating old data
+# (I really, REALLY, hope...)
+
+import json
+import pathlib
+import shutil
+
+from nuttig import getAddonProfile, Logger
+
+def migrate(name):
+    old = None
+    if (
+        ((path := pathlib.Path(getAddonProfile(), name)).exists()) and
+        (not (backup := path.with_name(f"{path.name}.bak")).exists())
+    ):
+        logger = Logger()
+        logger.info(f"migrating path: {path}")
+        logger.info(f"backup: {backup}")
+        try:
+            shutil.copyfile(path, backup)
+            with open(path, "r") as f:
+                old = json.load(f)
+        except Exception as err:
+            logger.error(f"failed to migrate: {err}")
+        else:
+            path.unlink()
+    return old
