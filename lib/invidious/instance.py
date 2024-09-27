@@ -207,19 +207,20 @@ class IVInstance(object):
     # video --------------------------------------------------------------------
 
     def __fixUrl__(self, video):
-        split = urlsplit(video["url"])
-        query = split.query.split("&") if split.query else []
-        if video["manifestType"] == "mpd" and self.__proxy__:
-            query.append("local=true")
-        video["url"] = urlunsplit(
-            (
-                split.scheme or self.__scheme__,
-                split.netloc or self.__netloc__,
-                split.path,
-                "&".join(query),
-                split.fragment
+        if video and (url := video.get("url")):
+            split = urlsplit(url)
+            query = split.query.split("&") if split.query else []
+            if video["manifestType"] == "mpd" and self.__proxy__:
+                query.append("local=true")
+            video["url"] = urlunsplit(
+                (
+                    split.scheme or self.__scheme__,
+                    split.netloc or self.__netloc__,
+                    split.path,
+                    "&".join(query),
+                    split.fragment
+                )
             )
-        )
         return video
 
     @public
