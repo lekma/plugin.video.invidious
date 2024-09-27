@@ -2,6 +2,7 @@
 
 
 from concurrent.futures import ThreadPoolExecutor
+
 from requests import HTTPError, RequestException, Session
 
 from nuttig import buildUrl, getSetting, localizedString
