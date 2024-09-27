@@ -17,11 +17,15 @@ class IVSearchHistory(Persistent, OrderedDict):
         if old:
             for k, v in old.items():
                 for q in v.values():
+                    if ((qsort := q["sort_by"]) == "upload_date"):
+                        qsort = "date"
+                    elif (qsort == "view_count"):
+                        qsort = "views"
                     self.record(
                         {
                             "q": q["query"],
                             "type": q["type"],
-                            "sort": q["sort_by"],
+                            "sort": qsort,
                             "page": 1
                         }
                     )
