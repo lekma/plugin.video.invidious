@@ -4,7 +4,8 @@
 from functools import wraps
 
 from iapc import Client
-from nuttig import Logger
+
+from nuttig import addonIsEnabled
 
 from invidious.items import (
     FeedChannels, Folders, Playlists, Queries, Results, Video, Videos
@@ -39,9 +40,12 @@ class IVClient(object):
     # video --------------------------------------------------------------------
 
     @instance
-    def video(self, **kwargs):
+    def video(self, sb=False, **kwargs):
         if (video := self.__client__.instance.video(**kwargs)):
-            return (Video(video).makeItem(video["url"]), video["manifestType"])
+            item = Video(video).makeItem(video["url"])
+            if (item and sb and addonIsEnabled("service.sponsorblock")):
+                item.setProperty("SB:videoID", video["videoId"])
+            return (item, video["manifestType"])
         return (None, None)
 
     # channel ------------------------------------------------------------------

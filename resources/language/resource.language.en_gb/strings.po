@@ -234,6 +234,29 @@ msgid "Play with YouTube addon"
 msgstr ""
 
 
+# Extras settings
+
+msgctxt "#49000"
+msgid "Extras"
+msgstr ""
+
+msgctxt "#49100"
+msgid "Features"
+msgstr ""
+
+msgctxt "#49110"
+msgid "Enable limited support for SponsorBlock"
+msgstr ""
+
+msgctxt "#49111"
+msgid "To use this feature you must install and enable the 'service.sponsorblock' addon"
+msgstr ""
+
+msgctxt "#49112"
+msgid "SponsorBlock service settings..."
+msgstr ""
+
+
 # Items infos
 
 msgctxt "#50101"

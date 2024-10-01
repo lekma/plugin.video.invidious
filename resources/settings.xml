@@ -223,6 +223,46 @@
 
         </category>
 
+        <!-- Extras -->
+        <category id="extras" label="49000">
+
+            <group id="features" label="49100">
+
+                <setting id="sponsorblock.warning" type="action" label="49111">
+                    <level>0</level>
+                    <control type="button" format="action">
+                        <hidevalue>true</hidevalue>
+                    </control>
+                    <dependencies>
+                        <dependency type="visible" on="property" name="infobool" operator="!is">System.AddonIsEnabled(service.sponsorblock)</dependency>
+                    </dependencies>
+                </setting>
+
+                <setting id="features.sponsorblock" type="boolean" label="49110">
+                    <level>0</level>
+                    <default>false</default>
+                    <control type="toggle" />
+                    <dependencies>
+                        <dependency type="enable" on="property" name="infobool" operator="is">System.AddonIsEnabled(service.sponsorblock)</dependency>
+                    </dependencies>
+                </setting>
+
+                <setting id="sponsorblock.settings" type="action" label="49112">
+                    <level>0</level>
+                    <data>Addon.OpenSettings(service.sponsorblock)</data>
+                    <control type="button" format="action">
+                        <close>true</close>
+                    </control>
+                    <dependencies>
+                        <dependency type="enable" on="property" name="infobool" operator="is">System.AddonIsEnabled(service.sponsorblock)</dependency>
+                        <dependency type="visible" setting="features.sponsorblock" operator="is">true</dependency>
+                    </dependencies>
+                </setting>
+
+            </group>
+
+        </category>
+
     </section>
 
 </settings>

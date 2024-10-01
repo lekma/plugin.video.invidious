@@ -84,7 +84,11 @@ class IVPlugin(Plugin):
 
     @action()
     def play(self, **kwargs):
-        return self.playItem(*self.__client__.video(**kwargs))
+        return self.playItem(
+            *self.__client__.video(
+                sb=getSetting("features.sponsorblock", bool), **kwargs
+            )
+        )
 
     # channel ------------------------------------------------------------------
 
