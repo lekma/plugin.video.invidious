@@ -7,6 +7,48 @@ from nuttig import save, Persistent
 
 
 # ------------------------------------------------------------------------------
+# IVNavigationHistory
+
+class IVNavigationHistory(Persistent, dict):
+
+    def __missing__(self, action):
+        self[action] = list()
+        return self[action]
+
+    def __push__(self, action, key, value):
+        if ((item := {key: value}) in self[action]):
+            self[action] = self[action][:self[action].index(item)]
+        try:
+            return self[action][-1]
+        except IndexError:
+            return None
+        finally:
+            self[action].append(item)
+
+    @save
+    def index(self, action, index):
+        if (index == 50):
+            self[action].clear()
+        return self.__push__(action, "index", index)
+
+    @save
+    def page(self, action, page):
+        if (page == 1):
+            self[action].clear()
+        return self.__push__(action, "page", page)
+
+    @save
+    def continuation(self, action, continuation):
+        if (not continuation):
+            self[action].clear()
+        return self.__push__(action, "continuation", continuation)
+
+    @save
+    def clear(self):
+        super(IVNavigationHistory, self).clear()
+
+
+# ------------------------------------------------------------------------------
 # IVSearchHistory
 
 class IVSearchHistory(Persistent, OrderedDict):
@@ -25,8 +67,7 @@ class IVSearchHistory(Persistent, OrderedDict):
                         {
                             "q": q["query"],
                             "type": q["type"],
-                            "sort": qsort,
-                            "page": 1
+                            "sort": qsort
                         }
                     )
 

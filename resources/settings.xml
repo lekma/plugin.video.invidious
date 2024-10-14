@@ -201,7 +201,7 @@
                     </dependencies>
                 </setting>
 
-                <setting id="ytdlp.settings" type="action" label="43212">
+                <!--<setting id="ytdlp.settings" type="action" label="43212">
                     <level>0</level>
                     <data>Addon.OpenSettings(service.yt-dlp)</data>
                     <control type="button" format="action">
@@ -211,7 +211,7 @@
                         <dependency type="enable" on="property" name="infobool" operator="is">System.AddonIsEnabled(service.yt-dlp)</dependency>
                         <dependency type="visible" setting="context.fromyoutube" operator="is">true</dependency>
                     </dependencies>
-                </setting>
+                </setting>-->
 
                 <setting id="context.withyoutube" type="boolean" label="43220">
                     <level>0</level>
@@ -247,7 +247,7 @@
                     </dependencies>
                 </setting>
 
-                <setting id="sponsorblock.settings" type="action" label="49112">
+                <!--<setting id="sponsorblock.settings" type="action" label="49112">
                     <level>0</level>
                     <data>Addon.OpenSettings(service.sponsorblock)</data>
                     <control type="button" format="action">
@@ -257,7 +257,7 @@
                         <dependency type="enable" on="property" name="infobool" operator="is">System.AddonIsEnabled(service.sponsorblock)</dependency>
                         <dependency type="visible" setting="features.sponsorblock" operator="is">true</dependency>
                     </dependencies>
-                </setting>
+                </setting>-->
 
             </group>
 

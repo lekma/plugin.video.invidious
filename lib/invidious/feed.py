@@ -52,22 +52,25 @@ class IVFeed(object):
         self.__last__ = time()
 
     def page(self, limit, page):
-        return self.__videos__[(limit * (page - 1)):(limit * page)]
+        videos, next = (
+            self.__videos__[:(fence := (limit * page))],
+            self.__videos__[fence:]
+        )
+        return (
+            videos[(limit * (page - 1)):],
+            {"page": (page + 1)} if next else None
+        )
 
     # feed ---------------------------------------------------------------------
 
     @public
     def feed(self, limit, page=1):
-        t = time()
-        try:
-            if (
-                ((page := int(page)) == 1) and
-                ((keys := self.invalid()) is not None)
-            ):
-                self.update(self.__instance__.__feeds__(keys))
-            return self.page(limit, page)
-        finally:
-            self.logger.info(f"feed() took: {time() - t} seconds")
+        if (
+            ((page := int(page)) == 1) and
+            ((keys := self.invalid()) is not None)
+        ):
+            self.update(self.__instance__.__feeds__(keys))
+        return self.page(limit, page)
 
     # channels -----------------------------------------------------------------
 

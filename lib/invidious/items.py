@@ -63,9 +63,10 @@ class Items(List):
 
     __ctor__ = Item
 
-    def __init__(self, items, continuation=None, limit=0, **kwargs):
+    def __init__(self, items, previous=None, next=None, **kwargs):
         super(Items, self).__init__(items, **kwargs)
-        self.more = continuation or ((len(self) >= limit) if limit else False)
+        self.previous = previous
+        self.next = next
 
 
 class Contents(Items):
@@ -86,6 +87,10 @@ class Folder(Item):
         return self.get("action", self.type)
 
     @property
+    def properties(self):
+        return self.get("properties")
+
+    @property
     def plot(self):
         if (plot := self.get("plot")):
             return maybeLocalize(plot)
@@ -102,6 +107,7 @@ class Folder(Item):
             title,
             buildUrl(url, action=self.action, **dict(self.kwargs, **kwargs)),
             isFolder=True,
+            properties=self.properties,
             infoLabels=self.labels(title, self.plot or title),
             **self.art
         )
@@ -147,8 +153,7 @@ class Query(Item):
                 action="search",
                 q=self.q,
                 type=self.type,
-                sort=self.sort,
-                page=self.page
+                sort=self.sort
             ),
             isFolder=True,
             infoLabels=self.labels(self.q, self.q),

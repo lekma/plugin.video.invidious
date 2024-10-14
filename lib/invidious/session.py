@@ -3,7 +3,7 @@
 
 from concurrent.futures import ThreadPoolExecutor
 
-from requests import HTTPError, RequestException, Session
+from requests import HTTPError, RequestException, Session, Timeout
 
 from nuttig import buildUrl, getSetting, localizedString
 
@@ -44,7 +44,8 @@ class IVSession(Session):
             )
         except RequestException as error:
             self.logger.error(error, notify=notify)
-            raise error
+            if (not isinstance(error, Timeout)):
+                raise error
 
     # --------------------------------------------------------------------------
 
@@ -58,13 +59,13 @@ class IVSession(Session):
         return (False, result)
 
     def __get__(self, url, notify=True, **kwargs):
-        response = self.get(url, notify=notify, params=kwargs)
-        notified, result = self.__error__(response.json(), notify=notify)
-        try:
-            response.raise_for_status()
-        except HTTPError as error:
-            self.logger.error(error, notify=((not notified) and notify))
-        return result
+        if (response := self.get(url, notify=notify, params=kwargs)):
+            notified, result = self.__error__(response.json(), notify=notify)
+            try:
+                response.raise_for_status()
+            except HTTPError as error:
+                self.logger.error(error, notify=((not notified) and notify))
+            return result
 
     def __map_get__(self, urls, **kwargs):
         def __pool_get__(url):

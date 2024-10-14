@@ -13,9 +13,7 @@ from nuttig import (
 )
 
 from invidious.extract import (
-    IVChannel, IVChannelVideos, IVChannelPlaylists,
-    IVPlaylist, IVPlaylistVideos,
-    IVResults, IVVideo, IVVideos
+    IVChannel, IVPlaylist, IVPlaylists, IVResults, IVVideo, IVVideos
 )
 from invidious.regional import locales, regions
 from invidious.session import IVSession
@@ -245,31 +243,59 @@ class IVInstance(object):
         self.logger.error(f"Invalid channelId: {channelId}", notify=True)
 
     def __tab__(self, channelId, key, **kwargs):
+        #if (("continuation" in kwargs) and (not kwargs["continuation"])):
+        #    del kwargs["continuation"]
+        if (continuation := kwargs.pop("continuation", None)):
+            kwargs["continuation"] = continuation
         return (
-            self.__channel__(channelId)["channel"],
-            self.__get__(key, channelId, **kwargs)
+            self.__get__(key, channelId, **kwargs),
+            self.__channel__(channelId)["channel"]
         )
 
     @public
     def tab(self, key, **kwargs):
         if (channelId := kwargs.pop("channelId", None)):
-            return IVChannelVideos(*self.__tab__(channelId, key, **kwargs))
+            items, channel = self.__tab__(channelId, key, **kwargs)
+            return (
+                IVVideos(items["videos"]),
+                (
+                    {"continuation": continuation}
+                    if (continuation := items.get("continuation")) else None
+                ),
+                channel
+            )
         self.logger.error(f"Invalid channelId: {channelId}", notify=True)
 
     @public
     def playlists(self, **kwargs):
         if (channelId := kwargs.pop("channelId", None)):
-            return IVChannelPlaylists(
-                *self.__tab__(channelId, "playlists", **kwargs)
+            items, channel = self.__tab__(channelId, "playlists", **kwargs)
+            return (
+                IVPlaylists(items["playlists"]),
+                (
+                    {"continuation": continuation}
+                    if (continuation := items.get("continuation")) else None
+                ),
+                channel
             )
         self.logger.error(f"Invalid channelId: {channelId}", notify=True)
 
     # playlist -----------------------------------------------------------------
 
     @public
-    def playlist(self, **kwargs):
+    def playlist(self, limit=200, **kwargs):
         if (playlistId := kwargs.pop("playlistId", None)):
-            return IVPlaylistVideos(self.__get_playlist__(playlistId, **kwargs))
+            items = (
+                (item := self.__get_playlist__(playlistId, **kwargs))["videos"]
+            )
+            return (
+                IVVideos(items),
+                (
+                    {"index": (kwargs["index"] + count)}
+                    if ((count := len(items)) >= limit) else None
+                ),
+                item["title"]
+            )
         self.logger.error(f"Invalid playlistId: {playlistId}", notify=True)
 
     # feed ---------------------------------------------------------------------

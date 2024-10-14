@@ -103,8 +103,7 @@ class IVSearch(object):
                 query = {
                     "q": q,
                     "type": self.__q_type__ or self.q_type(),
-                    "sort": self.__q_sort__ or self.q_sort(),
-                    "page": 1
+                    "sort": self.__q_sort__ or self.q_sort()
                 }
                 if self.__history__:
                     self.__queries__.record(query)
@@ -120,11 +119,14 @@ class IVSearch(object):
     # search -------------------------------------------------------------------
 
     @public
-    def search(self, query):
+    def search(self, query, limit=20):
         self.__cache__.append(query)
         if self.__history__:
             self.__queries__.move_to_end(query["q"])
-        return self.__instance__.search(query)
+        return (
+            (items := self.__instance__.search(query)),
+            {"page": (query["page"] + 1)} if (len(items) >= limit) else None
+        )
 
     # --------------------------------------------------------------------------
 

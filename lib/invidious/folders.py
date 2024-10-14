@@ -27,6 +27,7 @@ __folders__ = {
                     "action": "trending",
                     "title": 30310,
                     "art": "DefaultAddonMusic.png",
+                    "properties": {"SpecialSort": "top"},
                     "kwargs": {
                         "type": "music",
                         "category": localizedString(30310)
@@ -36,6 +37,7 @@ __folders__ = {
                     "action": "trending",
                     "title": 30320,
                     "art": "DefaultAddonGame.png",
+                    "properties": {"SpecialSort": "top"},
                     "kwargs": {
                         "type": "gaming",
                         "category": localizedString(30320)
@@ -45,6 +47,7 @@ __folders__ = {
                     "action": "trending",
                     "title": 30330,
                     "art": "DefaultMovies.png",
+                    "properties": {"SpecialSort": "top"},
                     "kwargs": {
                         "type": "movies",
                         "category": localizedString(30330)
@@ -68,6 +71,7 @@ class Folder(dict):
             action=folder.get("action", action),
             setting=folder.get("setting"),
             art=dict.fromkeys(("poster", "icon"), folder.get("art")),
+            properties=folder.get("properties"),
             kwargs=folder.get("kwargs", {})
         )
 

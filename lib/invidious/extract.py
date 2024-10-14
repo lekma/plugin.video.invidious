@@ -206,13 +206,14 @@ class IVPlaylist(Dict):
 
 
 # ------------------------------------------------------------------------------
-# IVPlaylistVideos
+# IVPlaylists
 
-class IVPlaylistVideos(IVPlaylist):
+class IVPlaylists(list):
 
-    def __init__(self, item):
-        super(IVPlaylistVideos, self).__init__(item)
-        self["items"] = IVVideos(item["videos"])
+    def __init__(self, playlists):
+        super(IVPlaylists, self).__init__(
+            IVPlaylist(playlist) for playlist in playlists if playlist
+        )
 
 
 # ------------------------------------------------------------------------------
@@ -250,7 +251,7 @@ class IVChannel(Dict):
             subscribers=subscribers,
             subscribersText=subscribersText,
             tabs=[
-                dict(tab, action=action)
+                dict(tab, action=action, properties={"SpecialSort": "top"})
                 for action, tab in self.__tabs__.items()
                 if action in item.get("tabs", [])
             ]
@@ -259,35 +260,6 @@ class IVChannel(Dict):
 
     def __repr__(self):
         return f"IVChannel({self['channel']})"
-
-
-# ------------------------------------------------------------------------------
-# IVChannelVideos
-
-class IVChannelVideos(dict):
-
-    def __init__(self, channel, items):
-        super(IVChannelVideos, self).__init__(
-            channel=channel,
-            continuation=items.get("continuation"),
-            items=IVVideos(items["videos"])
-        )
-
-
-# ------------------------------------------------------------------------------
-# IVChannelPlaylists
-
-class IVChannelPlaylists(dict):
-
-    def __init__(self, channel, items):
-        super(IVChannelPlaylists, self).__init__(
-            channel=channel,
-            continuation=items.get("continuation"),
-            items=[
-                IVPlaylist(playlist)
-                for playlist in items["playlists"] if playlist
-            ]
-        )
 
 
 # ------------------------------------------------------------------------------

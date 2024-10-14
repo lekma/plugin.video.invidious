@@ -10,6 +10,7 @@ from nuttig import addonIsEnabled
 from invidious.items import (
     FeedChannels, Folders, Playlists, Queries, Results, Video, Videos
 )
+from invidious.persistence import IVNavigationHistory
 
 
 # instance ---------------------------------------------------------------------
@@ -36,6 +37,7 @@ class IVClient(object):
     def __init__(self, logger):
         self.logger = logger.getLogger(f"{logger.component}.client")
         self.__client__ = Client()
+        self.__history__ = IVNavigationHistory()
 
     # video --------------------------------------------------------------------
 
@@ -57,29 +59,35 @@ class IVClient(object):
 
     @instance
     def tab(self, key, **kwargs):
-        if (videos := self.__client__.instance.tab(key, **kwargs)):
+        items, next, category = self.__client__.instance.tab(key, **kwargs)
+        if items is not None:
+            previous = self.__history__.continuation(
+                key, kwargs.get("continuation")
+            )
             return Videos(
-                videos["items"],
-                continuation=videos["continuation"],
-                category=videos["channel"]
+                items, next=next, category=category, previous=previous
             )
 
     @instance
     def playlists(self, **kwargs):
-        if (playlists := self.__client__.instance.playlists(**kwargs)):
+        items, next, category = self.__client__.instance.playlists(**kwargs)
+        if items is not None:
+            previous = self.__history__.continuation(
+                "playlists", kwargs.get("continuation")
+            )
             return Playlists(
-                playlists["items"],
-                continuation=playlists["continuation"],
-                category=playlists["channel"]
+                items, next=next, category=category, previous=previous
             )
 
     # playlist -----------------------------------------------------------------
 
     @instance
     def playlist(self, **kwargs):
-        if(playlist := self.__client__.instance.playlist(**kwargs)):
+        items, next, category = self.__client__.instance.playlist(**kwargs)
+        if items is not None:
+            previous = self.__history__.index("playlist", kwargs["index"])
             return Videos(
-                playlist["items"], limit=200, category=playlist["title"]
+                items, next=next, category=category, previous=previous
             )
 
     # home ---------------------------------------------------------------------
@@ -91,7 +99,9 @@ class IVClient(object):
 
     @instance
     def feed(self, limit=29, **kwargs):
-        return Videos(self.__client__.feed.feed(limit, **kwargs), limit=limit)
+        items, next = self.__client__.feed.feed(limit, **kwargs)
+        previous = self.__history__.page("feed", kwargs["page"])
+        return Videos(items, next=next, previous=previous)
 
     @instance
     def channels(self):
@@ -123,6 +133,8 @@ class IVClient(object):
 
     @instance
     def search(self, query):
+        items, next = self.__client__.search.search(query)
+        previous = self.__history__.page("search", query["page"])
         return Results(
-            self.__client__.search.search(query), limit=20, category=query["q"]
+            items, next=next, previous=previous, category=query["q"]
         )

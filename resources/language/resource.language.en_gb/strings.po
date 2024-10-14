@@ -14,7 +14,11 @@ msgid "Invidious"
 msgstr ""
 
 msgctxt "#30001"
-msgid "More..."
+msgid "<< Previous"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Next >>"
 msgstr ""
 
 
