@@ -59,7 +59,7 @@ class IVSession(Session):
         return (False, result)
 
     def __get__(self, url, notify=True, **kwargs):
-        if (response := self.get(url, notify=notify, params=kwargs)):
+        if ((response := self.get(url, notify=notify, params=kwargs)) is not None):
             notified, result = self.__error__(response.json(), notify=notify)
             try:
                 response.raise_for_status()
