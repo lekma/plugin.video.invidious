@@ -7,9 +7,12 @@ from urllib.parse import urlsplit, urlunsplit
 
 from requests import HTTPError
 
+from xbmcgui import ALPHANUM_HIDE_INPUT
+
 from iapc import public
 from nuttig import (
-    buildUrl, getSetting, maybeLocalize, selectDialog, setSetting
+    buildUrl, getSetting, maybeLocalize, setSetting,
+    inputDialog, okDialog, selectDialog
 )
 
 from invidious.extract import (
@@ -60,12 +63,16 @@ class IVInstance(object):
         if (uri := getSetting("instance.uri", str)):
             self.__scheme__, self.__netloc__, *unused = urlsplit(uri)
             self.__url__ = buildUrl(uri, getSetting("instance.path", str))
+            self.__uri__ = urlunsplit(
+                (self.__scheme__, self.__netloc__, "", "", "")
+            )
         else:
-            self.__scheme__ = self.__netloc__ = self.__url__ = None
+            self.__scheme__ = self.__netloc__ = self.__url__ = self.__uri__ = None
         self.__proxy__ = getSetting("instance.proxy", bool)
         self.__locale__ = getSetting("regional.locale", str)
         self.__region__ = getSetting("regional.region", str)
         settings = (
+            #("Uri", self.__uri__),
             ("Url", self.__url__),
             (41130, self.__proxy__),
             (
@@ -118,6 +125,8 @@ class IVInstance(object):
             if index > -1:
                 setSetting("instance.uri", keys[index], str)
                 return True
+        else:
+            okDialog(maybeLocalize(90101))
         return False
 
     # region -------------------------------------------------------------------
@@ -148,6 +157,22 @@ class IVInstance(object):
     @public
     def selectRegion(self):
         self.__select__(regions, "regional.region", 41222)
+
+    # tokens -------------------------------------------------------------------
+
+    #@public
+    #def addApiToken(self):
+    #    self.logger.info(f"addApiToken()")
+    #    if (
+    #        (uri := inputDialog(heading=90007, defaultt=self.__uri__)) and
+    #        (email := inputDialog(heading=90008)) and
+    #        (password := inputDialog(heading=90009, option=ALPHANUM_HIDE_INPUT))
+    #    ):
+    #        self.__tokens__.registerToken(uri, email, password)
+
+    #@public
+    #def removeApiTokens(self):
+    #    self.logger.info(f"removeApiTokens()")
 
     # --------------------------------------------------------------------------
 

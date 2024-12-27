@@ -260,6 +260,22 @@ msgctxt "#49112"
 msgid "SponsorBlock service settings..."
 msgstr ""
 
+msgctxt "#49200"
+msgid "Tokens"
+msgstr ""
+
+msgctxt "#49210"
+msgid "Add api token"
+msgstr ""
+
+msgctxt "#49211"
+msgid "You will need to login to retrieve an api token"
+msgstr ""
+
+msgctxt "#49220"
+msgid "Remove api tokens"
+msgstr ""
+
 
 # Items infos
 
@@ -349,4 +365,20 @@ msgstr ""
 
 msgctxt "#90006"
 msgid "==>"
+msgstr ""
+
+msgctxt "#90007"
+msgid "Instance uri"
+msgstr ""
+
+msgctxt "#90008"
+msgid "Username"
+msgstr ""
+
+msgctxt "#90009"
+msgid "Password"
+msgstr ""
+
+msgctxt "#90101"
+msgid "No public instance available"
 msgstr ""

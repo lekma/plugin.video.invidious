@@ -41,6 +41,15 @@ def selectRegion():
     return Client().instance.selectRegion()
 
 
+# tokens -----------------------------------------------------------------------
+
+#def addApiToken():
+#    return Client().instance.addApiToken()
+
+#def removeApiTokens():
+#    return Client().instance.removeApiTokens()
+
+
 # feed -------------------------------------------------------------------------
 
 def addChannelToFeed(channelId, channel):
@@ -77,6 +86,8 @@ __scripts__ = {
     "selectInstance": selectInstance,
     "selectLocale": selectLocale,
     "selectRegion": selectRegion,
+    #"addApiToken": addApiToken,
+    #"removeApiTokens": removeApiTokens,
     "addChannelToFeed": addChannelToFeed,
     "removeChannelFromFeed": removeChannelFromFeed,
     "clearChannelsFromFeed": clearChannelsFromFeed,

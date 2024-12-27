@@ -261,6 +261,22 @@
 
             </group>
 
+            <!--<group id="tokens" label="49200">
+
+                <setting id="addApiToken" type="action" label="49210" help="49211">
+                    <level>0</level>
+                    <data>RunScript($ID,addApiToken)</data>
+                    <control type="button" format="action" />
+                </setting>
+
+                <setting id="removeApiTokens" type="action" label="49220">
+                    <level>0</level>
+                    <data>RunScript($ID,removeApiTokens)</data>
+                    <control type="button" format="action" />
+                </setting>
+
+            </group>-->
+
         </category>
 
     </section>
