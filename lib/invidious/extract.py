@@ -99,7 +99,8 @@ class IVVideo(Dict):
             views=views,
             viewsText=viewsText,
             likes=likes,
-            likesText=likesText
+            likesText=likesText,
+            language=item.get("language")
         )
         self.__expires__ = (int(time()) + expires)
 
@@ -153,7 +154,8 @@ class YtDlpVideo(Dict):
             views=views,
             viewsText=viewsText,
             likes=likes,
-            likesText=likesText
+            likesText=likesText,
+            language=item.get("language")
         )
 
 
