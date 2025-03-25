@@ -13,7 +13,7 @@ from invidious.extract import YtDlpVideo
 class YtDlp(object):
 
     def __init__(self, logger):
-        self.logger = logger.getLogger(f"{logger.component}.yt-dlp")
+        self.logger = logger.getLogger(component="yt-dlp")
 
     def __setup__(self):
         pass

@@ -59,9 +59,11 @@ class IVVideo(Dict):
             #else item.get("lengthSeconds", -1)
         )
         manifestType = "hls"
+        mimeType = None
         if ((not live) or (not (url := item.get("hlsUrl")))):
             url = item.get("dashUrl")
             manifestType = "mpd"
+            mimeType = "application/dash+xml"
         thumbnails = VideoThumbnails(item.get("videoThumbnails"))
         # published
         published, publishedText = (
@@ -93,6 +95,7 @@ class IVVideo(Dict):
             live=live,
             url=url,
             manifestType=manifestType,
+            mimeType=mimeType,
             thumbnail=getattr(thumbnails, "high", None),
             published=published,
             publishedText=publishedText,

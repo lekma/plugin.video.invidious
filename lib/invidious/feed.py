@@ -16,7 +16,7 @@ from invidious.utils import confirm
 class IVFeed(object):
 
     def __init__(self, logger, instance, timeout=1800):
-        self.logger = logger.getLogger(f"{logger.component}.feed")
+        self.logger = logger.getLogger(component="feed")
         self.__instance__ = instance
         self.__channels__ = IVFeedChannels()
         self.__timeout__ = timeout

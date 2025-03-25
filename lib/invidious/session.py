@@ -15,7 +15,7 @@ class IVSession(Session):
 
     def __init__(self, logger, headers=None):
         super(IVSession, self).__init__()
-        self.logger = logger.getLogger(f"{logger.component}.session")
+        self.logger = logger.getLogger(component="session")
         if headers:
             self.headers.update(headers)
         self.__pool__ = ThreadPoolExecutor()

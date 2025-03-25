@@ -54,7 +54,7 @@ class IVInstance(object):
     }
 
     def __init__(self, logger):
-        self.logger = logger.getLogger(f"{logger.component}.instance")
+        self.logger = logger.getLogger(component="instance")
         self.__session__ = IVSession(self.logger, headers=self.__headers__)
         self.__ytdlp__ = YtDlp(self.logger)
         self.__cache__ = {}

@@ -44,7 +44,7 @@ querySort = OrderedDict(
 class IVSearch(object):
 
     def __init__(self, logger, instance):
-        self.logger = logger.getLogger(f"{logger.component}.search")
+        self.logger = logger.getLogger(component="search")
         self.__instance__ = instance
         self.__queries__ = IVSearchHistory()
         self.__cache__ = deque()
