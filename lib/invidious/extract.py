@@ -151,6 +151,7 @@ class YtDlpVideo(Dict):
             live=item["is_live"],
             url=item["url"],
             manifestType=item["manifestType"],
+            mimeType=item["mimeType"],
             thumbnail=item["thumbnail"],
             published=published,
             publishedText=publishedText,

@@ -49,7 +49,7 @@ def cached(name):
 class IVInstance(object):
 
     __headers__ = {
-        "User-Agent": "Mozilla/5.0",
+        #"User-Agent": "Mozilla/5.0",
         "Accept-Language": "*"
     }
 
