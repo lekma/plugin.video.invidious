@@ -21,11 +21,20 @@ class IVSession(Session):
         self.__pool__ = ThreadPoolExecutor()
 
     def __setup__(self):
+        # timeout
         if (timeout := getSetting("session.timeout", float)) > 0.0:
             self.__timeout__ = (((timeout - (timeout % 3)) + 0.05), timeout)
         else:
             self.__timeout__ = None
-        self.logger.info(f"{localizedString(41140)}: {self.__timeout__}")
+        self.logger.info(f"{localizedString(41310)}: {self.__timeout__}")
+        # proxies
+        proxies = {}
+        if (http_proxy := getSetting("session.proxies.http", str)):
+            proxies["http"] = http_proxy
+        if (https_proxy := getSetting("session.proxies.https", str)):
+            proxies["https"] = https_proxy
+        self.__proxies__ = proxies or None
+        self.logger.info(f"{localizedString(41320)}: {self.__proxies__}")
 
     def __stop__(self):
         self.__pool__.shutdown(cancel_futures=True)
@@ -40,7 +49,11 @@ class IVSession(Session):
         )
         try:
             return super(IVSession, self).request(
-                method, url, timeout=self.__timeout__, **kwargs
+                method,
+                url,
+                timeout=self.__timeout__,
+                proxies=self.__proxies__,
+                **kwargs
             )
         except RequestException as error:
             self.logger.error(error, notify=notify)

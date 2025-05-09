@@ -111,10 +111,6 @@ msgctxt "#41130"
 msgid "Proxy videos"
 msgstr ""
 
-msgctxt "#41140"
-msgid "Timeout"
-msgstr ""
-
 msgctxt "#41210"
 msgid "Select your locale"
 msgstr ""
@@ -137,6 +133,30 @@ msgstr ""
 
 msgctxt "#41222"
 msgid "Regions"
+msgstr ""
+
+msgctxt "#41300"
+msgid "Network"
+msgstr ""
+
+msgctxt "#41310"
+msgid "Timeout"
+msgstr ""
+
+msgctxt "#41320"
+msgid "Proxies"
+msgstr ""
+
+msgctxt "#41321"
+msgid "HTTP Proxy"
+msgstr ""
+
+msgctxt "#41322"
+msgid "HTTPS Proxy"
+msgstr ""
+
+msgctxt "#41323"
+msgid "Follow the 'scheme://user:pass@host:port' pattern.\nUse 'socks5' (client side dns resolution) or 'socks5h' (proxy side dns resolution) as the scheme if you want to use a SOCKS proxy."
 msgstr ""
 
 

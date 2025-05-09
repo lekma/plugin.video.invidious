@@ -39,7 +39,11 @@
                     <control type="toggle" />
                 </setting>
 
-                <setting id="session.timeout" type="number" label="41140">
+            </group>
+
+            <group id="network" label="41300">
+
+                <setting id="session.timeout" type="number" label="41310">
                     <level>0</level>
                     <default>10.0</default>
                     <constraints>
@@ -48,6 +52,24 @@
                         <maximum>120.0</maximum>
                     </constraints>
                     <control type="slider" format="number" />
+                </setting>
+
+                <setting id="session.proxies.http" type="string" label="41321" help="41323">
+                    <level>0</level>
+                    <default />
+                    <constraints>
+                        <allowempty>true</allowempty>
+                    </constraints>
+                    <control type="edit" format="string" />
+                </setting>
+
+                <setting id="session.proxies.https" type="string" label="41322" help="41323">
+                    <level>0</level>
+                    <default />
+                    <constraints>
+                        <allowempty>true</allowempty>
+                    </constraints>
+                    <control type="edit" format="string" />
                 </setting>
 
             </group>
