@@ -1,0 +1,404 @@
+# Addon Name: Invidious
+# Addon id: plugin.video.invidious
+msgid ""
+msgstr ""
+"Project-Id-Version: plugin.video.invidious\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en_GB\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgctxt "#30000"
+msgid "Invidious"
+msgstr "Invidious"
+
+msgctxt "#30001"
+msgid "<< Previous"
+msgstr "<< Précédent"
+
+msgctxt "#30002"
+msgid "Next >>"
+msgstr "Suivant >>"
+
+
+# Folders
+
+msgctxt "#30100"
+msgid "Feed"
+msgstr "Flux"
+
+msgctxt "#30110"
+msgid "Channels"
+msgstr "Chaînes"
+
+msgctxt "#30111"
+msgid "Feed / Channels"
+msgstr "Flux / Chaînes"
+
+
+msgctxt "#30200"
+msgid "Popular"
+msgstr "Populaire"
+
+
+msgctxt "#30300"
+msgid "Trending"
+msgstr "Tendance"
+
+msgctxt "#30310"
+msgid "Music"
+msgstr "Musique"
+
+msgctxt "#30320"
+msgid "Gaming"
+msgstr "Jeux vidéos"
+
+msgctxt "#30330"
+msgid "Movies"
+msgstr "Vidéos"
+
+
+msgctxt "#30410"
+msgid "New search"
+msgstr "Nouvelle recherche"
+
+
+msgctxt "#31100"
+msgid "Playlists"
+msgstr "Listes de lecture"
+
+msgctxt "#31200"
+msgid "Streams"
+msgstr "Directs"
+
+msgctxt "#31300"
+msgid "Shorts"
+msgstr "Vidéos courtes"
+
+
+# Instance settings
+
+msgctxt "#41000"
+msgid "Instance"
+msgstr "Instance"
+
+msgctxt "#41100"
+msgid "Connection"
+msgstr "Connexion"
+
+msgctxt "#41110"
+msgid "Uri"
+msgstr "Uri"
+
+msgctxt "#41111"
+msgid "Select a public instance"
+msgstr "Sélectionner une instance publique"
+
+msgctxt "#41112"
+msgid "Displays a list of public instances, along with the region the server is hosted in. Selecting one will update the \"Uri\" setting."
+msgstr "Afficher la liste des instances publiques, ainsi que la région dans laquelle le serveur est hébergé. La sélection mettra à jour les paramètres \"Uri\ "
+
+msgctxt "#41113"
+msgid "Publicly available instances"
+msgstr "Instances publiques disponibles"
+
+msgctxt "#41120"
+msgid "Path"
+msgstr "Chemin"
+
+msgctxt "#41130"
+msgid "Proxy videos"
+msgstr "Proxy vidéos"
+
+msgctxt "#41210"
+msgid "Select your locale"
+msgstr "Sélectionner les paramètres régionaux"
+
+msgctxt "#41211"
+msgid "Locale"
+msgstr "Région"
+
+msgctxt "#41212"
+msgid "Locales"
+msgstr "Régions"
+
+msgctxt "#41220"
+msgid "Select your region"
+msgstr "Sélectionner la région"
+
+msgctxt "#41221"
+msgid "Region"
+msgstr "Région"
+
+msgctxt "#41222"
+msgid "Regions"
+msgstr "Régions"
+
+msgctxt "#41300"
+msgid "Network"
+msgstr "Réseau"
+
+msgctxt "#41310"
+msgid "Timeout"
+msgstr "Timeout"
+
+msgctxt "#41320"
+msgid "Proxies"
+msgstr "Proxies"
+
+msgctxt "#41321"
+msgid "HTTP Proxy"
+msgstr "Proxy HTTP"
+
+msgctxt "#41322"
+msgid "HTTPS Proxy"
+msgstr "Proxy HTTPS"
+
+msgctxt "#41323"
+msgid "Follow the 'scheme://user:pass@host:port' pattern.\nUse 'socks5' (client side dns resolution) or 'socks5h' (proxy side dns resolution) as the scheme if you want to use a SOCKS proxy."
+msgstr "Suivre le modèle 'schéma ://utilisateur:motdepasse@hote:port'.\nUtiliser 'socks5' (résolution DNS côté client) ou 'socks5h' (résolution DNS côté proxy) comme schéma si vous souhaitez utiliser un proxy SOCKS."
+
+
+# Search settings
+
+msgctxt "#42100"
+msgid "History"
+msgstr "Historique"
+
+msgctxt "#42110"
+msgid "Search history"
+msgstr "Historique de recherche"
+
+msgctxt "#42200"
+msgid "Queries"
+msgstr "Requêtes"
+
+msgctxt "#42210"
+msgid "Query type"
+msgstr "Type de requête"
+
+msgctxt "#42211"
+msgid "All"
+msgstr "Tous"
+
+msgctxt "#42212"
+msgid "Video"
+msgstr "Vidéo"
+
+msgctxt "#42213"
+msgid "Channel"
+msgstr "Chaîne"
+
+msgctxt "#42214"
+msgid "Playlist"
+msgstr "Liste de lecture"
+
+msgctxt "#42215"
+msgid "Movie"
+msgstr "Vidéo"
+
+msgctxt "#42216"
+msgid "Show"
+msgstr "Montrer"
+
+msgctxt "#42220"
+msgid "Sort order"
+msgstr "Ordre de tri"
+
+msgctxt "#42221"
+msgid "Relevance"
+msgstr "Pertinence"
+
+msgctxt "#42222"
+msgid "Upload date"
+msgstr "Date de téléchargement"
+
+msgctxt "#42223"
+msgid "View count"
+msgstr "Nombre de vues"
+
+msgctxt "#42224"
+msgid "Rating"
+msgstr "Notation"
+
+msgctxt "#42230"
+msgid "Always ask"
+msgstr "Toujours demander"
+
+
+# Interface settings
+
+msgctxt "#43000"
+msgid "Interface"
+msgstr "Interface"
+
+msgctxt "#43100"
+msgid "Home"
+msgstr "Accueil"
+
+msgctxt "#43200"
+msgid "Context menus"
+msgstr "Menus contextuels"
+
+msgctxt "#43210"
+msgid "Play from YouTube"
+msgstr "Jouer à partir de YouTube"
+
+msgctxt "#43211"
+msgid "To use this feature you must install and enable the 'service.yt-dlp' addon"
+msgstr "Pour utiliser cette fonctionnalité, vous devez installer et activer l'extension 'service.yt-dlp'"
+
+msgctxt "#43212"
+msgid "yt-dlp service settings..."
+msgstr "Paramètres du service yt-dlp..."
+
+msgctxt "#43220"
+msgid "Play with YouTube addon"
+msgstr "Jouer avec l'extension YouTube"
+
+
+# Extras settings
+
+msgctxt "#49000"
+msgid "Extras"
+msgstr "Extras"
+
+msgctxt "#49100"
+msgid "Features"
+msgstr "Fonctionnalités"
+
+msgctxt "#49110"
+msgid "Enable limited support for SponsorBlock"
+msgstr "Activer la prise en charge limitée de SponsorBlock"
+
+msgctxt "#49111"
+msgid "To use this feature you must install and enable the 'service.sponsorblock' addon"
+msgstr "Pour utiliser cette fonctionnalité, vous devez installer et activer l'extension 'service.sponsorblock'"
+
+msgctxt "#49112"
+msgid "SponsorBlock service settings..."
+msgstr "Paramètres du service SponsorBlock..."
+
+msgctxt "#49200"
+msgid "Tokens"
+msgstr "Jetons"
+
+msgctxt "#49210"
+msgid "Add api token"
+msgstr "Ajouter un jeton d'API"
+
+msgctxt "#49211"
+msgid "You will need to login to retrieve an api token"
+msgstr "Vous devrez vous connecter pour récupérer un jeton d'api"
+
+msgctxt "#49220"
+msgid "Remove api tokens"
+msgstr "Supprimer les jetons d'API"
+
+
+# Items infos
+
+msgctxt "#50101"
+msgid "Published {}"
+msgstr "Publié {}"
+
+msgctxt "#50102"
+msgid "{} views"
+msgstr "{} vues"
+
+msgctxt "#50103"
+msgid "{} likes"
+msgstr "{} j'aime"
+
+msgctxt "#50201"
+msgid "{} subscribers"
+msgstr "{} abonnés"
+
+msgctxt "#50301"
+msgid "{} videos"
+msgstr "{} vidéos"
+
+msgctxt "#50302"
+msgid "Last updated {}"
+msgstr "Dernière mise à jour {}"
+
+
+# Context menus
+
+msgctxt "#60101"
+msgid "Query type: {_type_}"
+msgstr "Type de requête : {_type_}"
+
+msgctxt "#60102"
+msgid "Sort order: {_sort_}"
+msgstr "Ordre de tri : {_sort_}"
+
+msgctxt "#60103"
+msgid "Remove"
+msgstr "Supprimé"
+
+msgctxt "#60104"
+msgid "Clear search history"
+msgstr "Effacer l'historique de recherche"
+
+
+msgctxt "#60201"
+msgid "Go to channel"
+msgstr "Aller à la chaîne"
+
+msgctxt "#60202"
+msgid "Add channel to feed"
+msgstr "Ajouter une chaîne au flux"
+
+
+msgctxt "#60301"
+msgid "Remove channel from feed"
+msgstr "Supprimer la chaîne des flux"
+
+msgctxt "#60302"
+msgid "Clear all channels from feed"
+msgstr "Supprimer toutes les chaînes des flux"
+
+
+# Notifications, dialogs
+
+msgctxt "#90001"
+msgid "Are you sure?"
+msgstr "Êtes-vous sûr ?"
+
+msgctxt "#90002"
+msgid "Channel '{}' added to feed"
+msgstr "Ajout de la chaîne '{}' au flux"
+
+msgctxt "#90003"
+msgid "Search history cleared"
+msgstr "Historique de recherche effacé"
+
+msgctxt "#90004"
+msgid "To use this feature you must install and enable the following addon:\n\n'{}'"
+msgstr "Pour utiliser cette fonctionnalité, vous devez installer et activer l'extension suivante :\n\n'{}'"
+
+msgctxt "#90005"
+msgid "<=="
+msgstr "<=="
+
+msgctxt "#90006"
+msgid "==>"
+msgstr "==>"
+
+msgctxt "#90007"
+msgid "Instance uri"
+msgstr "uri de l'instance"
+
+msgctxt "#90008"
+msgid "Username"
+msgstr "Nom d'utilisateur"
+
+msgctxt "#90009"
+msgid "Password"
+msgstr "Mot de passe"
+
+msgctxt "#90101"
+msgid "No public instance available"
+msgstr "Aucune instance publique disponible"
